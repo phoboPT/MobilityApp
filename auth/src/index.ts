@@ -26,7 +26,7 @@ app.use(signoutRouter)
 app.use(signupRouter)
 
 app.all('*', async () => {
-    throw new NotFoundError()
+    throw new NotFoundError({ from: 'Index, /BAD_URL, route don\'t exist ' })
 })
 
 app.use(errorHandler)
