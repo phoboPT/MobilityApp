@@ -10,7 +10,11 @@ spec:
     - host: app.dev
       http:
         paths:
-        - path: /api/users/?(.*)
-          backend:
-            serviceName: auth-srv
-            servicePort: 3000
+          - path: /api/users/?(.*)
+            backend:
+              serviceName: auth-srv
+              servicePort: 3000
+          - path: /api/vehicles/?(.*)
+            backend:
+              serviceName: vehicles-srv
+              servicePort: 3000

@@ -14,12 +14,12 @@ router.post('/api/users/signin', [
     const { email, password } = req.body
     const existingUser = await User.findOne({ email })
     if (!existingUser) {
-        throw new BadRequestError("Bad credentials provided", { from: "Signin, invalid credentials" });
+        throw new BadRequestError('Bad credentials provided', { from: 'Signin, invalid credentials' });
 
     }
     const passwordsMatch = await Password.compare(existingUser.password, password)
     if (!passwordsMatch) {
-        throw new BadRequestError("Bad credentials provided", { from: "Signin, invalid credentials" });
+        throw new BadRequestError('Bad credentials provided', { from: 'Signin, invalid credentials' });
     }
 
     //Generate and setting token

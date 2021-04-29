@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-depl
+  name: vehicles-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth
+      app: vehicles
   template:
     metadata:
       labels:
-        app: auth
+        app: vehicles
     spec:
       containers:
-        - name: auth
-          image: teste/auth
-          env:
+        - name: vehicles
+          image: teste/vehicles
+          env: 
             - name: MONGO_URI
-              value: mongodb://auth-mongo-srv:27017/auth
+              value: mongodb://vehicles-mongo-srv:27017/vehicles 
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
@@ -27,12 +27,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-srv
+  name: vehicles-srv
 spec:
   selector:
-    app: auth
+    app: vehicles
   ports:
-    - name: auth
+    - name: vehicles
       protocol: TCP
       port: 3000
       targetPort: 3000

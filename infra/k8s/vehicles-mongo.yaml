@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vehicles-mongo-depl
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vehicles-mongo
+  template:
+    metadata:
+      labels:
+        app: vehicles-mongo
+    spec:
+      containers:
+        - name: vehicles-mongo
+          image: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vehicles-mongo-srv
+spec:
+  selector:
+    app: vehicles-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017
