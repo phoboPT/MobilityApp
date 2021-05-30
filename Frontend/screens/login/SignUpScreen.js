@@ -1,16 +1,16 @@
 import React from 'react';
 import {View, Text, Button, StyleSheet} from 'react-native';
 
-const CarPoolingScreen = ({navigation}) => {
+const SignUpScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
-      <Text>CarPooling Screen</Text>
+      <Text>SignIn Screen</Text>
       <Button title="Click Here" onPress={() => alert('Button Clicked')} />
     </View>
   );
 };
 
-export default CarPoolingScreen;
+export default SignUpScreen;
 
 const styles = StyleSheet.create({
   container: {

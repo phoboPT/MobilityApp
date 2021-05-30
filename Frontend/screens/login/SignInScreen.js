@@ -1,16 +1,16 @@
 import React from 'react';
 import {View, Text, Button, StyleSheet} from 'react-native';
 
-const BusScreen = ({navigation}) => {
+const SignInScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
-      <Text>Bus Screen</Text>
+      <Text>SignIn Screen</Text>
       <Button title="Click Here" onPress={() => alert('Button Clicked')} />
     </View>
   );
 };
 
-export default BusScreen;
+export default SignInScreen;
 
 const styles = StyleSheet.create({
   container: {

@@ -1,16 +1,16 @@
 import React from 'react';
 import {View, Text, Button, StyleSheet} from 'react-native';
 
-const MapScreen = ({navigation}) => {
+const MessagesScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
-      <Text>Map Screen</Text>
+      <Text>Messages Screen</Text>
       <Button title="Click Here" onPress={() => alert('Button Clicked')} />
     </View>
   );
 };
 
-export default MapScreen;
+export default MessagesScreen;
 
 const styles = StyleSheet.create({
   container: {
