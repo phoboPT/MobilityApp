@@ -89,127 +89,158 @@ const HomeScreen = ({navigation}) => {
       title: 'FINISH',
       startTime: faker.date.soon().toLocaleDateString(),
       address: faker.address.streetAddress(),
-      time: '',
+      time: null,
     },
   ];
 
   function recommendationsNearMe() {
     return (
-      <View style={{flexDirection: 'row'}}>
-        <Animated.FlatList
-          onScroll={Animated.event(
-            [{nativeEvent: {contentOffset: {y: scrollY}}}],
-            {useNativeDriver: true},
-          )}
-          data={DATA}
-          contentContainerStyle={{padding: SPACING}}
-          keyExtractor={item => item.key}
-          renderItem={({item, index}) => {
-            const inputRange = [
-              -1,
-              0,
-              ITEM_SIZE * index,
-              ITEM_SIZE * (index + 2),
-            ];
+      <View>
+        <Text
+          style={{
+            marginLeft: 15,
+            fontSize: 24,
+            fontFamily: 'Arial',
+            color: 'white',
+            fontWeight: '400',
+          }}>
+          Recommendations
+        </Text>
+        <View style={{flexDirection: 'row'}}>
+          <Animated.FlatList
+            onScroll={Animated.event(
+              [{nativeEvent: {contentOffset: {y: scrollY}}}],
+              {useNativeDriver: true},
+            )}
+            data={DATA}
+            contentContainerStyle={{padding: SPACING}}
+            keyExtractor={item => item.key}
+            renderItem={({item, index}) => {
+              const inputRange = [
+                -1,
+                0,
+                ITEM_SIZE * index,
+                ITEM_SIZE * (index + 2),
+              ];
 
-            const opacityInputRange = [
-              -1,
-              0,
-              ITEM_SIZE * index,
-              ITEM_SIZE * (index + 2),
-            ];
+              const opacityInputRange = [
+                -1,
+                0,
+                ITEM_SIZE * index,
+                ITEM_SIZE * (index + 2),
+              ];
 
-            const scale = scrollY.interpolate({
-              inputRange,
-              outputRange: [1, 1, 1, 0],
-            });
+              const scale = scrollY.interpolate({
+                inputRange,
+                outputRange: [1, 1, 1, 0],
+              });
 
-            const opacity = scrollY.interpolate({
-              inputRange: opacityInputRange,
-              outputRange: [1, 1, 1, 0],
-            });
-            return (
-              <Animated.View
-                style={{
-                  flexDirection: 'row',
-                  padding: SPACING,
-                  marginBottom: SPACING,
-                  shadowColor: '#000',
-                  shadowOffset: {
-                    width: 0,
-                    height: 10,
-                  },
-                  shadowOpacity: 1,
-                  opacity,
-                  transform: [{scale}],
-                  shadowRadius: 20,
-                  borderRadius: 12,
-                  backgroundColor: 'rgba(255,255,255,0.9)',
-                }}>
-                <Image
-                  source={{uri: item.image}}
+              const opacity = scrollY.interpolate({
+                inputRange: opacityInputRange,
+                outputRange: [1, 1, 1, 0],
+              });
+              return (
+                <Animated.View
                   style={{
-                    width: AVATAR_SIZE,
-                    height: AVATAR_SIZE,
-                    borderRadius: AVATAR_SIZE,
-                    marginRight: SPACING / 2,
-                  }}
-                />
-                <View>
-                  <Text style={{fontSize: 22, fontWeight: '700'}}>
-                    {item.title}
-                  </Text>
-                  <Text style={{fontSize: 16, opacity: 0.7}}>{item.city}</Text>
-                  <Text style={{fontSize: 12, opacity: 0.8, color: 'blue'}}>
-                    {item.address}
-                  </Text>
-                </View>
-              </Animated.View>
-            );
-          }}
-        />
+                    flexDirection: 'row',
+                    padding: SPACING,
+                    marginBottom: SPACING,
+                    shadowColor: '#000',
+                    shadowOffset: {
+                      width: 0,
+                      height: 10,
+                    },
+                    shadowOpacity: 1,
+                    opacity,
+                    transform: [{scale}],
+                    shadowRadius: 15,
+                    borderRadius: 12,
+                    backgroundColor: 'rgba(255,255,255,0.9)',
+                  }}>
+                  <Image
+                    source={{uri: item.image}}
+                    style={{
+                      width: AVATAR_SIZE,
+                      height: AVATAR_SIZE,
+                      borderRadius: AVATAR_SIZE,
+                      marginRight: SPACING / 2,
+                    }}
+                  />
+                  <View>
+                    <Text style={{fontSize: 22, fontWeight: '700'}}>
+                      {item.title}
+                    </Text>
+                    <Text style={{fontSize: 14, opacity: 0.7}}>
+                      From: {item.city}
+                    </Text>
+                    <Text style={{fontSize: 14, opacity: 0.7}}>
+                      To: {item.city}
+                    </Text>
+                    <Text style={{fontSize: 12, opacity: 0.8, color: 'blue'}}>
+                      {item.date}
+                    </Text>
+                  </View>
+                </Animated.View>
+              );
+            }}
+          />
+        </View>
       </View>
     );
   }
 
   function renderMyNextTravel() {
     return (
-      <View style={{flexDirection: 'row', marginTop: 30}}>
-        <Animated.FlatList
-          horizontal
-          data={NEXT_TRAVEL_2}
-          contentContainerStyle={{padding: SPACING}}
-          keyExtractor={item => item.id}
-          renderItem={({item, index}) => {
-            return (
-              <Animated.View
-                style={{
-                  flexDirection: 'row',
-                  padding: SPACING,
-                  marginBottom: SPACING,
-                  shadowRadius: 20,
-                  marginRight: 20,
-                  borderRadius: 12,
-                  backgroundColor: 'rgba(255,255,255,0.9)',
-                }}>
-                <View>
-                  <Text style={{fontSize: 22, fontWeight: '700'}}>
-                    {item.title}
-                  </Text>
-                  <Text style={{fontSize: 18, opacity: 0.9, fontWeight: '500'}}>
-                    {item.startTime}
-                  </Text>
-                  <Text style={{fontSize: 16, opacity: 0.7}}>
-                    {item.address}
-                  </Text>
-                  <Text style={{fontSize: 12, opacity: 0.8, color: 'blue'}}>
-                    Time of Travell: {item.time}
-                  </Text>
-                </View>
-              </Animated.View>
-            );
-          }}
-        />
+      <View>
+        <Text
+          style={{
+            marginLeft: 15,
+            fontSize: 24,
+            fontFamily: 'Arial',
+            color: 'white',
+            fontWeight: '400',
+            marginTop: 30,
+          }}>
+          Your next travel
+        </Text>
+        <View style={{flexDirection: 'row'}}>
+          <Animated.FlatList
+            horizontal
+            data={NEXT_TRAVEL_2}
+            contentContainerStyle={{padding: SPACING}}
+            keyExtractor={item => item.id}
+            renderItem={({item, index}) => {
+              return (
+                <Animated.View
+                  style={{
+                    flexDirection: 'row',
+                    padding: SPACING,
+                    marginBottom: SPACING,
+                    shadowRadius: 20,
+                    marginRight: 20,
+                    borderRadius: 12,
+                    backgroundColor: 'rgba(255,255,255,0.9)',
+                  }}>
+                  <View>
+                    <Text style={{fontSize: 22, fontWeight: '700'}}>
+                      {item.title}
+                    </Text>
+                    <Text
+                      style={{fontSize: 18, opacity: 0.9, fontWeight: '500'}}>
+                      {item.startTime}
+                    </Text>
+                    <Text style={{fontSize: 16, opacity: 0.7}}>
+                      {item.address}
+                    </Text>
+                    <Text style={{fontSize: 12, opacity: 0.8, color: 'blue'}}>
+                      Travel time: {item.time}
+                    </Text>
+                  </View>
+                </Animated.View>
+              );
+            }}
+          />
+        </View>
       </View>
     );
   }
