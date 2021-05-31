@@ -6,6 +6,8 @@ export const routes = require('../assets/icons/routes.png');
 export const menu = require('../assets/icons/menu.png');
 export const filter = require('../assets/icons/filter.png');
 export const signout = require('../assets/icons/sign-out.png');
+export const end = require('../assets/icons/end.png');
+export const userMarker = require('../assets/icons/userMarker.png');
 
 export default {
   settings,
@@ -16,4 +18,6 @@ export default {
   menu,
   filter,
   signout,
+  userMarker,
+  end,
 };

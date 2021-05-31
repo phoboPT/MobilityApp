@@ -17,6 +17,7 @@ import {Input} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ActionButton from 'react-native-action-button';
 import faker, {phone} from 'faker';
+import Search from '../components/Search';
 
 faker.seed(10);
 const image = {
@@ -24,7 +25,7 @@ const image = {
 };
 const DATA = [...Array(5).keys()].map((_, i) => {
   return {
-    key: faker.random.uuid(),
+    key: faker.datatype.uuid(),
     image: `https://randomuser.me/api/portraits/${faker.helpers.randomize([
       'women',
       'men',
@@ -38,21 +39,6 @@ const DATA = [...Array(5).keys()].map((_, i) => {
     vehicle: faker.vehicle.vehicle(),
     phoneNumber: faker.phone.phoneNumber(),
     time: faker.date.soon.toString(),
-  };
-});
-
-const NEXT_TRAVEL = [...Array(3).keys()].map((_, i) => {
-  return {
-    key: faker.random.uuid(),
-    name: faker.name.findName(),
-    title: faker.random.words(),
-    description: faker.random.words(),
-    city: faker.address.city(),
-    address: faker.address.streetAddress(),
-    date: faker.date.future().toLocaleDateString(),
-    vehicle: faker.vehicle.vehicle(),
-    phoneNumber: faker.phone.phoneNumber(),
-    type: faker.vehicle.bicycle(),
   };
 });
 
@@ -95,7 +81,7 @@ const HomeScreen = ({navigation}) => {
 
   function recommendationsNearMe() {
     return (
-      <View>
+      <View style={{position: 'relative'}}>
         <Text
           style={{
             marginLeft: 15,
@@ -191,19 +177,20 @@ const HomeScreen = ({navigation}) => {
 
   function renderMyNextTravel() {
     return (
-      <View>
+      <View style={{position: 'relative'}}>
         <Text
           style={{
             marginLeft: 15,
             fontSize: 24,
             fontFamily: 'Arial',
             color: 'white',
+            position: 'relative',
             fontWeight: '400',
             marginTop: 30,
           }}>
           Your next travel
         </Text>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{flexDirection: 'row', position: 'relative'}}>
           <Animated.FlatList
             horizontal
             data={NEXT_TRAVEL_2}
@@ -213,6 +200,7 @@ const HomeScreen = ({navigation}) => {
               return (
                 <Animated.View
                   style={{
+                    position: 'relative',
                     flexDirection: 'row',
                     padding: SPACING,
                     marginBottom: SPACING,
@@ -246,7 +234,7 @@ const HomeScreen = ({navigation}) => {
   }
   function renderBody() {
     return (
-      <View style={{flex: 1, alignItems: 'center'}}>
+      <View style={{flex: 1, alignItems: 'center', position: 'relative'}}>
         {renderMyNextTravel()}
         {recommendationsNearMe()}
       </View>
@@ -273,16 +261,7 @@ const HomeScreen = ({navigation}) => {
         </TouchableOpacity>
 
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <Input
-            containerStyle={{
-              marginTop: 15,
-              width: '85%',
-              borderRadius: SIZES.radius,
-            }}
-            placeholderTextColor="black"
-            placeholder="Where you want to go?"
-            rightIcon={<Icon name="search" size={12} color="black" />}
-          />
+          <Search />
         </View>
 
         <TouchableOpacity

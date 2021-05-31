@@ -12,8 +12,6 @@ import {
   SignUpScreen,
 } from './screens';
 import AsyncStorage from '@react-native-community/async-storage';
-import {View, ActivityIndicator} from 'react-native';
-import {COLORS} from './constants';
 import {createStackNavigator} from '@react-navigation/stack';
 
 const Drawer = createDrawerNavigator();
