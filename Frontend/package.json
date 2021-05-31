@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.12.1",
+    "@react-native-community/geolocation": "^2.0.2",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/bottom-tabs": "^5.11.10",
     "@react-navigation/drawer": "^5.12.5",
@@ -25,7 +26,9 @@
     "react-native-action-button": "^2.8.5",
     "react-native-elements": "^3.4.1",
     "react-native-gesture-handler": "^1.10.3",
+    "react-native-google-places-autocomplete": "^2.2.0",
     "react-native-linear-gradient": "^2.5.6",
+    "react-native-maps": "0.28.0",
     "react-native-paper": "^4.8.1",
     "react-native-reanimated": "^2.1.0",
     "react-native-safe-area-context": "^3.2.0",
