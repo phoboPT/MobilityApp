@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: vehicles
-          image: vehicles
+          image: phobopt/vehicles
           env: 
             - name: MONGO_URI
               value: mongodb://vehicles-mongo-srv:27017/vehicles 
