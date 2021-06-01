@@ -16,4 +16,3 @@ jobs:
           token: ${{secrets.DIGITALOCEAN_ACCESS_TOKEN}}
       - run: doctl kubernetes cluster kubeconfig services
       - run: kubectl apply -f infra/k8s
-
