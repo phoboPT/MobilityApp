@@ -14,7 +14,6 @@ app.use(json());
 app.use(cookieSession({
     signed: false,
     secure: false,
-
 })
 )
 
@@ -25,7 +24,6 @@ app.use(indexVehicleRouter)
 app.use(updateVehicleRouter)
 
 app.all('*', async () => {
-
     throw new NotFoundError({ from: 'Index, /BAD_URL, route don\'t exist' })
 })
 
