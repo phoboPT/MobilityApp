@@ -29,6 +29,7 @@ router.post('/api/users/signin', [
     }, process.env.JWT_KEY!)
 
     req.session = { jwt: userJwt }
+    console.log(req.session.jwt)
     res.send(existingUser)
 })
 

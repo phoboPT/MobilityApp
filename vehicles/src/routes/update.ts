@@ -1,7 +1,9 @@
 import { requiredAuth, validateRequest, NotAuthorizedError, NotFoundError } from "@mobileorg/common-lib"
 import express, { Response, Request, request } from "express"
 import { body } from "express-validator"
+import { VehiculeUpdatedPublisher } from "../events/publishers/vehicle-updated-publisher"
 import { Vehicle } from "../models/vehicle"
+import { natsWrapper } from "../nats-wrapper"
 
 
 const router = express.Router()
@@ -26,7 +28,12 @@ router.put('/api/vehicles/:id', requiredAuth,
             type: req.body.type,
         });
         await vehicle.save();
-
+        new VehiculeUpdatedPublisher(natsWrapper.client).publish({
+            id: vehicle.id,
+            location: vehicle.location,
+            type: vehicle.type,
+            userId: vehicle.userId
+        })
 
         res.send(vehicle)
     })

@@ -20,13 +20,13 @@ router.post('/api/vehicles', requiredAuth, [
     })
     await vehicule.save()
 
-    new VehiculeCreatedPublisher(natsWrapper.client).publish({
+    await new VehiculeCreatedPublisher(natsWrapper.client).publish({
         id: vehicule.id,
         type: vehicule.type,
         userId: vehicule.userId,
         location: vehicule.location
     })
-    
+
     res.status(201).send(vehicule)
 })
 

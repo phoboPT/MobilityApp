@@ -9,16 +9,17 @@ const router = express.Router();
 
 router.post('/api/users/signup', [
     body('email').isEmail().withMessage('Email must be valid'),
-    body('password').trim().isLength({ min: 4, max: 20 }).withMessage('Password must be between 4 and 20 characters')
+    body('password').trim().isLength({ min: 4, max: 20 }).withMessage('Password must be between 4 and 20 characters'),
+    body('name').trim().isLength({ min: 4, max: 20 }).withMessage('Name must be between 4 and 20 characters'),
 ], validateRequest, async (req: Request, res: Response) => {
-    const { email, password } = req.body;
+    const { email, password, name } = req.body;
     const existingUser = await User.findOne({ email })
 
     if (existingUser) {
         throw new BadRequestError('Email in use', { from: 'Signup, email is already in use' })
     }
 
-    const user = User.build({ email, password })
+    const user = User.build({ email, password, name })
     await user.save()
 
     //Generate and setting token
