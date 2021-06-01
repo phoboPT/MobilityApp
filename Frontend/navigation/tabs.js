@@ -1,6 +1,7 @@
 import * as React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
+import {Button, View, Image, Text, StyleSheet} from 'react-native';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import {NavigationContainer} from '@react-navigation/native';
 
 import HomeScreen from '../screens/HomeScreen';
 import MapScreen from '../screens/MapScreen';
@@ -8,32 +9,11 @@ import ProfileScreen from '../screens/ProfileScreen';
 import BusScreen from '../screens/BusScreen';
 import CarPoolingScreen from '../screens/CarPoolingScreen';
 
-const Tab = createBottomTabNavigator();
-
-const CustomTabBarButton = ({children, onPress}) => (
-  <TouchableOpacity
-    onPress={onPress}
-    style={{
-      top: -30,
-      justifyContent: 'center',
-      alignItems: 'center',
-      ...styles.shadow,
-    }}>
-    <View
-      style={{
-        width: 70,
-        height: 70,
-        borderRadius: 35,
-        backgroundColor: '#e32f45',
-      }}>
-      {children}
-    </View>
-  </TouchableOpacity>
-);
+const Drawer = createDrawerNavigator();
 
 const Tabs = () => {
   return (
-    <Tab.Navigator
+    <Drawer.Navigator
       tabBarOptions={{
         showLabel: false,
         style: {
@@ -48,7 +28,7 @@ const Tabs = () => {
           ...styles.shadow,
         },
       }}>
-      <Tab.Screen
+      <Drawer.Screen
         name="Home"
         component={HomeScreen}
         options={{
@@ -75,7 +55,7 @@ const Tabs = () => {
           ),
         }}
       />
-      <Tab.Screen
+      <Drawer.Screen
         name="Map"
         component={MapScreen}
         options={{
@@ -102,26 +82,7 @@ const Tabs = () => {
           ),
         }}
       />
-      <Tab.Screen
-        name="CarPoolingScreen"
-        component={CarPoolingScreen}
-        options={{
-          tabBarIcon: ({focused}) => (
-            <Image
-              source={require('../assets/icons/add.png')}
-              resizeMode="contain"
-              // eslint-disable-next-line react-native/no-inline-styles
-              style={{
-                width: 30,
-                height: 30,
-                tintColor: '#fff',
-              }}
-            />
-          ),
-          tabBarButton: props => <CustomTabBarButton {...props} />,
-        }}
-      />
-      <Tab.Screen
+      <Drawer.Screen
         name="BusScreen"
         component={BusScreen}
         options={{
@@ -148,7 +109,7 @@ const Tabs = () => {
           ),
         }}
       />
-      <Tab.Screen
+      <Drawer.Screen
         name="Profile"
         component={ProfileScreen}
         options={{
@@ -175,7 +136,7 @@ const Tabs = () => {
           ),
         }}
       />
-    </Tab.Navigator>
+    </Drawer.Navigator>
   );
 };
 
