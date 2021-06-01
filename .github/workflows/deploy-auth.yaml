@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'infra/**'
+      - 'auth/**'
 jobs:
   build:
     runs-on: ubuntu-latest
