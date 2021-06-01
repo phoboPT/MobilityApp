@@ -19,12 +19,14 @@ router.post('/api/users/signup', [
         throw new BadRequestError('Email in use', { from: 'Signup, email is already in use' })
     }
 
+
     const user = User.build({ email, password, name })
     await user.save()
 
     //Generate and setting token
     const userJwt = jwt.sign({
         id: user.id,
+
         email: user.email
     }, process.env.JWT_KEY!)
 
