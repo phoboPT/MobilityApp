@@ -26,7 +26,6 @@ router.post('/api/users/signup', [
     //Generate and setting token
     const userJwt = jwt.sign({
         id: user.id,
-
         email: user.email
     }, process.env.JWT_KEY!)
 
