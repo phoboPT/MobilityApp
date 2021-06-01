@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: auth
-          image: auth
+          image: phobopt/auth
           env:
             - name: MONGO_URI
               value: mongodb://auth-mongo-srv:27017/auth
