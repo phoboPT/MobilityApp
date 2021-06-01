@@ -13,6 +13,9 @@ import {
 } from './screens';
 import AsyncStorage from '@react-native-community/async-storage';
 import {createStackNavigator} from '@react-navigation/stack';
+import Map from './components/Map';
+import {navigationRef} from './navigation/RootNavigation';
+import {COLORS} from './constants';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -27,18 +30,36 @@ const App = () => {
     );
   }
 
-  function navigationDrawer() {
+  const navigationDrawer = () => {
     return (
       <Drawer.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
         initialRouteName={HomeScreen}
         drawerContent={props => <DrawerContent {...props} />}>
-        <Drawer.Screen name="Home" component={HomeScreen} />
+        <Drawer.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{headerShown: false}}
+        />
+        <Drawer.Screen name="Map" component={Map} />
         <Drawer.Screen name="Messages" component={MessagesScreen} />
         <Drawer.Screen name="My Routes" component={MyRoutesScreen} />
         <Drawer.Screen name="Settings" component={SettingsScreen} />
       </Drawer.Navigator>
     );
-  }
+  };
+
+  const AppStack = createStackNavigator();
+
+  const MyStack = () => {
+    return (
+      <AppStack.Navigator headerMode="none" initialRouteName="Drawer">
+        <AppStack.Screen name="Drawer" component={navigationDrawer} />
+      </AppStack.Navigator>
+    );
+  };
 
   useEffect(() => {
     async function handleUserNextScreen() {
@@ -51,8 +72,8 @@ const App = () => {
 
   const [userToken, setUserToken] = useState(null);
   return (
-    <NavigationContainer>
-      {userToken ? AuthNavigation() : navigationDrawer()}
+    <NavigationContainer ref={navigationRef}>
+      {userToken ? AuthNavigation() : MyStack()}
     </NavigationContainer>
   );
 };

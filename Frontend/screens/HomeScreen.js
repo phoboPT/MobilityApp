@@ -3,20 +3,15 @@ import {SafeAreaView} from 'react-native';
 import {
   View,
   Text,
-  Button,
   StyleSheet,
   TouchableOpacity,
   Image,
-  FlatList,
-  Easing,
   ImageBackground,
   Animated,
 } from 'react-native';
 import {icons, COLORS, SIZES} from '../constants/index';
-import {Input} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import ActionButton from 'react-native-action-button';
-import faker, {phone} from 'faker';
+import faker from 'faker';
 import Search from '../components/Search';
 
 faker.seed(10);
@@ -81,7 +76,7 @@ const HomeScreen = ({navigation}) => {
 
   function recommendationsNearMe() {
     return (
-      <View style={{position: 'relative'}}>
+      <View>
         <Text
           style={{
             marginLeft: 15,
@@ -177,7 +172,7 @@ const HomeScreen = ({navigation}) => {
 
   function renderMyNextTravel() {
     return (
-      <View style={{position: 'relative'}}>
+      <View>
         <Text
           style={{
             marginLeft: 15,
@@ -190,7 +185,7 @@ const HomeScreen = ({navigation}) => {
           }}>
           Your next travel
         </Text>
-        <View style={{flexDirection: 'row', position: 'relative'}}>
+        <View style={{flexDirection: 'row'}}>
           <Animated.FlatList
             horizontal
             data={NEXT_TRAVEL_2}
@@ -200,7 +195,6 @@ const HomeScreen = ({navigation}) => {
               return (
                 <Animated.View
                   style={{
-                    position: 'relative',
                     flexDirection: 'row',
                     padding: SPACING,
                     marginBottom: SPACING,
@@ -234,7 +228,7 @@ const HomeScreen = ({navigation}) => {
   }
   function renderBody() {
     return (
-      <View style={{flex: 1, alignItems: 'center', position: 'relative'}}>
+      <View style={{alignItems: 'center', position: 'relative'}}>
         {renderMyNextTravel()}
         {recommendationsNearMe()}
       </View>

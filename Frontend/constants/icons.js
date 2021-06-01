@@ -8,6 +8,7 @@ export const filter = require('../assets/icons/filter.png');
 export const signout = require('../assets/icons/sign-out.png');
 export const end = require('../assets/icons/end.png');
 export const userMarker = require('../assets/icons/userMarker.png');
+export const map = require('../assets/icons/map.png');
 
 export default {
   settings,
@@ -19,5 +20,6 @@ export default {
   filter,
   signout,
   userMarker,
+  map,
   end,
 };

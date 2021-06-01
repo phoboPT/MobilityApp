@@ -1,34 +1,22 @@
 import React, {Component} from 'react';
+import {Platform, View, Image} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
-import * as RootNavigation from '../../navigation/RootNavigation';
+import {icons, COLORS, SIZES} from '../../constants/index';
 
 export default class Search extends Component {
   state = {
     searchFocused: false,
-    endLocation: null,
   };
 
   render() {
     const {searchFocused} = this.state;
-
-    const goToMap = (data, details) => {
-      this.setState({
-        endLocation: {
-          city: data,
-          latitude: details.lat,
-          longitude: details.lng,
-        },
-      });
-      RootNavigation.navigate('Map', {endLocation: this.state.endLocation});
-    };
-
+    const {onLocationSelected} = this.props;
     return (
       <GooglePlacesAutocomplete
         placeholder="Where you want to go?"
         placeholderTextColor="#333"
-        onPress={(data, details = null) => {
-          goToMap(data.description, details.geometry.location);
-        }}
+        onPress={onLocationSelected}
         query={{
           key: 'AIzaSyBdWzj4T_9wAemIcvPfIONYBTMi4c8u13k',
           language: 'pt',
@@ -48,8 +36,9 @@ export default class Search extends Component {
         enablePoweredByContainer={false}
         styles={{
           container: {
+            left: 30,
             position: 'absolute',
-            width: '100%',
+            width: '90%',
           },
           textInputContainer: {
             flex: 1,
@@ -62,11 +51,12 @@ export default class Search extends Component {
           textInput: {
             height: 54,
             margin: 0,
-            borderRadius: 12,
+            borderRadius: 0,
             paddingTop: 0,
             paddingBottom: 0,
             paddingLeft: 20,
             paddingRight: 20,
+            marginTop: 0,
             marginLeft: 0,
             marginRight: 0,
             elevation: 5,
@@ -76,27 +66,26 @@ export default class Search extends Component {
             shadowRadius: 15,
             borderWidth: 1,
             borderColor: '#DDD',
-            fontSize: 15,
+            fontSize: 18,
           },
           listView: {
-            position: 'relative',
             borderWidth: 1,
             borderColor: '#DDD',
             backgroundColor: '#FFF',
             marginHorizontal: 20,
-            elevation: 10,
+            elevation: 5,
             shadowColor: '#000',
             shadowOpacity: 0.1,
             shadowOffset: {x: 0, y: 0},
             shadowRadius: 15,
-            top: 50,
+            marginTop: 10,
           },
           description: {
             fontSize: 16,
           },
           row: {
-            padding: 10,
-            height: 56,
+            padding: 20,
+            height: 58,
           },
         }}
       />
