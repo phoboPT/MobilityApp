@@ -23,8 +23,7 @@ app.use(indexVehicleRouter)
 app.use(updateVehicleRouter)
 
 app.all('*', async () => {
-    console.log("vehicles")
-    throw new NotFoundError({ from: 'Index, /BAD_URL, route don\'t exist sadasdasd' })
+    throw new NotFoundError({ from: 'Index, /BAD_URL, route don\'t exist' })
 })
 
 app.use(errorHandler)
