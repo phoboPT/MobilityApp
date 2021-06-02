@@ -24,7 +24,7 @@ const start = async () => {
             useUnifiedTopology: true,
             useCreateIndex: true
         })
-        console.log('Connected to mongo DB')
+        console.log('Connected to mongo DB on vehicles')
 
     } catch (err) {
         console.error(`Error on start ${err}`)
