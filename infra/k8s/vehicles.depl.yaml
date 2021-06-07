@@ -18,11 +18,6 @@ spec:
           env: 
             - name: MONGO_URI
               value: mongodb://vehicles-mongo-srv:27017/vehicles 
-            - name: JWT_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: jwt-secret
-                  key: JWT_KEY
 ---
 apiVersion: v1
 kind: Service

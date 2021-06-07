@@ -17,8 +17,7 @@ spec:
           image: phobopt/routes
           env: 
             - name: MONGO_URI
-              value: mongodb://routes-mongo-srv:27017/routes 
-            
+              value: mongodb://routes-mongo-srv:27017/routes        
 ---
 apiVersion: v1
 kind: Service
