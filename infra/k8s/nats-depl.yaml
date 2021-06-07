@@ -30,7 +30,6 @@ spec:
               '-SD',
               '-cid',
               'vehicules',
-              'routes'
             ]
 ---
 apiVersion: v1
