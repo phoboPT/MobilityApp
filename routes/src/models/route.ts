@@ -18,6 +18,7 @@ interface RouteDoc extends mongoose.Document {
     state: string
 }
 
+
 interface RouteModel extends mongoose.Model<RouteDoc> {
     build(attrs: RouteAttrs): RouteDoc
 }
