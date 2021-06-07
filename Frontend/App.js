@@ -90,7 +90,7 @@ const App = () => {
   const [userToken, setUserToken] = useState(null);
   return (
     <NavigationContainer ref={navigationRef}>
-      {userToken ? MyStack() : AuthNavigation()}
+      {userToken ? AuthNavigation() : MyStack()}
     </NavigationContainer>
   );
 };

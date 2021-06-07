@@ -3,7 +3,6 @@ import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import Form from 'react-native-basic-form';
 import api from '../../services/api';
 import AsyncStorage from '@react-native-community/async-storage';
-import {StackActions, NavigationActions} from 'react-navigation';
 
 const SignInScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
@@ -32,22 +31,18 @@ const SignInScreen = ({navigation}) => {
   async function onSubmit(state) {
     setLoading(true);
     try {
-      const response = await api.post('/signin', {
+      const response = await api.post('/users/signin', {
         email: state.email,
         password: state.password,
       });
 
       const token = response.data;
       await saveUser(token);
-
-      const resetAction = StackActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({routeName: 'Home'})],
-      });
+      console.log(token);
       setLoading(false);
 
       if (response.data.error !== 'Invalid email or password!') {
-        navigation.dispatch(resetAction);
+        console.log('Deu');
       } else {
         Alert.alert(response.data.error);
       }

@@ -1,8 +1,9 @@
 import React from 'react';
 import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-
-import {images, icons, COLORS, FONTS, SIZES} from '../constants';
+import faker from 'faker';
+import {images, icons, COLORS, SIZES} from '../constants';
+import {ScrollView} from 'react-native';
 
 const StarReview = ({rate}) => {
   var starComponents = [];
@@ -59,7 +60,7 @@ const StarReview = ({rate}) => {
     <View style={{flexDirection: 'row', alignItems: 'center'}}>
       {starComponents}
       <Text
-        style={{marginLeft: SIZES.base, color: COLORS.gray, ...FONTS.body3}}>
+        style={{marginLeft: SIZES.base, color: COLORS.gray, ...SIZES.body3}}>
         {rate}
       </Text>
     </View>
@@ -68,16 +69,17 @@ const StarReview = ({rate}) => {
 
 const IconLabel = ({icon, label}) => {
   return (
-    <View style={{alignItems: 'center'}}>
+    <View style={{alignItems: 'center', marginLeft: 30}}>
       <Image
         source={icon}
         resizeMode="cover"
         style={{
-          width: 50,
-          height: 50,
+          tintColor: COLORS.primary,
+          width: 45,
+          height: 45,
         }}
       />
-      <Text style={{marginTop: SIZES.padding, color: COLORS.gray, ...FONTS.h3}}>
+      <Text style={{marginTop: SIZES.padding, color: COLORS.gray, ...SIZES.h3}}>
         {label}
       </Text>
     </View>
@@ -87,12 +89,34 @@ const IconLabel = ({icon, label}) => {
 const DestinationDetail = ({navigation}) => {
   // Render
 
+  const data = {
+    id: '1',
+    title: 'Boleia até Serviços Académicos',
+    description:
+      'Boleia com partida na IPVC-ESTG por favor enviem me mensagem para o whatsapp para combinarmos melhor',
+    contact: '+351 911979115',
+    startLocation: 'IPVC-ESTG',
+    userLocation: 'Viana do Castelo',
+    endLocation: 'Serviços Académicos',
+    estimatedTime: '10 Minutos',
+    startDate: faker.date.soon().toLocaleDateString(),
+    userImage: `https://randomuser.me/api/portraits/${faker.helpers.randomize([
+      'women',
+      'men',
+    ])}/${faker.datatype.number(60)}.jpg`,
+    userName: faker.name.findName(),
+    userRating: 3.5,
+    price: 3,
+    vehicleImage:
+      'https://auto-drive.pt/wp-content/uploads/2020/05/audi-rs6-avant-by-wheelsandmore.jpg',
+  };
+
   return (
     <View style={styles.container}>
       {/* Header */}
       <View style={{flex: 2}}>
         <Image
-          source={images.skiVillaBanner}
+          source={{uri: data.vehicleImage}}
           resizeMode="cover"
           style={{
             width: '100%',
@@ -115,7 +139,7 @@ const DestinationDetail = ({navigation}) => {
           <View style={{flexDirection: 'row'}}>
             <View style={styles.shadow}>
               <Image
-                source={images.skiVilla}
+                source={{uri: data.userImage}}
                 resizeMode="cover"
                 style={{
                   width: 70,
@@ -130,18 +154,16 @@ const DestinationDetail = ({navigation}) => {
                 marginHorizontal: SIZES.radius,
                 justifyContent: 'space-around',
               }}>
-              <Text style={{...FONTS.h3}}>Ski Villa</Text>
-              <Text style={{color: COLORS.gray, ...FONTS.body3}}>France</Text>
+              <Text style={{...SIZES.h3}}>{data.userName}</Text>
+              <Text style={{color: COLORS.gray, ...SIZES.body3}}>
+                {data.userLocation}
+              </Text>
 
-              <StarReview rate={4.5} />
+              <StarReview rate={data.userRating} />
+              <View style={{marginTop: 5}}>
+                <Text style={{color: COLORS.primary}}>{data.contact}</Text>
+              </View>
             </View>
-          </View>
-
-          <View style={{marginTop: SIZES.radius}}>
-            <Text style={{color: COLORS.gray, ...FONTS.body3}}>
-              Ski Villa offers simple rooms with mountain views in front of the
-              ski lift to the Ski Resort
-            </Text>
           </View>
         </View>
 
@@ -158,7 +180,7 @@ const DestinationDetail = ({navigation}) => {
           <View style={{flex: 1}}>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('Home');
+                navigation.goBack();
               }}>
               <Image
                 source={icons.back}
@@ -170,21 +192,7 @@ const DestinationDetail = ({navigation}) => {
               />
             </TouchableOpacity>
           </View>
-          <View style={{flex: 1, alignItems: 'flex-end'}}>
-            <TouchableOpacity
-              onPress={() => {
-                console.log('Menu on pressed');
-              }}>
-              <Image
-                source={icons.menu}
-                resizeMode="cover"
-                style={{
-                  width: 30,
-                  height: 30,
-                }}
-              />
-            </TouchableOpacity>
-          </View>
+          <View style={{flex: 1, alignItems: 'flex-end'}}></View>
         </View>
       </View>
 
@@ -195,77 +203,100 @@ const DestinationDetail = ({navigation}) => {
           style={{
             flexDirection: 'row',
             marginTop: SIZES.base,
-            paddingHorizontal: SIZES.padding * 2,
             justifyContent: 'space-between',
           }}>
-          <IconLabel icon={icons.villa} label="Villa" />
+          <ScrollView horizontal>
+            <IconLabel icon={icons.frontCar} label={data.startLocation} />
+            <IconLabel icon={icons.rightArrow} label={data.estimatedTime} />
+            <IconLabel icon={icons.end} label={data.endLocation} />
+          </ScrollView>
+        </View>
 
-          <IconLabel icon={icons.parking} label="Parking" />
-
-          <IconLabel icon={icons.wind} label="4 °C" />
+        {/* About */}
+        <View style={{marginTop: 10, paddingHorizontal: SIZES.padding}}>
+          <Text style={{...SIZES.body2}}>Start Date: {data.startDate}</Text>
         </View>
 
         {/* About */}
         <View
-          style={{marginTop: SIZES.padding, paddingHorizontal: SIZES.padding}}>
-          <Text style={{...FONTS.h2}}>About</Text>
-          <Text
-            style={{
-              marginTop: SIZES.radius,
-              color: COLORS.gray,
-              ...FONTS.body3,
-            }}>
-            Located at the Alps with an altitude of 1,702 meters. The ski area
-            is the largest ski area in the world and is known as the best place
-            to ski. Many other facilities, such as fitness center, sauna, steam
-            room to star-rated restaurants.
-          </Text>
+          style={{
+            marginTop: SIZES.padding - 10,
+            paddingHorizontal: SIZES.padding,
+          }}>
+          <Text style={{...SIZES.h2}}>Description</Text>
+          <ScrollView style={{marginBottom: 140}}>
+            <Text
+              style={{
+                marginTop: SIZES.radius,
+                color: COLORS.gray,
+                ...SIZES.body3,
+              }}>
+              {data.description}
+            </Text>
+          </ScrollView>
         </View>
       </View>
 
       {/* Footer */}
-      <View style={{flex: 0.5, paddingHorizontal: SIZES.padding}}>
-        <LinearGradient
-          style={[{height: 70, width: '100%', borderRadius: 15}]}
-          colors={['#edf0fc', '#d6dfff']}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}>
-          <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-            <View
-              style={{
+      <View
+        style={{
+          flex: 0.5,
+          marginLeft: 50,
+          alignContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'row',
+        }}>
+        <TouchableOpacity
+          style={{
+            width: 130,
+            marginBottom: 20,
+            height: '50%',
+            marginHorizontal: SIZES.radius,
+          }}
+          onPress={() => {
+            navigation.navigate('Map');
+          }}>
+          <LinearGradient
+            style={[
+              {
                 flex: 1,
-                marginHorizontal: SIZES.padding,
+                alignItems: 'center',
                 justifyContent: 'center',
-              }}>
-              <Text style={{...FONTS.h1}}>$1000</Text>
-            </View>
-
-            <TouchableOpacity
-              style={{
-                width: 130,
-                height: '80%',
-                marginHorizontal: SIZES.radius,
-              }}
-              onPress={() => {
-                console.log('Booking on pressed');
-              }}>
-              <LinearGradient
-                style={[
-                  {
-                    flex: 1,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: 10,
-                  },
-                ]}
-                colors={['#46aeff', '#5884ff']}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 0}}>
-                <Text style={{color: COLORS.white, ...FONTS.h2}}>BOOKING</Text>
-              </LinearGradient>
-            </TouchableOpacity>
-          </View>
-        </LinearGradient>
+                borderRadius: 10,
+              },
+            ]}
+            colors={['#D1D100', '#757500']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}>
+            <Text style={{color: COLORS.white, ...SIZES.h2}}>Show Route</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            width: 130,
+            marginBottom: 20,
+            height: '50%',
+          }}
+          onPress={() => {
+            console.log('Booking on pressed');
+          }}>
+          <LinearGradient
+            style={[
+              {
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 10,
+              },
+            ]}
+            colors={[COLORS.primary, '#5884ff']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}>
+            <Text style={{color: COLORS.white, ...SIZES.h2}}>
+              GO {data.price}$
+            </Text>
+          </LinearGradient>
+        </TouchableOpacity>
       </View>
     </View>
   );

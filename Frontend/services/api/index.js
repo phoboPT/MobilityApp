@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {create} from 'apisauce';
 
 const api = create({
-  baseURL: 'www.mobility-app.dev/api',
+  baseURL: 'https://www.mobillity-app-dev.club/api',
 });
 
 api.addAsyncRequestTransform(request => async () => {
