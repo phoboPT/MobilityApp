@@ -4,8 +4,13 @@ import {Avatar, Title, Caption, Paragraph, Drawer} from 'react-native-paper';
 import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
 
 import {COLORS, icons} from '../constants';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export function DrawerContent(props) {
+  function signOut() {
+    AsyncStorage.removeItem('@App:userToken');
+  }
+
   return (
     <View style={{flex: 1}}>
       <DrawerContentScrollView {...props}>
@@ -143,9 +148,7 @@ export function DrawerContent(props) {
             />
           )}
           label="Sign Out"
-          onPress={() => {
-            console.log('TODO');
-          }}
+          onPress={() => signOut()}
         />
       </Drawer.Section>
     </View>

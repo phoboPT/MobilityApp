@@ -10,12 +10,15 @@ import {
   MyRoutesScreen,
   SignInScreen,
   SignUpScreen,
+  DestinationDetail,
+  Onboarding,
 } from './screens';
 import AsyncStorage from '@react-native-community/async-storage';
 import {createStackNavigator} from '@react-navigation/stack';
 import Map from './components/Map';
 import {navigationRef} from './navigation/RootNavigation';
 import {COLORS} from './constants';
+import CreateCarPooling from './screens/CreateCarPooling';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -24,8 +27,16 @@ const App = () => {
   function AuthNavigation() {
     return (
       <Stack.Navigator>
-        <Stack.Screen name="SignInScreen" component={SignInScreen} />
-        <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="SignInScreen"
+          component={SignInScreen}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="SignUpScreen"
+          component={SignUpScreen}
+        />
       </Stack.Navigator>
     );
   }
@@ -55,8 +66,14 @@ const App = () => {
 
   const MyStack = () => {
     return (
-      <AppStack.Navigator headerMode="none" initialRouteName="Drawer">
+      <AppStack.Navigator headerMode="none" initialRouteName="Onboarding">
         <AppStack.Screen name="Drawer" component={navigationDrawer} />
+        <AppStack.Screen name="Onboarding" component={Onboarding} />
+        <AppStack.Screen name="CreateCarPooling" component={CreateCarPooling} />
+        <AppStack.Screen
+          name="DestinationDetail"
+          component={DestinationDetail}
+        />
       </AppStack.Navigator>
     );
   };
@@ -73,7 +90,7 @@ const App = () => {
   const [userToken, setUserToken] = useState(null);
   return (
     <NavigationContainer ref={navigationRef}>
-      {userToken ? AuthNavigation() : MyStack()}
+      {userToken ? MyStack() : AuthNavigation()}
     </NavigationContainer>
   );
 };

@@ -13,6 +13,7 @@ import {icons, COLORS, SIZES} from '../constants/index';
 import ActionButton from 'react-native-action-button';
 import faker from 'faker';
 import Search from '../components/Search';
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
 faker.seed(10);
 const image = {
@@ -24,7 +25,7 @@ const DATA = [...Array(5).keys()].map((_, i) => {
     image: `https://randomuser.me/api/portraits/${faker.helpers.randomize([
       'women',
       'men',
-    ])}/${faker.random.number(60)}.jpg`,
+    ])}/${faker.datatype.number(60)}.jpg`,
     name: faker.name.findName(),
     title: faker.random.words(),
     description: faker.random.words(),
@@ -193,32 +194,35 @@ const HomeScreen = ({navigation}) => {
             keyExtractor={item => item.id}
             renderItem={({item, index}) => {
               return (
-                <Animated.View
-                  style={{
-                    flexDirection: 'row',
-                    padding: SPACING,
-                    marginBottom: SPACING,
-                    shadowRadius: 20,
-                    marginRight: 20,
-                    borderRadius: 12,
-                    backgroundColor: 'rgba(255,255,255,0.9)',
-                  }}>
-                  <View>
-                    <Text style={{fontSize: 22, fontWeight: '700'}}>
-                      {item.title}
-                    </Text>
-                    <Text
-                      style={{fontSize: 18, opacity: 0.9, fontWeight: '500'}}>
-                      {item.startTime}
-                    </Text>
-                    <Text style={{fontSize: 16, opacity: 0.7}}>
-                      {item.address}
-                    </Text>
-                    <Text style={{fontSize: 12, opacity: 0.8, color: 'blue'}}>
-                      Travel time: {item.time}
-                    </Text>
-                  </View>
-                </Animated.View>
+                <TouchableWithoutFeedback
+                  onPress={() => navigation.navigate('DestinationDetail')}>
+                  <Animated.View
+                    style={{
+                      flexDirection: 'row',
+                      padding: SPACING,
+                      marginBottom: SPACING,
+                      shadowRadius: 20,
+                      marginRight: 20,
+                      borderRadius: 12,
+                      backgroundColor: 'rgba(255,255,255,0.9)',
+                    }}>
+                    <View>
+                      <Text style={{fontSize: 22, fontWeight: '700'}}>
+                        {item.title}
+                      </Text>
+                      <Text
+                        style={{fontSize: 18, opacity: 0.9, fontWeight: '500'}}>
+                        {item.startTime}
+                      </Text>
+                      <Text style={{fontSize: 16, opacity: 0.7}}>
+                        {item.address}
+                      </Text>
+                      <Text style={{fontSize: 12, opacity: 0.8, color: 'blue'}}>
+                        Travel time: {item.time}
+                      </Text>
+                    </View>
+                  </Animated.View>
+                </TouchableWithoutFeedback>
               );
             }}
           />
@@ -285,9 +289,7 @@ const HomeScreen = ({navigation}) => {
         {renderBody()}
         <ActionButton
           buttonColor={COLORS.primary}
-          onPress={() => {
-            console.log('Adicionar nova boleia');
-          }}
+          onPress={() => navigation.navigate('CreateCarPooling')}
         />
       </SafeAreaView>
     </ImageBackground>

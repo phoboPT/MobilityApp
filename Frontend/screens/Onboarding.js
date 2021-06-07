@@ -11,8 +11,6 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import {COLORS, SIZES, images} from '../constants';
 
-import logo from '../assets/images/maas_logo.jpeg';
-
 const Onboarding = ({navigation}) => {
   // Render
 
@@ -31,15 +29,14 @@ const Onboarding = ({navigation}) => {
 
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
         <View style={{alignItems: 'center', marginHorizontal: SIZES.padding}}>
-          <Text>Digital Ticket</Text>
+          <Text style={{fontWeight: '500'}}>Mobility One</Text>
           <Text
             style={{
               color: COLORS.gray,
               marginTop: SIZES.padding,
               textAlign: 'center',
             }}>
-            Easy solution to buy tickets for your travel, business trips,
-            transportation, lodging and culinary.
+            TODOTODOTODOTODOTODOTODO
           </Text>
         </View>
 
@@ -54,7 +51,7 @@ const Onboarding = ({navigation}) => {
               justifyContent: 'center',
             },
           ]}
-          onPress={() => navigation.navigate('Home')}>
+          onPress={() => navigation.navigate('Drawer')}>
           <LinearGradient
             style={{
               height: '100%',

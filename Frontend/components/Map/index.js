@@ -18,7 +18,6 @@ export default class Map extends Component {
     endLocation: null,
     haveEndLocation: false,
     the2points: [],
-    region2: null,
   };
 
   async componentDidMount() {
@@ -156,7 +155,10 @@ export default class Map extends Component {
           showUserLocation={true}
           loadingEnabled>
           <Marker style={{width: 24, height: 24}} coordinate={userLocation}>
-            <Image source={icons.userMarker} style={{height: 35, width: 35}} />
+            <Image
+              source={icons.userMarker}
+              style={{height: 35, width: 35, tintColor: 'red'}}
+            />
           </Marker>
           {haveEndLocation && (
             <Marker style={{width: 20, height: 20}} coordinate={endLocation}>
