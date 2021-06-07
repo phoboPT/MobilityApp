@@ -25,3 +25,11 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: phobopt/routes
+      context: routes
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .

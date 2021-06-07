@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-
 interface VehicleAttrs {
     userId: string
     type: string

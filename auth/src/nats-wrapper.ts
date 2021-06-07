@@ -5,7 +5,7 @@ class NatsWrapper {
 
     get client() {
         if (!this._client) {
-            throw new Error("Cannot access NATS client before conecting");
+            throw new Error('Cannot access NATS client before conecting');
         }
         return this._client
     }
@@ -13,9 +13,9 @@ class NatsWrapper {
         this._client = nats.connect(clusterId, clientId, { url })
 
         return new Promise((resolve, reject) => {
-            console.log("connected to nas")
+            console.log('connected to nas')
             this.client.on('connect', () => {
-                resolve("d")
+                resolve('d')
             })
             this.client.on('error', (err) => {
                 reject(err)

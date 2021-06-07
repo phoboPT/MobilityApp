@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: routes-mongo-depl
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: routes-mongo
+  template:
+    metadata:
+      labels:
+        app: routes-mongo
+    spec:
+      containers:
+        - name: routes-mongo
+          image: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: routes-mongo-srv
+spec:
+  selector:
+    app: routes-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017

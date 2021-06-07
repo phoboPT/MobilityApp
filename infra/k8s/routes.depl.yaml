@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: routes-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: routes
+  template:
+    metadata:
+      labels:
+        app: routes
+    spec:
+      containers:
+        - name: routes
+          image: phobopt/routes
+          env: 
+            - name: MONGO_URI
+              value: mongodb://routes-mongo-srv:27017/routes 
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: routes-srv
+spec:
+  selector:
+    app: routes
+  ports:
+    - name: routes
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
