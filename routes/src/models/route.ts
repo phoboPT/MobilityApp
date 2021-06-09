@@ -3,19 +3,30 @@ import mongoose from "mongoose";
 interface RouteAttrs {
     userId: string
     type: string
-    location: string
+    startLocation: string
+    endLocation: string
     availableTime: string
-    vehiculeId: string
+    vehicleId: string
     state: string
+    description: string
+    estimatedTime: string
+    startDate: string
+    userImage: string
+
 }
 
 interface RouteDoc extends mongoose.Document {
     userId: string
     type: string
-    location: string
+    startLocation: string
+    endLocation: string
     availableTime: string
-    vehiculeId: string
+    vehicleId: string
     state: string
+    description: string
+    estimatedTime: string
+    startDate: string
+    userImage: string
 }
 
 
@@ -31,18 +42,42 @@ const routeSchema = new mongoose.Schema({
     type: {
         type: String,
         required: true
-    }, location: {
+    },
+    startLocation: {
         type: String,
         required: true
-    }, availableTime: {
+    },
+    endLocation: {
         type: String,
         required: true
-    }, vehicleId: {
+    },
+    availableTime: {
         type: String,
         required: true
-    }, state: {
+    },
+    vehicleId: {
         type: String,
         required: true
+    },
+    state: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
+    },
+    estimatedTime: {
+        type: String,
+        required: true
+    },
+    startDate: {
+        type: String,
+        required: true
+    },
+    userImage: {
+        type: String,
+        required: false
     }
 }, {
     toJSON: {

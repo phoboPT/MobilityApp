@@ -2,7 +2,6 @@ import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
 import { BadRequestError, validateRequest } from '@mobileorg/common-lib';
-
 import { User } from '../models/user'
 
 const router = express.Router();
@@ -18,7 +17,6 @@ router.post('/api/users/signup', [
     if (existingUser) {
         throw new BadRequestError('Email in use', { from: 'Signup, email is already in use' })
     }
-
 
     const user = User.build({ email, password, name })
     await user.save()

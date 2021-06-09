@@ -30,11 +30,17 @@ router.put('/api/routes/:id', requiredAuth,
         await route.save();
         new RouteUpdatedPublisher(natsWrapper.client).publish({
             id: route.id,
-            location: route.location,
             type: route.type,
             userId: route.userId,
+            startLocation: route.startLocation,
+            endLocation: route.endLocation,
             availableTime: route.availableTime,
-            state: route.state
+            vehicleId: route.vehicleId,
+            state: route.state,
+            description: route.description,
+            estimatedTime: route.estimatedTime,
+            startDate: route.startDate,
+            userImage: route.userImage
         })
 
         res.send(route)
