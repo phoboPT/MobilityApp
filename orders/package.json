@@ -1,5 +1,5 @@
 {
-  "name": "routes",
+  "name": "orders",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -24,6 +24,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "mongoose-update-if-current": "^1.4.0",
     "@mobileorg/common-lib": "^1.0.22",
     "@types/cookie-session": "^2.0.42",
     "@types/express": "^4.17.11",

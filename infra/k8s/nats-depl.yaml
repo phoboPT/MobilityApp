@@ -29,7 +29,7 @@ spec:
               '2',
               '-SD',
               '-cid',
-              'vehicules',
+              'vehicles',
             ]
 ---
 apiVersion: v1

@@ -2,6 +2,7 @@ import request from 'supertest'
 import { app } from '../../app'
 import { Vehicle } from '../../models/vehicle'
 
+jest.mock('../../nats-wrapper')
 it('has a route handles listening to /api/vehicles post requests', async () => {
     const response = await request(app).post('/api/vehicles')
         .send({})

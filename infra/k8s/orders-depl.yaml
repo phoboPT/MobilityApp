@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: vehicles-depl
+  name: orders-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: vehicles
+      app: orders
   template:
     metadata:
       labels:
-        app: vehicles
+        app: orders
     spec:
       containers:
-        - name: vehicles
-          image: phobopt/vehicles
+        - name: orders
+          image: phobopt/orders
           env: 
             - name: NATS_URL
               value: 'http://nats-srv:4222'
@@ -23,9 +23,9 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: NATS_CLUSTER_ID
-              value: 'vehicles'
+              value: 'orders'
             - name: MONGO_URI
-              value: mongodb://vehicles-mongo-srv:27017/vehicles
+              value: mongodb://orders-mongo-srv:27017/orders
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
@@ -35,12 +35,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: vehicles-srv
+  name: orders-srv
 spec:
   selector:
-    app: vehicles
+    app: orders
   ports:
-    - name: vehicles
+    - name: orders
       protocol: TCP
       port: 3000
       targetPort: 3000
