@@ -16,7 +16,7 @@ router.post('/api/routes', requiredAuth, [
     body('description').not().isEmpty().withMessage('description is required'),
     body('startDate').not().isEmpty().withMessage('starting date is required')
 ], validateRequest, async (req: Request, res: Response) => {
-    const { startLocation, type, vehicleId, state, endLocation, estimatedTime, userImage, description, startDate } = req.body
+    const { startLocation, type, vehicleId, state, endLocation, estimatedTime, userImage, description, startDate, rating } = req.body
 
     const route = Route.build({
         userId: req.currentUser!.id,
@@ -29,7 +29,8 @@ router.post('/api/routes', requiredAuth, [
         description,
         estimatedTime,
         startDate,
-        userImage: userImage || ""
+        userImage: userImage || "",
+        rating: rating || 0
     })
     await route.save()
 

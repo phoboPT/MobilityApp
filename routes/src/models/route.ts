@@ -12,6 +12,7 @@ interface RouteAttrs {
     estimatedTime: string
     startDate: string
     userImage: string
+    rating: number
 
 }
 
@@ -27,6 +28,7 @@ interface RouteDoc extends mongoose.Document {
     estimatedTime: string
     startDate: string
     userImage: string
+    rating: number
 }
 
 
@@ -78,6 +80,10 @@ const routeSchema = new mongoose.Schema({
     userImage: {
         type: String,
         required: false
+    },
+    rating: {
+        type: Number,
+        required: true
     }
 }, {
     toJSON: {
