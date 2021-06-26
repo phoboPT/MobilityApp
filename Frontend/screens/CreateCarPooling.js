@@ -60,7 +60,7 @@ const CreateCarPooling = ({navigation}) => {
             justifyContent: 'center',
           }}>
           <Image
-            source={icons.menu}
+            source={icons.back}
             resizeMode="contain"
             style={{
               width: 25,

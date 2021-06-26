@@ -11,6 +11,7 @@ import {
   SignInScreen,
   SignUpScreen,
   DestinationDetail,
+  DestinationSearch,
   Onboarding,
 } from './screens';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -69,6 +70,10 @@ const App = () => {
       <AppStack.Navigator headerMode="none" initialRouteName="Onboarding">
         <AppStack.Screen name="Drawer" component={navigationDrawer} />
         <AppStack.Screen name="Onboarding" component={Onboarding} />
+        <AppStack.Screen
+          name="DestinationSearch"
+          component={DestinationSearch}
+        />
         <AppStack.Screen name="CreateCarPooling" component={CreateCarPooling} />
         <AppStack.Screen
           name="DestinationDetail"

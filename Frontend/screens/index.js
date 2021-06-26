@@ -7,6 +7,7 @@ import SignInScreen from './login/SignInScreen';
 import SignUpScreen from './login/SignUpScreen';
 import Onboarding from './Onboarding';
 import DestinationDetail from './DestinationDetail';
+import DestinationSearch from './DestinationSearch';
 
 export {
   HomeScreen,
@@ -18,4 +19,5 @@ export {
   DestinationDetail,
   Onboarding,
   SignUpScreen,
+  DestinationSearch,
 };
