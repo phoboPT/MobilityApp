@@ -64,7 +64,7 @@ const MyRoutesScreen = ({navigation}) => {
           <Text
             style={{
               fontSize: 24,
-              fontWeight: '500',
+              fontWeight: '400',
             }}>
             Simba
           </Text>
@@ -73,7 +73,7 @@ const MyRoutesScreen = ({navigation}) => {
     );
   }
 
-  function recommendationsNearMe() {
+  function renderRequests() {
     return (
       <View>
         <Text
@@ -194,7 +194,7 @@ const MyRoutesScreen = ({navigation}) => {
       source={images.background}>
       <SafeAreaView style={styles.container}>
         {renderHeader()}
-        {recommendationsNearMe()}
+        {renderRequests()}
       </SafeAreaView>
     </ImageBackground>
   );

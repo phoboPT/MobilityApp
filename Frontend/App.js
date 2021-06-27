@@ -14,6 +14,7 @@ import {
   DestinationSearch,
   Onboarding,
   UserProfile,
+  SingleMessage,
 } from './screens';
 import AsyncStorage from '@react-native-community/async-storage';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -77,6 +78,7 @@ const App = () => {
         />
         <AppStack.Screen name="CreateCarPooling" component={CreateCarPooling} />
         <AppStack.Screen name="UserProfile" component={UserProfile} />
+        <AppStack.Screen name="SingleMessage" component={SingleMessage} />
         <AppStack.Screen
           name="DestinationDetail"
           component={DestinationDetail}

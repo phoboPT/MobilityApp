@@ -232,51 +232,14 @@ const UserProfile = ({navigation}) => {
             marginBottom: 20,
             height: '30%',
           }}
-          onPress={() => {
-            Alert.alert('Rate this user!');
-          }}>
-          <LinearGradient
-            style={[
-              {
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: 10,
-              },
-            ]}
-            colors={['#D1D100', '#757500']}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}>
-            <View style={{flexDirection: 'row'}}>
-              <Text
-                style={{
-                  marginTop: 3,
-                  marginRight: 15,
-                  color: COLORS.white,
-                  ...SIZES.h2,
-                }}>
-                Rate User
-              </Text>
-              <Image
-                style={{
-                  width: 25,
-                  height: 25,
-                  tintColor: 'white',
-                }}
-                source={icons.starFull}
-              />
-            </View>
-          </LinearGradient>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            width: 200,
-            marginBottom: 20,
-            height: '30%',
-          }}
-          onPress={() => {
-            Alert.alert('Send Message');
-          }}>
+          onPress={() =>
+            navigation.navigate('SingleMessage', {
+              userId: 2,
+              userName: userData.userName,
+              userAvatar: userData.userImage,
+              userMessage: '',
+            })
+          }>
           <LinearGradient
             style={[
               {

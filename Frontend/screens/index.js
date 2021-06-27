@@ -8,6 +8,7 @@ import SignUpScreen from './login/SignUpScreen';
 import Onboarding from './Onboarding';
 import DestinationDetail from './DestinationDetail';
 import DestinationSearch from './DestinationSearch';
+import SingleMessage from './SingleMessage';
 
 export {
   HomeScreen,
@@ -20,4 +21,5 @@ export {
   Onboarding,
   SignUpScreen,
   DestinationSearch,
+  SingleMessage,
 };
