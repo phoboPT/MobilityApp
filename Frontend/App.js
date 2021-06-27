@@ -13,6 +13,7 @@ import {
   DestinationDetail,
   DestinationSearch,
   Onboarding,
+  UserProfile,
 } from './screens';
 import AsyncStorage from '@react-native-community/async-storage';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -75,6 +76,7 @@ const App = () => {
           component={DestinationSearch}
         />
         <AppStack.Screen name="CreateCarPooling" component={CreateCarPooling} />
+        <AppStack.Screen name="UserProfile" component={UserProfile} />
         <AppStack.Screen
           name="DestinationDetail"
           component={DestinationDetail}

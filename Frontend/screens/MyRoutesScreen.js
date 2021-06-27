@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import {images, icons, SIZES} from '../constants';
 import faker from 'faker';
+import {Alert} from 'react-native';
 
 faker.seed(10);
 const DATA = [...Array(5).keys()].map((_, i) => {
@@ -23,6 +24,7 @@ const DATA = [...Array(5).keys()].map((_, i) => {
       'men',
     ])}/${faker.datatype.number(60)}.jpg`,
     name: faker.name.findName(),
+    requestName: faker.name.jobTitle(),
   };
 });
 
@@ -145,9 +147,38 @@ const MyRoutesScreen = ({navigation}) => {
                       marginRight: SPACING / 2,
                     }}
                   />
-                  <Text style={{fontSize: 22, fontWeight: '500'}}>
-                    {item.name}
-                  </Text>
+                  <View
+                    style={{
+                      marginRight: 1,
+                    }}>
+                    <Text style={{fontSize: 22, fontWeight: '500'}}>
+                      {item.name}
+                    </Text>
+                    <Text style={{fontSize: 15, fontWeight: '300'}}>
+                      {item.requestName}
+                    </Text>
+                    <View style={{flexDirection: 'row', marginTop: 10}}>
+                      <TouchableOpacity onPress={() => Alert.alert('Accept')}>
+                        <Image
+                          source={images.accept}
+                          style={{
+                            width: 42,
+                            height: 42,
+                            marginRight: 10,
+                          }}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={() => Alert.alert('Decline')}>
+                        <Image
+                          source={images.decline}
+                          style={{
+                            width: 42,
+                            height: 42,
+                          }}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
                 </Animated.View>
               );
             }}

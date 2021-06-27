@@ -1,6 +1,6 @@
 import HomeScreen from './HomeScreen';
 import MessagesScreen from './MessagesScreen';
-import ProfileScreen from './ProfileScreen';
+import UserProfile from './UserProfile';
 import MyRoutesScreen from './MyRoutesScreen';
 import SettingsScreen from './SettingsScreen';
 import SignInScreen from './login/SignInScreen';
@@ -12,7 +12,7 @@ import DestinationSearch from './DestinationSearch';
 export {
   HomeScreen,
   MessagesScreen,
-  ProfileScreen,
+  UserProfile,
   MyRoutesScreen,
   SettingsScreen,
   SignInScreen,

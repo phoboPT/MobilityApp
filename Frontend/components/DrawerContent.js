@@ -1,10 +1,11 @@
 import React from 'react';
-import {View, StyleSheet, Image} from 'react-native';
+import {View, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import {Avatar, Title, Caption, Paragraph, Drawer} from 'react-native-paper';
 import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
 
 import {COLORS, icons} from '../constants';
 import AsyncStorage from '@react-native-community/async-storage';
+import {Alert} from 'react-native';
 
 export function DrawerContent(props) {
   function signOut() {
@@ -15,30 +16,34 @@ export function DrawerContent(props) {
     <View style={{flex: 1}}>
       <DrawerContentScrollView {...props}>
         <View style={styles.drawerContent}>
-          <View style={styles.userInfoSection}>
-            <View style={{flexDirection: 'row', marginTop: 15}}>
-              <Avatar.Image
-                source={{
-                  uri: 'https://scontent.fopo3-1.fna.fbcdn.net/v/t1.6435-9/121291773_3385520941485741_5881563945087180365_n.jpg?_nc_cat=101&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=b-FvAs3nnvIAX_Bxjlp&_nc_ht=scontent.fopo3-1.fna&oh=3d40b9be37a9ca384f7b825aff2a0c64&oe=60E51042',
-                }}
-                size={50}
-              />
-              <View style={{marginLeft: 15, flexDirection: 'column'}}>
-                <Title style={styles.title}>Hélder Gonçalves</Title>
-                <Caption style={styles.caption}>@helderpgoncalves</Caption>
+          <TouchableOpacity
+            onPress={() => {
+              props.navigation.navigate('UserProfile');
+            }}>
+            <View style={styles.userInfoSection}>
+              <View style={{flexDirection: 'row', marginTop: 15}}>
+                <Avatar.Image
+                  source={{
+                    uri: 'https://scontent.fopo3-1.fna.fbcdn.net/v/t1.6435-9/121291773_3385520941485741_5881563945087180365_n.jpg?_nc_cat=101&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=b-FvAs3nnvIAX_Bxjlp&_nc_ht=scontent.fopo3-1.fna&oh=3d40b9be37a9ca384f7b825aff2a0c64&oe=60E51042',
+                  }}
+                  size={50}
+                />
+                <View style={{marginLeft: 15, flexDirection: 'column'}}>
+                  <Title style={styles.title}>Hélder Gonçalves</Title>
+                  <Caption style={styles.caption}>@helderpgoncalves</Caption>
+                </View>
+              </View>
+
+              <View style={styles.row}>
+                <View style={styles.section}>
+                  <Paragraph style={[styles.paragraph, styles.caption]}>
+                    100
+                  </Paragraph>
+                  <Caption style={styles.caption}>Pontos Écológicos</Caption>
+                </View>
               </View>
             </View>
-
-            <View style={styles.row}>
-              <View style={styles.section}>
-                <Paragraph style={[styles.paragraph, styles.caption]}>
-                  100
-                </Paragraph>
-                <Caption style={styles.caption}>Pontos Écológicos</Caption>
-              </View>
-            </View>
-          </View>
-
+          </TouchableOpacity>
           <Drawer.Section style={styles.drawerSection}>
             <DrawerItem
               icon={({color, size}) => (
@@ -56,6 +61,24 @@ export function DrawerContent(props) {
               label="Home"
               onPress={() => {
                 props.navigation.navigate('Home');
+              }}
+            />
+            <DrawerItem
+              icon={({color, size}) => (
+                <Image
+                  source={icons.routes}
+                  name="messages"
+                  style={{
+                    tintColor: COLORS.primary,
+                    resizeMode: 'contain',
+                    height: 24,
+                    width: 24,
+                  }}
+                />
+              )}
+              label="Routes"
+              onPress={() => {
+                props.navigation.navigate('My Routes');
               }}
             />
             <DrawerItem
@@ -92,24 +115,6 @@ export function DrawerContent(props) {
               label="Messages"
               onPress={() => {
                 props.navigation.navigate('Messages');
-              }}
-            />
-            <DrawerItem
-              icon={({color, size}) => (
-                <Image
-                  source={icons.routes}
-                  name="messages"
-                  style={{
-                    tintColor: COLORS.primary,
-                    resizeMode: 'contain',
-                    height: 24,
-                    width: 24,
-                  }}
-                />
-              )}
-              label="Planned Routes"
-              onPress={() => {
-                props.navigation.navigate('My Routes');
               }}
             />
             <DrawerItem
