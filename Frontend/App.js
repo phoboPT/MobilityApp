@@ -16,7 +16,6 @@ import {
   UserProfile,
   SingleMessage,
 } from './screens';
-import AsyncStorage from '@react-native-community/async-storage';
 import {createStackNavigator} from '@react-navigation/stack';
 import Map from './components/Map';
 import {navigationRef} from './navigation/RootNavigation';
@@ -24,31 +23,8 @@ import CreateCarPooling from './screens/CreateCarPooling';
 import AuthLoadingScreen from './screens/login/AuthLoadingScreen';
 
 const Drawer = createDrawerNavigator();
-const Stack = createStackNavigator();
 
 const App = () => {
-  function AuthNavigation() {
-    return (
-      <Stack.Navigator>
-        <Stack.Screen
-          options={{headerShown: false}}
-          name="SignInScreen"
-          component={SignInScreen}
-        />
-        <Stack.Screen
-          options={{headerShown: false}}
-          name="SignUpScreen"
-          component={SignUpScreen}
-        />
-        <Stack.Screen
-          options={{headerShown: false}}
-          name="AuthLoadingScreen"
-          component={AuthLoadingScreen}
-        />
-      </Stack.Navigator>
-    );
-  }
-
   const navigationDrawer = () => {
     return (
       <Drawer.Navigator
@@ -95,16 +71,6 @@ const App = () => {
     );
   };
 
-  useEffect(() => {
-    async function handleUserNextScreen() {
-      const token = await AsyncStorage.getItem('@App:userID');
-      setUserToken(token);
-    }
-
-    handleUserNextScreen();
-  }, []);
-
-  const [userToken, setUserToken] = useState(null);
   return (
     <NavigationContainer ref={navigationRef}>{MyStack()}</NavigationContainer>
   );
