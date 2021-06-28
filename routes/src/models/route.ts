@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 interface RouteAttrs {
     userId: string
     type: string
+    title:string
     startLocation: string
     endLocation: string
     availableTime: string
@@ -19,6 +20,7 @@ interface RouteAttrs {
 interface RouteDoc extends mongoose.Document {
     userId: string
     type: string
+    title:string
     startLocation: string
     endLocation: string
     availableTime: string
@@ -44,6 +46,10 @@ const routeSchema = new mongoose.Schema({
     type: {
         type: String,
         required: true
+    },
+    title:{
+        type:string,
+        required:true
     },
     startLocation: {
         type: String,

@@ -10,17 +10,19 @@ const router = express.Router()
 router.post('/api/routes', requiredAuth, [
     body('startLocation').not().isEmpty().withMessage('start location required'),
     body('type').not().isEmpty().withMessage('type required'),
+    body('title').not().isEmpty().withMessage('type required'),
     body('vehicleId').not().isEmpty().withMessage('vehicle required'),
     body('startLocation').not().isEmpty().withMessage('starting point is required'),
     body('endLocation').not().isEmpty().withMessage('end point is required'),
     body('description').not().isEmpty().withMessage('description is required'),
     body('startDate').not().isEmpty().withMessage('starting date is required')
 ], validateRequest, async (req: Request, res: Response) => {
-    const { startLocation, type, vehicleId, state, endLocation, estimatedTime, userImage, description, startDate, rating } = req.body
+    const { startLocation, type, vehicleId, state, endLocation, estimatedTime,
+         userImage, description, startDate, rating,title } = req.body
 
     const route = Route.build({
         userId: req.currentUser!.id,
-        type,
+        type,title,
         startLocation,
         endLocation,
         availableTime: "teste",
