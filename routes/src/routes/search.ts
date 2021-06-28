@@ -9,6 +9,7 @@ const router = express.Router()
 router.get('/api/routes/start/:start/end/:end', async (req: Request, res: Response) => {
 
     const allRoutes = await Route.find({})
+    console.log(allRoutes)
     
     const paths=searchRoute(req.params.start,req.params.end,allRoutes,[])
   
