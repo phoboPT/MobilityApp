@@ -63,20 +63,22 @@ const CreateCarPooling = ({navigation}) => {
             source={icons.back}
             resizeMode="contain"
             style={{
-              width: 25,
-              height: 25,
+              width: 30,
+              height: 30,
             }}
           />
         </TouchableOpacity>
 
         <View
           style={{
-            paddingRight: 46,
+            paddingRight: 35,
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          <Text style={{fontSize: 20}}>Create Car Pooling</Text>
+          <Text style={{fontSize: 24, fontWeight: '400'}}>
+            Create Car Pooling
+          </Text>
         </View>
       </View>
     );
@@ -192,6 +194,7 @@ const CreateCarPooling = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
   },
 });
 

@@ -1,20 +1,44 @@
 /*eslint-disable*/
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   ImageBackground,
   View,
+  ActivityIndicator,
   Text,
   Button,
+  Alert,
   TouchableOpacity,
   Image,
   StyleSheet,
   SafeAreaView,
 } from 'react-native';
-import {images, icons, SIZES} from '../constants';
+import {images, icons, SIZES, COLORS} from '../constants';
+import api from '../services/api';
+import {FlatGrid} from 'react-native-super-grid';
+import {Avatar} from 'react-native-elements';
+import faker from 'faker';
 
 const DestinationSearch = ({route, navigation}) => {
-  const [loading, setLoading] = useState(false);
-  const {name, title} = route.params; 
+  const [loading, setLoading] = useState(true);
+  const {name, endLocation} = route.params;
+  const [routes, setRoutes] = useState(null);
+
+  useEffect(() => {
+    // temail@testdefff.com
+    async function getRoutes() {
+      setLoading(true);
+      try {
+        const response = await api.get('/routes/endLocation/' + endLocation);
+
+        setRoutes(response.data);
+        setLoading(false);
+      } catch (err) {
+        Alert.alert(err.data.errors[0].message);
+        setLoading(false);
+      }
+    }
+    getRoutes();
+  }, []);
 
   function renderHeader() {
     return (
@@ -43,12 +67,15 @@ const DestinationSearch = ({route, navigation}) => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Text style={{
-            fontWeight: "600"
-          }}>{name}</Text>
+          <Text
+            style={{
+              fontWeight: '600',
+            }}>
+            {name}
+          </Text>
         </View>
         <TouchableOpacity
-          onPress={() => console.log("Open Filters")}
+          onPress={() => console.log('Open Filters')}
           style={{
             marginLeft: 10,
             width: 50,
@@ -68,11 +95,63 @@ const DestinationSearch = ({route, navigation}) => {
     );
   }
 
+  function renderRouteOptions() {
+    return (
+      <FlatGrid
+        itemDimension={130}
+        data={routes}
+        style={styles.gridView}
+        spacing={10}
+        renderItem={({item}) => (
+          <TouchableOpacity onPress={() => Alert.alert('Navegar')}>
+            <View
+              style={[styles.itemContainer, {backgroundColor: "white"}]}>
+              <Avatar
+                size="medium"
+                rounded
+                source={{
+                  uri: `https://randomuser.me/api/portraits/${faker.helpers.randomize(
+                    ['women', 'men'],
+                  )}/${faker.datatype.number(60)}.jpg`,
+                }}
+                activeOpacity={0.7}
+                titleStyle={{color: 'white'}}
+                containerStyle={{ backgroundColor: 'black', marginBottom: 2}}
+              />
+              <Text style={styles.userName}>Hélder Gonçalves</Text>
+              <View>
+                <Text style={styles.itemName}>Start: {item.startLocation}</Text>
+                <Text style={styles.itemName}>End: {item.endLocation}</Text>
+                <Text style={styles.itemCode}>
+                  Description: {item.description}
+                </Text>
+                <Text style={styles.itemCode}>
+                  Estimated Time: {item.estimatedTime}
+                </Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+        )}
+      />
+    );
+  }
+
   return (
     <ImageBackground
       style={{flex: 1, resizeMode: 'cover'}}
       source={images.background}>
-      <SafeAreaView style={styles.container}>{renderHeader()}</SafeAreaView>
+      <SafeAreaView style={styles.container}>
+        {renderHeader()}
+        {loading ? (
+          <ActivityIndicator
+            size="large"
+            color="white"
+            style={{flex: 1, justifyContent: 'center', alignContent: 'center'}}
+          />
+        ) : (
+          renderRouteOptions()
+        )}
+      </SafeAreaView>
     </ImageBackground>
   );
 };
@@ -82,5 +161,29 @@ export default DestinationSearch;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  gridView: {
+    marginTop: 10,
+    flex: 1,
+  },
+  itemContainer: {
+    justifyContent: 'flex-start',
+    borderRadius: 25,
+    padding: 10,
+    height: 200,
+  },
+  itemName: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  userName: {
+    fontSize: 16,
+    marginTop: 3,
+    fontWeight: '800',
+  },
+  itemCode: {
+    fontWeight: '500',
+    fontSize: 12,
+    opacity: .99,
   },
 });

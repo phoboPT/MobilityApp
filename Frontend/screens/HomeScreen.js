@@ -16,6 +16,9 @@ import faker from 'faker';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {SearchBar} from 'react-native-elements';
 import {ScrollView} from 'react-native';
+import DropDownPicker from 'react-native-dropdown-picker';
+import {Value} from 'react-native-reanimated';
+import {loadOptions} from '@babel/core';
 
 // PASSOS
 /*
@@ -50,6 +53,17 @@ const ITEM_SIZE = AVATAR_SIZE + SPACING * 3;
 const HomeScreen = ({navigation}) => {
   const [hasNextRide, setHasNextRide] = useState(false);
   const [search, setSearch] = useState('');
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    {label: 'ESTG', value: 'Escola Superior de Tecnologia e Gestão'},
+    {label: 'ESE', value: 'Escola Superior de Educação'},
+    {label: 'ESA', value: 'Escola Superior Agrária'},
+    {label: 'ESS', value: 'Escola Superior de Saúde'},
+    {label: 'ESDL', value: 'Escola Superior de Desporto e Lazer'},
+    {label: 'ESCE', value: 'Escola Superior de Ciências Empresariais'},
+    {label: 'SAS', value: 'Serviços Académicos'},
+  ]);
 
   const scrollY = new Animated.Value(0);
   const NEXT_TRAVEL_2 = [
@@ -80,44 +94,6 @@ const HomeScreen = ({navigation}) => {
       startTime: faker.date.soon().toLocaleDateString(),
       address: faker.address.streetAddress(),
       time: null,
-    },
-  ];
-
-  const DESTINATIONS = [
-    {
-      id: 1,
-      title: 'ESTG',
-      name: 'Escola Superior de Tecnologia e Gestão',
-    },
-    {
-      id: 2,
-      title: 'ESE',
-      name: 'Escola Superior de Educação',
-    },
-    {
-      id: 3,
-      title: 'ESS',
-      name: 'Escola Superior de Saúde',
-    },
-    {
-      id: 4,
-      title: 'ESDL',
-      name: 'Escola Superior de Desporto e Lazer',
-    },
-    {
-      id: 5,
-      title: 'ESCE',
-      name: 'Escola Superior de Ciências Empresariais',
-    },
-    {
-      id: 6,
-      title: 'ESA',
-      name: 'Escola Superior Agrária',
-    },
-    {
-      id: 7,
-      title: 'SAS',
-      name: 'Serviços de Acção Social',
     },
   ];
 
@@ -218,6 +194,48 @@ const HomeScreen = ({navigation}) => {
   function renderMyNextTravel() {
     return (
       <View>
+        <DropDownPicker
+          open={open}
+          closeAfterSelecting={true}
+          itemSeparator={true}
+          value={value}
+          itemKey="label"
+          theme="DARK"
+          schema={{
+            label: 'label',
+            value: 'value',
+          }}
+          items={items}
+          onChangeValue={() => {
+            var item = items.filter(obj => {
+              return obj.value === value;
+            });
+            navigation.navigate('DestinationSearch', {
+              endLocation: item[0].label,
+              name: item[0].value,
+            });
+          }}
+          placeholder="Where you want to go?"
+          setOpen={setOpen}
+          setValue={setValue}
+          containerStyle={{
+            flex: 1,
+            width: 330,
+            marginTop: 40,
+            marginBottom: 10,
+            marginLeft: 30,
+            marginRight: 30,
+            borderRadius: 30,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          searchTextInputStyle={{
+            borderRadius: 30,
+            backgroundColor: 'transparent',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        />
         <Text
           style={{
             marginLeft: 15,
@@ -294,16 +312,16 @@ const HomeScreen = ({navigation}) => {
           <Animated.FlatList
             horizontal
             showsHorizontalScrollIndicator={false}
-            data={DESTINATIONS}
+            data={items}
             contentContainerStyle={{padding: SPACING}}
             keyExtractor={item => item.id}
             renderItem={({item, index}) => {
               return (
-                <TouchableWithoutFeedback
+                <TouchableOpacity
                   onPress={() =>
                     navigation.navigate('DestinationSearch', {
-                      title: item.title,
-                      name: item.name,
+                      endLocation: item.label,
+                      name: item.value,
                     })
                   }>
                   <Animated.View
@@ -318,14 +336,14 @@ const HomeScreen = ({navigation}) => {
                     }}>
                     <View>
                       <Text style={{fontSize: 22, fontWeight: '700'}}>
-                        {item.title}
+                        {item.label}
                       </Text>
                       <Text style={{fontSize: 14, fontWeight: '500'}}>
-                        {item.name}
+                        {item.value}
                       </Text>
                     </View>
                   </Animated.View>
-                </TouchableWithoutFeedback>
+                </TouchableOpacity>
               );
             }}
           />
@@ -335,7 +353,7 @@ const HomeScreen = ({navigation}) => {
   }
   function renderBody() {
     return (
-      <View style={{position: 'relative'}}>
+      <View>
         {hasNextRide ? renderMyNextTravel() : renderDestinations()}
         {recommendationsNearMe()}
       </View>
@@ -361,31 +379,14 @@ const HomeScreen = ({navigation}) => {
             }}
           />
         </TouchableOpacity>
-
-        <SearchBar
-          placeholder="Where you want to go?"
-          onChangeText={setSearch}
-          value={search}
-          searchIcon={false}
-          containerStyle={{
+        <View
+          style={{
             flex: 1,
-            marginLeft: 20,
-            borderRadius: 20,
-            marginRight: 20,
-            justifyContent: 'center',
             alignItems: 'center',
-          }}
-          inputContainerStyle={{
-            borderRadius: 20,
-            backgroundColor: 'transparent',
             justifyContent: 'center',
-            alignItems: 'center',
-          }}
-          inputStyle={{
-            textAlign: 'center',
-            fontSize: 16,
-          }}
-        />
+          }}>
+          <Text style={{fontSize: 24, fontWeight: '400'}}>Home</Text>
+        </View>
         <TouchableOpacity
           onPress={() => navigation.navigate('Messages')}
           style={{
@@ -432,19 +433,5 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  header: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerText: {
-    fontWeight: 'bold',
-    fontSize: 20,
-    color: COLORS.primary,
-    letterSpacing: 1,
   },
 });
