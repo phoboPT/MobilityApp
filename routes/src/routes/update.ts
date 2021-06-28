@@ -5,27 +5,34 @@ import { RouteUpdatedPublisher } from "../events/publishers/route-updated-publis
 import { Route } from "../models/route"
 //import { natsWrapper } from "../nats-wrapper"
 
-
 const router = express.Router()
 
-
 router.put('/api/routes/:id', requiredAuth,
-    [
-        body('location').not().isEmpty().withMessage('location is required'),
-        body('type').not().isEmpty().withMessage('type is required')
-    ],
     validateRequest, async (req: Request, res: Response) => {
         const route = await Route.findById(req.params.id)
+        const { startLocation, type, vehicleId, state, endLocation, estimatedTime,
+            userImage, description, startDate, rating,title,availableTime } = req.body
         if (!route) {
-            throw new NotFoundError({ from: "Update vehicle" })
+            throw new NotFoundError({ from: "Route not found, verify the route id" })
         }
 
         if (route.userId !== req.currentUser!.id) {
             throw new NotAuthorizedError();
         }
         route.set({
-            location: req.body.location,
-            type: req.body.type,
+            userId: req.currentUser!.id,
+        type:type||route.type,
+        title:title||route.title,
+        startLocation:startLocation||route.startLocation,
+        endLocation:endLocation||route.endLocation,
+        availableTime: availableTime||route.availableTime,
+        vehicleId:vehicleId||route.vehicleId,
+        state: state ||route.state,
+        description:description||route.description,
+        estimatedTime:estimatedTime||route.estimatedTime,
+        startDate:startDate||route.startDate,
+        userImage: userImage ||route.userImage,
+        rating: rating ||route.rating
         });
         await route.save();
         // new RouteUpdatedPublisher(natsWrapper.client).publish({

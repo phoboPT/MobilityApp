@@ -14,7 +14,6 @@ interface RouteAttrs {
     startDate: string
     userImage: string
     rating: number
-
 }
 
 interface RouteDoc extends mongoose.Document {
@@ -48,7 +47,7 @@ const routeSchema = new mongoose.Schema({
         required: true
     },
     title:{
-        type:string,
+        type:String,
         required:true
     },
     startLocation: {
@@ -96,6 +95,7 @@ const routeSchema = new mongoose.Schema({
         transform(doc, ret) {
             ret.id = ret._id
             delete ret._id
+            delete ret.__v
         }
     }
 })

@@ -8,6 +8,7 @@ import { showRouteRouter } from './routes/show';
 import { indexRouteRouter } from './routes';
 import { updateRouteRouter } from './routes/update';
 import { searchRouteRouter } from './routes/search';
+import { myRouteRouter } from './routes/my-routes';
 
 
 const app = express()
@@ -19,9 +20,9 @@ app.use(cookieSession({
 }))
 
 app.use(currentUser)
+app.use(indexRouteRouter)
 app.use(createRouteRouter)
 app.use(showRouteRouter)
-app.use(indexRouteRouter)
 app.use(updateRouteRouter)
 app.use(searchRouteRouter)
 
