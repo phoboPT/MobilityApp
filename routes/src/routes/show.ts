@@ -5,7 +5,16 @@ import { Route } from "../models/route"
 
 
 const router = express.Router()
+router.get('/api/routes/endLocation/:location', async (req: Request, res: Response) => {
+    console.log("hey")
+    const route = await Route.find({endLocation:req.params.location})
 
+    if (!route) {
+        throw new NotFoundError({ from: 'show ride' })
+    }
+    res.send(route)
+
+})
 router.get('/api/routes/:id', async (req: Request, res: Response) => {
     const route = await Route.findById(req.params.id)
 
@@ -15,15 +24,6 @@ router.get('/api/routes/:id', async (req: Request, res: Response) => {
     res.send(route)
 
 })
-router.get('/api/routes/endLocation/:location', async (req: Request, res: Response) => {
-    
-    const route = await Route.find({endLocation:req.params.location})
 
-    if (!route) {
-        throw new NotFoundError({ from: 'show ride' })
-    }
-    res.send(route)
-
-})
 
 export { router as showRouteRouter }
