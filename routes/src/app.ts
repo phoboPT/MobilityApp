@@ -7,6 +7,7 @@ import { createRouteRouter } from './routes/new';
 import { showRouteRouter } from './routes/show';
 import { indexRouteRouter } from './routes';
 import { updateRouteRouter } from './routes/update';
+import { searchRouteRouter } from './routes/search';
 
 
 const app = express()
@@ -22,6 +23,7 @@ app.use(createRouteRouter)
 app.use(showRouteRouter)
 app.use(indexRouteRouter)
 app.use(updateRouteRouter)
+app.use(searchRouteRouter)
 
 app.all('*', async () => {
     throw new NotFoundError({ from: 'Index, /BAD_URL, route don\'t exist' })
