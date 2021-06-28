@@ -5,11 +5,11 @@ import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
 
 import {COLORS, icons} from '../constants';
 import AsyncStorage from '@react-native-community/async-storage';
-import {Alert} from 'react-native';
 
 export function DrawerContent(props) {
-  function signOut() {
-    AsyncStorage.removeItem('@App:userToken');
+  async function signOut() {
+    await AsyncStorage.removeItem('@App:userID');
+    props.navigation.navigate('SignIn');
   }
 
   return (

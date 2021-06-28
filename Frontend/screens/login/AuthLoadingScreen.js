@@ -1,13 +1,17 @@
 import React, {useEffect} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
-import {View, ActivityIndicator} from 'react-native';
+import {View, ActivityIndicator, useColorScheme} from 'react-native';
 import {COLORS} from '../../constants';
 
-export default function AuthLoadingScreen(props) {
+const SingleMessage = ({navigation, route}) => {
   useEffect(() => {
     async function handleUserNextScreen() {
-      const userToken = await AsyncStorage.getItem('@App:userToken');
-      props.navigation.navigate(userToken ? 'App' : 'Auth');
+      const userToken = await AsyncStorage.getItem('@App:userID');
+      if (userToken === null) {
+        navigation.navigate('SignIn');
+      } else {
+        navigation.navigate('Drawer');
+      }
     }
 
     handleUserNextScreen();
@@ -18,10 +22,6 @@ export default function AuthLoadingScreen(props) {
       <ActivityIndicator size="large" color={COLORS.primary} />
     </View>
   );
-}
-
-AuthLoadingScreen.navigationOptions = () => {
-  return {
-    header: null,
-  };
 };
+
+export default SingleMessage;

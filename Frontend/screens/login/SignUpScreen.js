@@ -3,8 +3,8 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Form from 'react-native-basic-form';
 import api from '../../services/api';
 import AsyncStorage from '@react-native-community/async-storage';
-import {StackActions, NavigationActions} from 'react-navigation';
 import {COLORS} from '../../constants';
+import {Alert} from 'react-native';
 
 const SignUpScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
@@ -33,33 +33,26 @@ const SignUpScreen = ({navigation}) => {
   ];
 
   async function saveUser(user) {
-    await AsyncStorage.setItem('@App:userToken', JSON.stringify(user));
+    await AsyncStorage.setItem('@App:userID', JSON.stringify(user));
   }
 
   // trreste@tesddt.com
   async function onSubmit(state) {
     setLoading(true);
     try {
-      const response = await api.post('/signup', {
+      const response = await api.post('/users/signup', {
         name: state.name,
-        username: state.username,
         email: state.email,
         password: state.password,
       });
 
-      const token = response.data;
-      await saveUser(token);
-
-      const resetAction = StackActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({routeName: 'App'})],
-      });
+      saveUser(response.data.id);
 
       setLoading(false);
 
-      navigation.dispatch(resetAction);
+      navigation.navigate('AuthLoading');
     } catch (err) {
-      console.log(err.message);
+      Alert.alert(err.data.errors[0].message);
       setLoading(false);
     }
   }

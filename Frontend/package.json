@@ -19,6 +19,7 @@
     "@react-navigation/stack": "^5.14.5",
     "apisauce": "^2.1.1",
     "faker": "^5.5.3",
+    "https": "^1.0.0",
     "install": "^0.13.0",
     "moment": "^2.29.1",
     "npm": "^7.13.0",

@@ -15,6 +15,7 @@ import ActionButton from 'react-native-action-button';
 import faker from 'faker';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {SearchBar} from 'react-native-elements';
+import {ScrollView} from 'react-native';
 
 // PASSOS
 /*
@@ -23,7 +24,7 @@ import {SearchBar} from 'react-native-elements';
 */
 
 faker.seed(10);
-const DATA = [...Array(5).keys()].map((_, i) => {
+const DATA = [...Array(3).keys()].map((_, i) => {
   return {
     key: faker.datatype.uuid(),
     image: `https://randomuser.me/api/portraits/${faker.helpers.randomize([
@@ -48,7 +49,7 @@ const ITEM_SIZE = AVATAR_SIZE + SPACING * 3;
 
 const HomeScreen = ({navigation}) => {
   const [hasNextRide, setHasNextRide] = useState(false);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
 
   const scrollY = new Animated.Value(0);
   const NEXT_TRAVEL_2 = [
@@ -134,14 +135,14 @@ const HomeScreen = ({navigation}) => {
           }}>
           Recommendations
         </Text>
-        <View style={{flexDirection: 'row'}}>
+        <View>
           <Animated.FlatList
             onScroll={Animated.event(
               [{nativeEvent: {contentOffset: {y: scrollY}}}],
               {useNativeDriver: true},
             )}
             data={DATA}
-            contentContainerStyle={{padding: SPACING}}
+            contentContainerStyle={{padding: 20}}
             keyExtractor={item => item.key}
             renderItem={({item, index}) => {
               const inputRange = [
@@ -173,15 +174,8 @@ const HomeScreen = ({navigation}) => {
                     flexDirection: 'row',
                     padding: SPACING,
                     marginBottom: SPACING,
-                    shadowColor: '#000',
-                    shadowOffset: {
-                      width: 0,
-                      height: 10,
-                    },
-                    shadowOpacity: 1,
                     opacity,
                     transform: [{scale}],
-                    shadowRadius: 15,
                     borderRadius: 12,
                     backgroundColor: 'rgba(255,255,255,0.9)',
                   }}>
@@ -281,67 +275,67 @@ const HomeScreen = ({navigation}) => {
     );
   }
 
-    function renderDestinations() {
-      return (
-        <View>
-          <Text
-            style={{
-              marginLeft: 15,
-              fontSize: 24,
-              fontFamily: 'Arial',
-              color: 'white',
-              position: 'relative',
-              fontWeight: '400',
-              marginTop: 30,
-            }}>
-            Destinations
-          </Text>
-          <View style={{flexDirection: 'row'}}>
-            <Animated.FlatList
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              data={DESTINATIONS}
-              contentContainerStyle={{padding: SPACING}}
-              keyExtractor={item => item.id}
-              renderItem={({item, index}) => {
-                return (
-                  <TouchableWithoutFeedback
-                    onPress={() =>
-                      navigation.navigate('DestinationSearch', {
-                        title: item.title,
-                        name: item.name,
-                      })
-                    }>
-                    <Animated.View
-                      style={{
-                        flexDirection: 'row',
-                        padding: SPACING,
-                        marginBottom: SPACING,
-                        shadowRadius: 20,
-                        marginRight: 20,
-                        borderRadius: 12,
-                        backgroundColor: 'rgba(255,255,255,0.9)',
-                      }}>
-                      <View>
-                        <Text style={{fontSize: 22, fontWeight: '700'}}>
-                          {item.title}
-                        </Text>
-                        <Text style={{fontSize: 14, fontWeight: '500'}}>
-                          {item.name}
-                        </Text>
-                      </View>
-                    </Animated.View>
-                  </TouchableWithoutFeedback>
-                );
-              }}
-            />
-          </View>
+  function renderDestinations() {
+    return (
+      <View>
+        <Text
+          style={{
+            marginLeft: 15,
+            fontSize: 24,
+            fontFamily: 'Arial',
+            color: 'white',
+            position: 'relative',
+            fontWeight: '400',
+            marginTop: 30,
+          }}>
+          Destinations
+        </Text>
+        <View style={{flexDirection: 'row'}}>
+          <Animated.FlatList
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={DESTINATIONS}
+            contentContainerStyle={{padding: SPACING}}
+            keyExtractor={item => item.id}
+            renderItem={({item, index}) => {
+              return (
+                <TouchableWithoutFeedback
+                  onPress={() =>
+                    navigation.navigate('DestinationSearch', {
+                      title: item.title,
+                      name: item.name,
+                    })
+                  }>
+                  <Animated.View
+                    style={{
+                      flexDirection: 'row',
+                      padding: SPACING,
+                      marginBottom: SPACING,
+                      shadowRadius: 20,
+                      marginRight: 20,
+                      borderRadius: 12,
+                      backgroundColor: 'rgba(255,255,255,0.9)',
+                    }}>
+                    <View>
+                      <Text style={{fontSize: 22, fontWeight: '700'}}>
+                        {item.title}
+                      </Text>
+                      <Text style={{fontSize: 14, fontWeight: '500'}}>
+                        {item.name}
+                      </Text>
+                    </View>
+                  </Animated.View>
+                </TouchableWithoutFeedback>
+              );
+            }}
+          />
         </View>
-      );
-    }
+      </View>
+    );
+  }
   function renderBody() {
     return (
-      <View style={{alignItems: 'center', position: 'relative'}}>
+      <View style={{position: 'relative'}}>
         {hasNextRide ? renderMyNextTravel() : renderDestinations()}
         {recommendationsNearMe()}
       </View>
@@ -383,12 +377,12 @@ const HomeScreen = ({navigation}) => {
           }}
           inputContainerStyle={{
             borderRadius: 20,
-            backgroundColor: "transparent",
+            backgroundColor: 'transparent',
             justifyContent: 'center',
             alignItems: 'center',
           }}
           inputStyle={{
-            textAlign: "center",
+            textAlign: 'center',
             fontSize: 16,
           }}
         />
@@ -412,7 +406,7 @@ const HomeScreen = ({navigation}) => {
     );
   }
 
-  function renderActionButton(){
+  function renderActionButton() {
     return (
       <ActionButton
         buttonColor={COLORS.primary}
@@ -421,7 +415,9 @@ const HomeScreen = ({navigation}) => {
     );
   }
   return (
-    <ImageBackground style={{flex: 1, resizeMode: 'cover'}} source={images.background}>
+    <ImageBackground
+      style={{flex: 1, resizeMode: 'cover'}}
+      source={images.background}>
       <SafeAreaView style={styles.container}>
         {renderHeader()}
         {renderBody()}

@@ -51,7 +51,7 @@ const Onboarding = ({navigation}) => {
               justifyContent: 'center',
             },
           ]}
-          onPress={() => navigation.navigate('Drawer')}>
+          onPress={() => navigation.navigate('AuthLoading')}>
           <LinearGradient
             style={{
               height: '100%',

@@ -138,15 +138,18 @@ const MyRoutesScreen = ({navigation}) => {
                     borderRadius: 12,
                     backgroundColor: 'rgba(255,255,255,0.9)',
                   }}>
-                  <Image
-                    source={{uri: item.image}}
-                    style={{
-                      width: AVATAR_SIZE,
-                      height: AVATAR_SIZE,
-                      borderRadius: AVATAR_SIZE,
-                      marginRight: SPACING / 2,
-                    }}
-                  />
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('UserProfile')}>
+                    <Image
+                      source={{uri: item.image}}
+                      style={{
+                        width: AVATAR_SIZE,
+                        height: AVATAR_SIZE,
+                        borderRadius: AVATAR_SIZE,
+                        marginRight: SPACING / 2,
+                      }}
+                    />
+                  </TouchableOpacity>
                   <View
                     style={{
                       marginRight: 1,

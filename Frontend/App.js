@@ -20,8 +20,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {createStackNavigator} from '@react-navigation/stack';
 import Map from './components/Map';
 import {navigationRef} from './navigation/RootNavigation';
-import {COLORS} from './constants';
 import CreateCarPooling from './screens/CreateCarPooling';
+import AuthLoadingScreen from './screens/login/AuthLoadingScreen';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -39,6 +39,11 @@ const App = () => {
           options={{headerShown: false}}
           name="SignUpScreen"
           component={SignUpScreen}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="AuthLoadingScreen"
+          component={AuthLoadingScreen}
         />
       </Stack.Navigator>
     );
@@ -70,8 +75,11 @@ const App = () => {
   const MyStack = () => {
     return (
       <AppStack.Navigator headerMode="none" initialRouteName="Onboarding">
+        <AppStack.Screen name="SignIn" component={SignInScreen} />
+        <AppStack.Screen name="SignUp" component={SignUpScreen} />
         <AppStack.Screen name="Drawer" component={navigationDrawer} />
         <AppStack.Screen name="Onboarding" component={Onboarding} />
+        <AppStack.Screen name="AuthLoading" component={AuthLoadingScreen} />
         <AppStack.Screen
           name="DestinationSearch"
           component={DestinationSearch}
@@ -89,7 +97,7 @@ const App = () => {
 
   useEffect(() => {
     async function handleUserNextScreen() {
-      const token = await AsyncStorage.getItem('@App:userToken');
+      const token = await AsyncStorage.getItem('@App:userID');
       setUserToken(token);
     }
 
@@ -98,9 +106,7 @@ const App = () => {
 
   const [userToken, setUserToken] = useState(null);
   return (
-    <NavigationContainer ref={navigationRef}>
-      {userToken ? AuthNavigation() : MyStack()}
-    </NavigationContainer>
+    <NavigationContainer ref={navigationRef}>{MyStack()}</NavigationContainer>
   );
 };
 

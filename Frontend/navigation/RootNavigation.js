@@ -1,9 +1,17 @@
-// RootNavigation.js
-
 import * as React from 'react';
+import {NavigationActions} from 'react-navigation';
 
-export const navigationRef = React.createRef();
+let navigator;
 
-export function navigate(name, params) {
-  navigationRef.current?.navigate(name, params);
+export function setTopLevelNavigator(navigatorRef) {
+  navigator = navigatorRef;
+}
+
+export function navigate(routeName, params) {
+  navigator.dispatch(
+    NavigationActions.navigate({
+      routeName,
+      params,
+    }),
+  );
 }

@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import Form from 'react-native-basic-form';
 import api from '../../services/api';
 import AsyncStorage from '@react-native-community/async-storage';
+import {StackActions, NavigationActions} from 'react-navigation';
 
 const SignInScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
@@ -24,10 +25,10 @@ const SignInScreen = ({navigation}) => {
   let formProps = {title: 'Login', fields, onSubmit, loading};
 
   async function saveUser(user) {
-    await AsyncStorage.setItem('@App:userToken', JSON.stringify(user));
+    await AsyncStorage.setItem('@App:userID', JSON.stringify(user));
   }
 
-  // trreste@tesddt.com
+  // temail@testdefff.com
   async function onSubmit(state) {
     setLoading(true);
     try {
@@ -35,19 +36,13 @@ const SignInScreen = ({navigation}) => {
         email: state.email,
         password: state.password,
       });
+      saveUser(response.data.id);
 
-      const token = response.data;
-      await saveUser(token);
-      console.log(token);
       setLoading(false);
 
-      if (response.data.error !== 'Invalid email or password!') {
-        console.log('Deu');
-      } else {
-        Alert.alert(response.data.error);
-      }
+      navigation.navigate('Drawer');
     } catch (err) {
-      Alert.alert(err.message);
+      Alert.alert(err.data.errors[0].message);
       setLoading(false);
     }
   }
