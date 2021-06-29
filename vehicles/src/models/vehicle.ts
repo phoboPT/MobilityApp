@@ -2,16 +2,16 @@ import mongoose from "mongoose";
 
 interface VehicleAttrs {
     userId: string
-    type: string    
-    carModel:string
-    capacity:number
+    type: string
+    carModel: string
+    capacity: number
 }
 
 interface VehicleDoc extends mongoose.Document {
     userId: string
-    type: string   
+    type: string
     carModel: string
-    capacity:number
+    capacity: number
 }
 
 interface VehicleModel extends mongoose.Model<VehicleDoc> {
@@ -27,13 +27,13 @@ const vehicleSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    carModel:{
-        type:String,
-        required:true
+    carModel: {
+        type: String,
+        required: true
     },
-    capacity:{
-        type:Number,
-        required:true
+    capacity: {
+        type: Number,
+        required: true
     }
 
 }, {

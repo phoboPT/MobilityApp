@@ -6,13 +6,17 @@ import { Vehicle } from "../models/vehicle"
 
 const router = express.Router()
 
-router.get('/api/vehicles/me', currentUser,async (req: Request, res: Response) => {
+router.get('/api/vehicles/me', currentUser, async (req: Request, res: Response) => {
 
-    const vehicle = await Vehicle.find({userId:req.currentUser?.id})
+    const vehicle = await Vehicle.find({ userId: req.currentUser?.id })
+
+
 
     if (!vehicle) {
-        throw new NotFoundError({ from: 'show vehicle ' })
+        throw new NotFoundError({ from: 'show my vehicle ' })
     }
+
+
     res.send(vehicle)
 
 })

@@ -20,11 +20,11 @@ app.use(cookieSession({
 }))
 
 app.use(currentUser)
+app.use(searchRouteRouter)
 app.use(indexRouteRouter)
 app.use(createRouteRouter)
 app.use(showRouteRouter)
 app.use(updateRouteRouter)
-app.use(searchRouteRouter)
 
 app.all('*', async () => {
     throw new NotFoundError({ from: 'Index, /BAD_URL, route don\'t exist' })

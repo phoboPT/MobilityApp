@@ -101,4 +101,4 @@ routeSchema.statics.build = (attrs: RouteAttrs) => {
 const Route = mongoose.model<RouteDoc, RouteModel>('Route', routeSchema)
 
 
-export { Route }
+export { Route,RouteDoc }
