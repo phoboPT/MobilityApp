@@ -18,7 +18,7 @@ router.post('/api/users/signup', [
         throw new BadRequestError('Email in use', { from: 'Signup, email is already in use' })
     }
 
-    const user = User.build({ email, password, name,photoUrl })
+    const user = User.build({ email, password, name,photoUrl:photoUrl||'https://toppng.com/uploads/preview/app-icon-set-login-icon-comments-avatar-icon-11553436380yill0nchdm.png' })
     await user.save()
 
     //Generate and setting token
