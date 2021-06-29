@@ -2,14 +2,16 @@ import mongoose from "mongoose";
 
 interface VehicleAttrs {
     userId: string
-    type: string
-    location: string
+    type: string    
+    carModel:string
+    capacity:number
 }
 
 interface VehicleDoc extends mongoose.Document {
     userId: string
-    type: string
-    location: string
+    type: string   
+    carModel: string
+    capacity:number
 }
 
 interface VehicleModel extends mongoose.Model<VehicleDoc> {
@@ -24,10 +26,16 @@ const vehicleSchema = new mongoose.Schema({
     type: {
         type: String,
         required: true
-    }, location: {
-        type: String,
-        required: true
+    },
+    carModel:{
+        type:String,
+        required:true
+    },
+    capacity:{
+        type:Number,
+        required:true
     }
+
 }, {
     toJSON: {
         transform(doc, ret) {

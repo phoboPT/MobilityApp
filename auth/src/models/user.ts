@@ -5,6 +5,8 @@ interface UserAttrs {
     email: string
     password: string
     name: string
+    photoUrl:string
+    
 }
 
 //Interface that describes a UserModel
@@ -17,6 +19,7 @@ interface UserDoc extends mongoose.Document {
     email: string
     password: string
     name: string
+    photoUrl:string
 }
 
 const userSchema = new mongoose.Schema({
@@ -30,6 +33,10 @@ const userSchema = new mongoose.Schema({
     }, name: {
         type: String,
         required: true
+    },
+    photoUrl:{
+        type:String,
+        required:false
     }
 }, {
     toJSON: {

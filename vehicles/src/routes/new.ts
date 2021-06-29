@@ -7,27 +7,27 @@ import { natsWrapper } from "../nats-wrapper"
 
 const router = express.Router()
 
-router.post('/api/vehicles', requiredAuth, [
-    body('location').not().isEmpty().withMessage('location required'),
+router.post('/api/vehicles', requiredAuth, [  
     body('type').not().isEmpty().withMessage('type required')
 ], validateRequest, async (req: Request, res: Response) => {
-    const { location, type } = req.body
-
-    const vehicule = Vehicle.build({
-        location,
-        type,
-        userId: req.currentUser!.id
+    const {  type,carModel,capacity } = req.body
+        console.log(carModel)
+    const vehicle = Vehicle.build({     
+        type:type,
+        userId: req.currentUser!.id,
+        carModel:carModel,
+        capacity:capacity
     })
-    await vehicule.save()
+    await vehicle.save()
 
-    await new VehiculeCreatedPublisher(natsWrapper.client).publish({
-        id: vehicule.id,
-        type: vehicule.type,
-        userId: vehicule.userId,
-        location: vehicule.location
-    })
+    // await new VehiculeCreatedPublisher(natsWrapper.client).publish({
+    //     id: vehicule.id,
+    //     type: vehicule.type,
+    //     userId: vehicule.userId,
+      
+    // })
 
-    res.status(201).send(vehicule)
+    res.status(201).send(vehicle)
 })
 
 export { router as createVehicleRouter }

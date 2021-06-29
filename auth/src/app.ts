@@ -16,8 +16,7 @@ app.use(cookieSession({
 
     signed: false,
     secure: false,
-})
-)
+}))
 
 app.use(currentUserRouter)
 app.use(signinRouter)

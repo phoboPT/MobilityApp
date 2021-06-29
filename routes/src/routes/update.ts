@@ -22,7 +22,6 @@ router.put('/api/routes/:id', requiredAuth,
         route.set({
             userId: req.currentUser!.id,
         type:type||route.type,
-        title:title||route.title,
         startLocation:startLocation||route.startLocation,
         endLocation:endLocation||route.endLocation,
         availableTime: availableTime||route.availableTime,

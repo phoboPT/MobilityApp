@@ -24,16 +24,17 @@ router.put('/api/vehicles/:id', requiredAuth,
             throw new NotAuthorizedError();
         }
         vehicle.set({
-            location: req.body.location,
+            carModel: req.body.location,
             type: req.body.type,
         });
         await vehicle.save();
-        new VehiculeUpdatedPublisher(natsWrapper.client).publish({
-            id: vehicle.id,
-            location: vehicle.location,
-            type: vehicle.type,
-            userId: vehicle.userId
-        })
+        // new VehiculeUpdatedPublisher(natsWrapper.client).publish({
+        //     id: vehicle.id,
+        //     carModel: vehicle.carModel,
+        //     type: vehicle.type,
+        //     userId: vehicle.userId
+
+        // })
 
         res.send(vehicle)
     })

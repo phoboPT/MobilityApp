@@ -10,7 +10,6 @@ const router = express.Router()
 router.post('/api/routes', requiredAuth, [
     body('startLocation').not().isEmpty().withMessage('start location required'),
     body('type').not().isEmpty().withMessage('type required'),
-    body('title').not().isEmpty().withMessage('type required'),
     body('vehicleId').not().isEmpty().withMessage('vehicle required'),
     body('startLocation').not().isEmpty().withMessage('starting point is required'),
     body('endLocation').not().isEmpty().withMessage('end point is required'),
@@ -22,7 +21,7 @@ router.post('/api/routes', requiredAuth, [
 
     const route = Route.build({
         userId: req.currentUser!.id,
-        type,title,
+        type,
         startLocation,
         endLocation,
         availableTime: "teste",

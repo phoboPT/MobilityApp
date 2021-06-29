@@ -11,21 +11,21 @@ router.post('/api/users/signup', [
     body('password').trim().isLength({ min: 4, max: 20 }).withMessage('Password must be between 4 and 20 characters'),
     body('name').trim().isLength({ min: 4, max: 20 }).withMessage('Name must be between 4 and 20 characters'),
 ], validateRequest, async (req: Request, res: Response) => {
-    const { email, password, name } = req.body;
+    const { email, password, name,photoUrl } = req.body;
     const existingUser = await User.findOne({ email })
 
     if (existingUser) {
         throw new BadRequestError('Email in use', { from: 'Signup, email is already in use' })
     }
 
-    const user = User.build({ email, password, name })
+    const user = User.build({ email, password, name,photoUrl })
     await user.save()
 
     //Generate and setting token
     const userJwt = jwt.sign({
         id: user.id,
         email: user.email
-    }, process.env.JWT_KEY!)
+    }, process.env.JWT_KEY||'MySeCrEt')
 
     req.session = { jwt: userJwt }
     res.status(201).send(user);
