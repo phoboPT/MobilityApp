@@ -11,7 +11,7 @@ router.post('/api/users/signin', [
     body('password').trim().isLength({ min: 4, max: 20 }).notEmpty().withMessage('Provide a password')
 ], validateRequest, async (req: Request, res: Response) => {
 
-    const { email, password } = req.body
+    const { email, password ,rating} = req.body
     const existingUser = await User.findOne({ email })
     if (!existingUser) {
         throw new BadRequestError('Bad credentials provided', { from: 'Signin, invalid credentials' });
@@ -25,7 +25,8 @@ router.post('/api/users/signin', [
     //Generate and setting token
     const userJwt = jwt.sign({
         id: existingUser.id,
-        email: existingUser.email
+        email: existingUser.email,
+        rating:rating||0
     }, process.env.JWT_KEY!)
 
     req.session = { jwt: userJwt }

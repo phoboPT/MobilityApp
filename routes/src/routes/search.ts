@@ -13,57 +13,41 @@ router.get('/api/routes/start/:start/end/:end', async (req: Request, res: Respon
     const { start, end } = req.params
     const allRoutes = await Route.find({})
 
-
-    let paths
-    let final: IVisit = {}
+    let allPaths
+    let routeDetails: IVisit = {}
     if (allRoutes) {
-        paths = searchRoute(start, end, allRoutes, [])
+        allPaths = searchRoute(start, end, allRoutes, [])
 
-
-        paths.forEach((path): void => {
+        allPaths.forEach((path): void => {
             path.split(',').forEach((subpath: any): void => {
-
-
-                if (final[subpath]) {
-                    console.log("hey")
-                } else {
+                if (!routeDetails[subpath]) {
                     allRoutes.forEach(route => {
-                        console.log(route.startLocation === subpath)
                         if (route.startLocation === subpath) {
-
-                            final[route.startLocation] = route
+                            routeDetails[route.startLocation] = route
                         }
-
                     })
                 }
             })
-
         })
     }
     const response: RouteDoc[] = []
-    paths?.forEach((path): void => {
-        let temp: any = []
+    allPaths?.forEach((path): void => {
+        let tempArray: any = []
         path.split(',').forEach((subpath: any): void => {
-            if (final[subpath]) {
-                temp.push(final[subpath])
+            if (routeDetails[subpath]) {
+                tempArray.push(routeDetails[subpath])
             }
         })
-        temp.push(end)
-        response.push(temp)
-
-        temp = []
-
+        tempArray.push(end)
+        response.push(tempArray)
+        tempArray = []
     })
-    console.log(response)
-    console.log(paths)
+
 
     const after = Date.now();
     console.log('Route performed in ', (after - before) / 1000);
-
-
-
+    // console.log(allPaths)
     res.send(response)
-
 })
 
 export { router as searchRouteRouter }

@@ -6,6 +6,7 @@ interface UserAttrs {
     password: string
     name: string
     photoUrl:string
+    rating:number
     
 }
 
@@ -20,6 +21,7 @@ interface UserDoc extends mongoose.Document {
     password: string
     name: string
     photoUrl:string
+    rating:number
 }
 
 const userSchema = new mongoose.Schema({
@@ -37,6 +39,10 @@ const userSchema = new mongoose.Schema({
     photoUrl:{
         type:String,
         required:false
+    },
+    rating:{
+        type:Number,
+        required:true
     }
 }, {
     toJSON: {
