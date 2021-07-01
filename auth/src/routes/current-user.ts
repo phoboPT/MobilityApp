@@ -1,4 +1,4 @@
-import { NotFoundError } from './../../../common/src/errors/not-found-error';
+import {  NotFoundError } from '@mobileorg/common-lib';
 import express from 'express'
 import { currentUser } from '@mobileorg/common-lib';
 import { User } from '../models/user';
@@ -11,9 +11,10 @@ router.get('/api/users/currentUser', currentUser,async (req, res) => {
     res.send(user)
 })
 
-router.post('/api/users/:id', async (req, res) => {
-    const{id,photoUrl}=req.params
+router.post('/api/users/edit', async (req, res) => {
    
+   const{photoUrl,id}=req.body
+
     const user = await User.findById(id)
 
     if (!user) {
