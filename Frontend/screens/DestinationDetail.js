@@ -1,9 +1,21 @@
-import React from 'react';
-import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+  Alert,
+  SafeAreaView,
+  ImageBackground,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import faker from 'faker';
 import {images, icons, COLORS, SIZES} from '../constants';
 import {ScrollView} from 'react-native';
+import api from '../services/api';
+import Moment from 'moment';
 
 const StarReview = ({rate}) => {
   var starComponents = [];
@@ -86,37 +98,85 @@ const IconLabel = ({icon, label}) => {
   );
 };
 
-const DestinationDetail = ({navigation}) => {
+const DestinationDetail = ({navigation, route}) => {
   // Render
 
-  const data = {
-    id: '1',
-    title: 'Boleia até Serviços Académicos',
-    description:
-      'Boleia com partida na IPVC-ESTG por favor enviem me mensagem para o whatsapp para combinarmos melhor',
-    contact: '+351 911979115',
-    startLocation: 'IPVC-ESTG',
-    userLocation: 'Viana do Castelo',
-    endLocation: 'Serviços Académicos',
-    estimatedTime: '10 Minutos',
-    startDate: faker.date.soon().toLocaleDateString(),
-    userImage: `https://randomuser.me/api/portraits/${faker.helpers.randomize([
-      'women',
-      'men',
-    ])}/${faker.datatype.number(60)}.jpg`,
-    userName: faker.name.findName(),
-    userRating: 3.5,
-    price: 3,
-    vehicleImage:
-      'https://auto-drive.pt/wp-content/uploads/2020/05/audi-rs6-avant-by-wheelsandmore.jpg',
+  const {data} = route.params;
+  const [loading, setLoading] = useState(true);
+  const [endLocationImage, setEndLocationImage] = useState(null);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    setBackgroundImage(data.endLocation);
+    async function getUserInfo() {
+      try {
+        const response = await api.get('/users/' + data.userId);
+        setUser(response.data);
+        setLoading(false);
+      } catch (err) {
+        Alert.alert(err);
+        setLoading(true);
+      }
+    }
+    getUserInfo();
+  }, []);
+
+  const setBackgroundImage = endLocation => {
+    if (endLocation === 'ESTG') {
+      setEndLocationImage(
+        'https://lh3.googleusercontent.com/proxy/SigP21VNrtU8wGuDP9FZmRmtGjbUyAFSEJnLTO_0C66Moks0EBwRKl6Xwg4VStcl9gRzgjqub7FMWNxdV1Fs2Gg-J9X9HXglvAmSjSHBiU87l8r9Iyctp5WYGQ',
+      );
+    } else if (endLocation === 'ESE') {
+      setEndLocationImage(
+        'https://www.ipvc.pt/ese/wp-content/uploads/sites/4/2021/01/ESE-10-800x600.png',
+      );
+    } else if (endLocation === 'ESA') {
+      setEndLocationImage(
+        'https://www.ipvc.pt/esa/wp-content/uploads/sites/2/2021/01/ESA-9-380x290.png',
+      );
+    } else if (endLocation === 'ESS') {
+      setEndLocationImage(
+        'https://www.ipvc.pt/ess/wp-content/uploads/sites/6/2021/01/ESS-10-380x290.png',
+      );
+    } else if (endLocation === 'ESDL') {
+      setEndLocationImage(
+        'https://www.ipvc.pt/esdl/wp-content/uploads/sites/7/2021/01/escola_melgaco_jose_campos_137-800x600.jpg',
+      );
+    } else if (endLocation === 'ESCE') {
+      setEndLocationImage(
+        'https://www.ipvc.pt/esce/wp-content/uploads/sites/5/2021/01/esce1-800x600.png',
+      );
+    } else if (endLocation === 'SAS') {
+      setEndLocationImage(
+        'https://lh3.googleusercontent.com/proxy/7kOVUx9dTGAwGWR32MecJLd3-G8QNSQF-4d_Oh1JhtPdHz2aQTSrBn_4tQ7YVYLxDtqvqSo_uUZKZV2QS1fgCy_Vg7a2w4Ue0NpO6smbPQ',
+      );
+    }
   };
+
+  if (loading) {
+    return (
+      <ImageBackground
+        style={{flex: 1, resizeMode: 'cover'}}
+        source={images.background}>
+        <ActivityIndicator
+          size="large"
+          color="white"
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignContent: 'center',
+          }}
+        />
+      </ImageBackground>
+    );
+  }
 
   return (
     <View style={styles.container}>
       {/* Header */}
       <View style={{flex: 2}}>
         <Image
-          source={{uri: data.vehicleImage}}
+          source={{uri: endLocationImage}}
           resizeMode="cover"
           style={{
             width: '100%',
@@ -138,15 +198,27 @@ const DestinationDetail = ({navigation}) => {
           ]}>
           <View style={{flexDirection: 'row'}}>
             <View style={styles.shadow}>
-              <Image
-                source={{uri: data.userImage}}
-                resizeMode="cover"
-                style={{
-                  width: 70,
-                  height: 70,
-                  borderRadius: 15,
-                }}
-              />
+              {data.userImage === 'nothing.png' ? (
+                <Image
+                  source={{uri: data.userImage}}
+                  resizeMode="cover"
+                  style={{
+                    width: 70,
+                    height: 70,
+                    borderRadius: 15,
+                  }}
+                />
+              ) : (
+                <Image
+                  source={images.defaultUser}
+                  resizeMode="cover"
+                  style={{
+                    width: 70,
+                    height: 70,
+                    borderRadius: 15,
+                  }}
+                />
+              )}
             </View>
 
             <View
@@ -154,14 +226,11 @@ const DestinationDetail = ({navigation}) => {
                 marginHorizontal: SIZES.radius,
                 justifyContent: 'space-around',
               }}>
-              <Text style={{...SIZES.h3}}>{data.userName}</Text>
-              <Text style={{color: COLORS.gray, ...SIZES.body3}}>
-                {data.userLocation}
-              </Text>
+              <Text style={{...SIZES.h3}}>{user.name}</Text>
 
-              <StarReview rate={data.userRating} />
+              <StarReview rate="4" />
               <View style={{marginTop: 5}}>
-                <Text style={{color: COLORS.primary}}>{data.contact}</Text>
+                <Text style={{color: COLORS.primary}}>{user.email}</Text>
               </View>
             </View>
           </View>
@@ -206,15 +275,23 @@ const DestinationDetail = ({navigation}) => {
             justifyContent: 'space-between',
           }}>
           <ScrollView horizontal>
-            <IconLabel icon={icons.frontCar} label={data.startLocation} />
-            <IconLabel icon={icons.rightArrow} label={data.estimatedTime} />
+            <IconLabel
+              icon={icons.graduationHat}
+              label={`${data.startLocation}`}
+            />
+            <IconLabel
+              icon={icons.frontCar}
+              label={`${data.estimatedTime} Minutes`}
+            />
             <IconLabel icon={icons.end} label={data.endLocation} />
           </ScrollView>
         </View>
 
         {/* About */}
         <View style={{marginTop: 10, paddingHorizontal: SIZES.padding}}>
-          <Text style={{...SIZES.body2}}>Start Date: {data.startDate}</Text>
+          <Text style={{...SIZES.body2, fontWeight: '700'}}>
+            Start Date: {Moment(data.startDate).format('LLL')}
+          </Text>
         </View>
 
         {/* About */}
@@ -223,7 +300,7 @@ const DestinationDetail = ({navigation}) => {
             marginTop: SIZES.padding - 10,
             paddingHorizontal: SIZES.padding,
           }}>
-          <Text style={{...SIZES.h2}}>Description</Text>
+          <Text style={{...SIZES.h2, fontWeight: '700'}}>Description</Text>
           <ScrollView style={{marginBottom: 140}}>
             <Text
               style={{
@@ -254,7 +331,7 @@ const DestinationDetail = ({navigation}) => {
             marginHorizontal: SIZES.radius,
           }}
           onPress={() => {
-            navigation.navigate('Map');
+            console.log('Map');
           }}>
           <LinearGradient
             style={[
@@ -292,9 +369,7 @@ const DestinationDetail = ({navigation}) => {
             colors={[COLORS.primary, '#5884ff']}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}>
-            <Text style={{color: COLORS.white, ...SIZES.h2}}>
-              GO {data.price}$
-            </Text>
+            <Text style={{color: COLORS.white, ...SIZES.h2}}>GO</Text>
           </LinearGradient>
         </TouchableOpacity>
       </View>

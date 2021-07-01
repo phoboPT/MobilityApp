@@ -79,7 +79,6 @@ const CreateCarPooling = ({navigation}) => {
         const value = await AsyncStorage.getItem('@App:userIMAGE');
         if (value !== null) {
           setUserImage(value);
-          console.log(value);
         } else {
           setUserImage(
             'https://res.cloudinary.com/hegs/image/upload/v1625155512/default-user_amkn6r.png',
@@ -122,7 +121,6 @@ const CreateCarPooling = ({navigation}) => {
         startDate: date,
         userImage: userImage,
       });
-      console.log(response.data);
       Alert.alert('Ride created with success!');
       navigation.navigate('Drawer');
     } catch (err) {

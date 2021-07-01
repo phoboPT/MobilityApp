@@ -17,6 +17,7 @@ export const starFull = require('../assets/icons/star_full.png');
 export const starHalf = require('../assets/icons/star_half.png');
 export const back = require('../assets/icons/back_icon.png');
 export const send = require('../assets/icons/send.png');
+export const graduationHat = require('../assets/icons/graduation-hat.png');
 
 export default {
   settings,
@@ -38,4 +39,5 @@ export default {
   starHalf,
   back,
   send,
+  graduationHat,
 };

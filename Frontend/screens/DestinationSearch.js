@@ -17,6 +17,7 @@ import api from '../services/api';
 import {FlatGrid} from 'react-native-super-grid';
 import {Avatar} from 'react-native-elements';
 import faker from 'faker';
+import Moment from 'moment';
 
 const DestinationSearch = ({route, navigation}) => {
   const [loading, setLoading] = useState(true);
@@ -29,11 +30,11 @@ const DestinationSearch = ({route, navigation}) => {
       setLoading(true);
       try {
         const response = await api.get('/routes/endLocation/' + endLocation);
-
         setRoutes(response.data);
         setLoading(false);
       } catch (err) {
-        Alert.alert(err.data.errors[0].message);
+        console.log(err);
+        Alert.alert('Error! Please try again later!');
         setLoading(false);
       }
     }
@@ -103,30 +104,45 @@ const DestinationSearch = ({route, navigation}) => {
         style={styles.gridView}
         spacing={10}
         renderItem={({item}) => (
-          <TouchableOpacity onPress={() => Alert.alert('Navegar')}>
-            <View
-              style={[styles.itemContainer, {backgroundColor: "white"}]}>
-              <Avatar
-                size="medium"
-                rounded
-                source={{
-                  uri: `https://randomuser.me/api/portraits/${faker.helpers.randomize(
-                    ['women', 'men'],
-                  )}/${faker.datatype.number(60)}.jpg`,
-                }}
-                activeOpacity={0.7}
-                titleStyle={{color: 'white'}}
-                containerStyle={{ backgroundColor: 'black', marginBottom: 2}}
-              />
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('DestinationDetail', {
+                data: item,
+              })
+            }>
+            <View style={[styles.itemContainer, {backgroundColor: 'white'}]}>
+              {item.userImage === 'nothing.png' ? (
+                <Avatar
+                  size="medium"
+                  rounded
+                  source={{
+                    uri: item.userImage,
+                  }}
+                  activeOpacity={0.7}
+                  titleStyle={{color: 'white'}}
+                  containerStyle={{backgroundColor: 'black', marginBottom: 2}}
+                />
+              ) : (
+                <Avatar
+                  size="medium"
+                  rounded
+                  source={{
+                    uri: 'https://res.cloudinary.com/hegs/image/upload/v1625155512/default-user_amkn6r.png',
+                  }}
+                  activeOpacity={0.7}
+                  titleStyle={{color: 'white'}}
+                  containerStyle={{backgroundColor: 'black', marginBottom: 2}}
+                />
+              )}
               <Text style={styles.userName}>Hélder Gonçalves</Text>
               <View>
                 <Text style={styles.itemName}>Start: {item.startLocation}</Text>
                 <Text style={styles.itemName}>End: {item.endLocation}</Text>
-                <Text style={styles.itemCode}>
-                  Description: {item.description}
+                <Text style={styles.itemDate}>
+                  {Moment(item.startDate).format('lll')}
                 </Text>
                 <Text style={styles.itemCode}>
-                  Estimated Time: {item.estimatedTime}
+                  Estimated Time: {item.estimatedTime} Minutes
                 </Text>
               </View>
             </View>
@@ -174,6 +190,10 @@ const styles = StyleSheet.create({
   },
   itemName: {
     fontSize: 16,
+    fontWeight: '700',
+  },
+  itemDate: {
+    fontSize: 13,
     fontWeight: '600',
   },
   userName: {
@@ -184,6 +204,6 @@ const styles = StyleSheet.create({
   itemCode: {
     fontWeight: '500',
     fontSize: 12,
-    opacity: .99,
+    opacity: 0.99,
   },
 });
