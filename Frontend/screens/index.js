@@ -10,7 +10,8 @@ import DestinationDetail from './DestinationDetail';
 import DestinationSearch from './DestinationSearch';
 import SingleMessage from './SingleMessage';
 import AuthLoading from './login/AuthLoadingScreen';
-
+import CreateVehicle
+ from './CreateVehicle';
 export {
   HomeScreen,
   MessagesScreen,
@@ -24,4 +25,5 @@ export {
   DestinationSearch,
   SingleMessage,
   AuthLoading,
+  CreateVehicle,
 };

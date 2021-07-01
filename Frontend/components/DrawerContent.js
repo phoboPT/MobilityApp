@@ -1,50 +1,65 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import {Avatar, Title, Caption, Paragraph, Drawer} from 'react-native-paper';
+import {Avatar, Title, Caption, Drawer} from 'react-native-paper';
 import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
 import api from '../services/api';
 
-import {COLORS, icons} from '../constants';
+import {COLORS, icons, images} from '../constants';
 import AsyncStorage from '@react-native-community/async-storage';
 
 export function DrawerContent(props) {
+  const [user, setUser] = useState(null);
   async function signOut() {
     await AsyncStorage.removeItem('@App:userID');
-    props.navigation.navigate('SignIn');
+    props.navigation.navigate('SignInScreen');
   }
+
+  useEffect(() => {
+    async function getCurrentUserDetails() {
+      try {
+        const response = await api.get('/users/currentUser');
+        setUser(response.data);
+        if (response.data.photoUrl == null) {
+          console.log('este utilizador nao tem foto');
+        } else {
+          await AsyncStorage.setItem('@App:userIMAGE', response.data.photoUrl);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    getCurrentUserDetails();
+  }, []);
 
   return (
     <View style={{flex: 1}}>
       <DrawerContentScrollView {...props}>
         <View style={styles.drawerContent}>
-          <TouchableOpacity
-            onPress={() => {
-              props.navigation.navigate('UserProfile');
-            }}>
-            <View style={styles.userInfoSection}>
-              <View style={{flexDirection: 'row', marginTop: 15}}>
-                <Avatar.Image
-                  source={{
-                    uri: 'https://scontent.fopo3-1.fna.fbcdn.net/v/t1.6435-9/121291773_3385520941485741_5881563945087180365_n.jpg?_nc_cat=101&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=b-FvAs3nnvIAX_Bxjlp&_nc_ht=scontent.fopo3-1.fna&oh=3d40b9be37a9ca384f7b825aff2a0c64&oe=60E51042',
-                  }}
-                  size={50}
-                />
-                <View style={{marginLeft: 15, flexDirection: 'column'}}>
-                  <Title style={styles.title}>Hélder Gonçalves</Title>
-                  <Caption style={styles.caption}>@helderpgoncalves</Caption>
+          {user ? (
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate('UserProfile');
+              }}>
+              <View style={styles.userInfoSection}>
+                <View style={{flexDirection: 'row', marginTop: 15}}>
+                  {user.photoUrl ? (
+                    <Avatar.Image
+                      source={{
+                        uri: user.photoUrl,
+                      }}
+                      size={50}
+                    />
+                  ) : (
+                    <Avatar.Image source={images.defaultUser} size={50} />
+                  )}
+                  <View style={{marginLeft: 15, flexDirection: 'column'}}>
+                    <Title style={styles.title}>{user.name}</Title>
+                    <Caption style={styles.caption}>{user.email}</Caption>
+                  </View>
                 </View>
               </View>
-
-              <View style={styles.row}>
-                <View style={styles.section}>
-                  <Paragraph style={[styles.paragraph, styles.caption]}>
-                    100
-                  </Paragraph>
-                  <Caption style={styles.caption}>Pontos Écológicos</Caption>
-                </View>
-              </View>
-            </View>
-          </TouchableOpacity>
+            </TouchableOpacity>
+          ) : null}
           <Drawer.Section style={styles.drawerSection}>
             <DrawerItem
               icon={({color, size}) => (
@@ -174,7 +189,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   caption: {
-    fontSize: 14,
+    fontSize: 12,
     lineHeight: 14,
   },
   row: {

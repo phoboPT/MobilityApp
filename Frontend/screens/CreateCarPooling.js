@@ -6,46 +6,127 @@ import {
   Image,
   TouchableOpacity,
   SafeAreaView,
-  StyleSheet,
+  ActivityIndicator,
+  ImageBackground,
 } from 'react-native';
-import {icons, SIZES, COLORS} from '../constants';
-import {launchImageLibrary} from 'react-native-image-picker';
+import {icons, SIZES, COLORS, images} from '../constants';
 import {Button, Input} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {ScrollView} from 'react-native-gesture-handler';
 import DatePicker from 'react-native-date-picker';
+import DropDownPicker from 'react-native-dropdown-picker';
+import api from '../services/api';
+import NumericInput from 'react-native-numeric-input';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const CreateCarPooling = ({navigation}) => {
-  const [photo, setPhoto] = React.useState(null);
-  const [title, setTitle] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [startLocation, setStartLocation] = React.useState('');
   const [endLocation, setEndLocation] = React.useState('');
-  const [date, setDate] = useState(null);
+  const [estimatedTime, setEstimatedTime] = React.useState(10);
+  const [userVehicles, setUserVehicles] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
+  const [userVehicle, setUserVehicle] = React.useState(null);
+  const [userImage, setUserImage] = React.useState(null);
+  const [date, setDate] = useState(new Date());
+  const [open, setOpen] = useState(false);
+  const [open1, setOpen1] = useState(false);
+  const [open2, setOpen2] = useState(false);
+  const [value, setValue] = useState(null);
+  const [value1, setValue1] = useState(null);
+  const [value2, setValue2] = useState(null);
 
-  const handleChoosePhoto = () => {
-    launchImageLibrary({noData: true}, response => {
-      // TODO ERRO
-      if (response.assets[0]) {
-        setPhoto(response.assets[0]);
-      } else {
-        setPhoto(null);
+  const [items, setItems] = useState([
+    {label: 'ESTG', value: 'Escola Superior de Tecnologia e Gestão'},
+    {label: 'ESE', value: 'Escola Superior de Educação'},
+    {label: 'ESA', value: 'Escola Superior Agrária'},
+    {label: 'ESS', value: 'Escola Superior de Saúde'},
+    {label: 'ESDL', value: 'Escola Superior de Desporto e Lazer'},
+    {label: 'ESCE', value: 'Escola Superior de Ciências Empresariais'},
+    {label: 'SAS', value: 'Serviços Académicos'},
+  ]);
+
+  useEffect(() => {
+    async function checkIfUserHasVehicles() {
+      try {
+        const response = await api.get('/vehicles/me');
+        if (response.data.length == 0) {
+          Alert.alert(
+            'You need to create a vehicle to introduce a ride',
+            null,
+            [
+              {
+                text: 'Cancel',
+                onPress: () => navigation.navigate('Drawer'),
+                style: 'cancel',
+              },
+              {
+                text: 'Create Vehicle',
+                onPress: () => navigation.navigate('CreateVehicle'),
+              },
+            ],
+          );
+        } else {
+          setUserVehicles(response.data);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
       }
-    });
-  };
-  const postCarPooling = async () => {
+    }
+
+    async function getUserImage() {
+      try {
+        const value = await AsyncStorage.getItem('@App:userIMAGE');
+        if (value !== null) {
+          setUserImage(value);
+          console.log(value);
+        } else {
+          setUserImage(
+            'https://res.cloudinary.com/hegs/image/upload/v1625155512/default-user_amkn6r.png',
+          );
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    getUserImage();
+    checkIfUserHasVehicles();
+  }, []);
+  const validateInputs = () => {
     //Enviar dados
     if (
-      title === null ||
       description === null ||
       startLocation === '' ||
       endLocation === '' ||
-      date == null
+      date == null ||
+      userVehicle == null
     ) {
-      Alert.alert('There is missing information,');
+      Alert.alert('There is missing information!');
     } else {
-      // Enviar pedido POST à API
-      console.log('Funcionou');
+      postCarPooling();
+    }
+  };
+
+  const postCarPooling = async () => {
+    try {
+      const response = await api.post('/routes', {
+        type: '2',
+        startLocation: startLocation,
+        endLocation: endLocation,
+        availableTime: null,
+        vehicleId: userVehicle,
+        state: 'Available',
+        description: description,
+        estimatedTime: estimatedTime,
+        startDate: date,
+        userImage: userImage,
+      });
+      console.log(response.data);
+      Alert.alert('Ride created with success!');
+      navigation.navigate('Drawer');
+    } catch (err) {
+      Alert.alert('Error on creating new ride. Please try Again!');
     }
   };
 
@@ -86,80 +167,169 @@ const CreateCarPooling = ({navigation}) => {
 
   function renderCreateCarPooling() {
     return (
-      <View style={{alignItems: 'center', justifyContent: 'center'}}>
-        {photo ? (
-          <>
-            <Image
-              source={{uri: photo.uri}}
-              style={{width: '100%', height: 300}}
-            />
-            <Button
-              onPress={() => handleChoosePhoto()}
-              buttonStyle={{
-                marginTop: 30,
-                backgroundColor: COLORS.secondary,
-                borderRadius: 10,
-              }}
-              titleStyle={{color: COLORS.white}}
-              icon={<Icon name="upload" size={24} color="white" />}
-              iconRight
-              title="Change Image     "
-            />
-          </>
-        ) : (
-          <>
-            <Button
-              onPress={() => handleChoosePhoto()}
-              buttonStyle={{
-                marginTop: 30,
-                backgroundColor: COLORS.primary,
-                borderRadius: 10,
-              }}
-              titleStyle={{color: COLORS.white}}
-              icon={<Icon name="upload" size={24} color="white" />}
-              iconRight
-              title="Upload Image     "
-            />
-          </>
-        )}
-        <Input
-          style={{marginTop: 30}}
-          containerStyle={{width: '90%'}}
-          placeholder="Title"
-          onChangeText={value => setTitle(value)}
+      <View
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          alignContent: 'center',
+          flexDirection: 'column',
+        }}>
+        <DropDownPicker
+          open={open}
+          closeAfterSelecting={true}
+          itemSeparator={true}
+          value={value}
+          itemKey="label"
+          theme="DARK"
+          schema={{
+            label: 'value',
+            value: 'label',
+          }}
+          items={items}
+          placeholder="Start Location"
+          setOpen={setOpen}
+          setValue={setValue}
+          onChangeValue={() => setStartLocation(value)}
+          containerStyle={{
+            width: '88%',
+            marginBottom: 10,
+            zIndex: 2,
+            marginLeft: 30,
+            marginRight: 30,
+            marginTop: 10,
+            borderRadius: 30,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          searchTextInputStyle={{
+            borderRadius: 30,
+            backgroundColor: 'transparent',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
         />
-
+        <DropDownPicker
+          open={open1}
+          closeAfterSelecting={true}
+          itemSeparator={true}
+          value={value1}
+          itemKey="label"
+          theme="DARK"
+          schema={{
+            label: 'value',
+            value: 'label',
+          }}
+          items={items}
+          placeholder="End Location"
+          onChangeValue={() => setEndLocation(value1)}
+          setOpen={setOpen1}
+          setValue={setValue1}
+          containerStyle={{
+            width: '88%',
+            marginBottom: 10,
+            zIndex: 1,
+            marginLeft: 30,
+            marginRight: 30,
+            borderRadius: 30,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          searchTextInputStyle={{
+            borderRadius: 30,
+            backgroundColor: 'transparent',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        />
+        <DropDownPicker
+          open={open2}
+          closeAfterSelecting={true}
+          itemSeparator={true}
+          value={value2}
+          theme="DARK"
+          schema={{
+            label: 'carModel',
+            value: 'id',
+          }}
+          items={userVehicles}
+          placeholder="Vehicle"
+          setOpen={setOpen2}
+          setValue={setValue2}
+          onChangeValue={() => setUserVehicle(value2)}
+          containerStyle={{
+            width: '88%',
+            marginBottom: 10,
+            zIndex: -1,
+            marginLeft: 30,
+            marginRight: 30,
+            borderRadius: 30,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          searchTextInputStyle={{
+            borderRadius: 30,
+            backgroundColor: 'transparent',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        />
         <Input
           placeholder="Description"
           multiline
-          containerStyle={{width: '90%'}}
+          placeholderTextColor="black"
+          containerStyle={{width: '90%', zIndex: -2}}
           onChangeText={value => setDescription(value)}
         />
-
-        <Input
-          placeholder="Start Location"
-          multiline
-          containerStyle={{width: '90%'}}
-          onChangeText={value => setStartLocation(value)}
-        />
-
-        <Input
-          placeholder="End Location"
-          multiline
-          containerStyle={{width: '90%'}}
-          onChangeText={value => setEndLocation(value)}
-        />
-        <View>
+        <View style={{zIndex: -3}}>
           <Text
             style={{
+              alignSelf: 'center',
               fontSize: SIZES.body2,
-              fontWeight: '300',
-              color: COLORS.gray,
+              zIndex: -3,
+              marginBottom: 15,
+              fontWeight: '400',
+              color: COLORS.black,
+            }}>
+            Estimated Time
+          </Text>
+          <NumericInput
+            value={estimatedTime}
+            onChange={value => setEstimatedTime(value)}
+            onLimitReached={() =>
+              Alert.alert('Reached the minimum value of 10 minutes!')
+            }
+            totalWidth={240}
+            editable
+            minValue={10}
+            totalHeight={50}
+            iconSize={25}
+            step={5}
+            containerStyle={{
+              zIndex: -3,
+              marginBottom: 17,
+            }}
+            valueType="real"
+            rounded
+            textColor="black"
+            iconStyle={{color: 'white'}}
+            rightButtonBackgroundColor={COLORS.primary}
+            leftButtonBackgroundColor={COLORS.gray}
+          />
+        </View>
+
+        <View style={{zIndex: -3}}>
+          <Text
+            style={{
+              alignSelf: 'center',
+              fontSize: SIZES.body2,
+              fontWeight: '400',
+              color: COLORS.black,
             }}>
             Start Time
           </Text>
           <DatePicker
             collapsable
+            minimumDate={new Date()}
             locale="pt"
             is24hourSource="locale"
             androidVariant="iosClone"
@@ -169,33 +339,43 @@ const CreateCarPooling = ({navigation}) => {
         </View>
 
         <Button
-          onPress={() => postCarPooling()}
+          onPress={() => validateInputs()}
           buttonStyle={{
             backgroundColor: COLORS.primary,
             borderRadius: 10,
           }}
           titleStyle={{color: COLORS.white}}
-          icon={<Icon name="chevron-circle-down" size={28} color="white" />}
+          icon={
+            <Icon
+              name="chevron-circle-down"
+              style={{marginLeft: 10}}
+              size={28}
+              color="white"
+            />
+          }
           iconRight
-          title="Post Ride     "
+          title="Create Ride"
         />
       </View>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      {renderHeader()}
-      <ScrollView>{renderCreateCarPooling()}</ScrollView>
-    </SafeAreaView>
+    <ImageBackground
+      style={{flex: 1, resizeMode: 'cover'}}
+      source={images.background}>
+      {loading ? (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size="large" color={COLORS.primary} />
+        </View>
+      ) : (
+        <SafeAreaView>
+          {renderHeader()}
+          {renderCreateCarPooling()}
+        </SafeAreaView>
+      )}
+    </ImageBackground>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-});
 
 export default CreateCarPooling;

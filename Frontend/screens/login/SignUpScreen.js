@@ -1,22 +1,54 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Button} from 'react-native';
 import Form from 'react-native-basic-form';
 import api from '../../services/api';
 import AsyncStorage from '@react-native-community/async-storage';
 import {COLORS} from '../../constants';
 import {Alert} from 'react-native';
+import {Avatar} from 'react-native-elements';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 const SignUpScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
+  const [photo, setPhoto] = useState(false);
+  const options = [
+    {label: '2', value: 2},
+    {label: '3', value: 3},
+    {label: '4', value: 4},
+    {label: '5', value: 5},
+    {label: '6', value: 6},
+    {label: '7', value: 7},
+    {label: '8', value: 8},
+  ];
+
+  const openPicker = () => {
+    launchImageLibrary(options, response => {
+      // Use launchImageLibrary to open image gallery
+      // console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        const source = {
+          uri: response.assets[0].uri,
+          type: response.assets[0].type,
+          name: response.assets[0].fileName,
+        };
+        setPhoto(source);
+      }
+    });
+  };
+
+  const removeImage = () => {
+    setPhoto(null);
+  };
 
   const fields = [
     {name: 'name', label: 'Name', required: true, autoCapitalize: 'none'},
-    {
-      name: 'username',
-      label: 'Username',
-      required: true,
-      autoCapitalize: 'none',
-    },
     {
       name: 'email',
       label: 'Email Address',
@@ -36,34 +68,87 @@ const SignUpScreen = ({navigation}) => {
     await AsyncStorage.setItem('@App:userID', JSON.stringify(user));
   }
 
-  // trreste@tesddt.com
   async function onSubmit(state) {
-    setLoading(true);
+    setLoading(false);
+    try {
+      const data = new FormData();
+      data.append('file', photo);
+      data.append('upload_preset', 'mobility-one');
+      data.append('cloud_name', 'hegs');
+      fetch('https://api.cloudinary.com/v1_1/hegs/image/upload', {
+        method: 'post',
+        body: data,
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.secure_url !== undefined) {
+            signUp(state, data.secure_url);
+          }
+        })
+        .catch(err => {
+          Alert.alert('An Error Occured While Creating');
+          console.log(err.data.errors);
+        });
+    } catch (err) {
+      Alert.alert(err);
+      setLoading(false);
+    }
+  }
+
+  async function signUp(state, photo) {
     try {
       const response = await api.post('/users/signup', {
         name: state.name,
         email: state.email,
         password: state.password,
+        photoUrl: photo,
       });
-
       saveUser(response.data.id);
-
       setLoading(false);
-
-      navigation.navigate('AuthLoading');
+      navigation.navigate('SignInScreen');
     } catch (err) {
       Alert.alert(err.data.errors[0].message);
       setLoading(false);
     }
   }
 
-  let formProps = {title: 'Register', fields, onSubmit, loading};
+    let formProps = {title: 'Register', fields, onSubmit, loading};
 
   return (
     <View style={styles.container}>
       <View style={styles.master}>
-        <Text style={styles.header}>Mobility One</Text>
         <Text style={styles.subHeader}>Register</Text>
+        {photo ? (
+          <>
+            <Avatar
+              containerStyle={{alignSelf: 'center', marginBottom: 12}}
+              rounded
+              source={photo}
+              size="xlarge"
+            />
+            <Button
+              onPress={() => removeImage()}
+              buttonStyle={{
+                marginTop: 30,
+                backgroundColor: COLORS.primary,
+                borderRadius: 10,
+              }}
+              titleStyle={{color: COLORS.white}}
+              title="Remove Image"
+            />
+          </>
+        ) : (
+          <Button
+            onPress={() => openPicker()}
+            buttonStyle={{
+              marginTop: 30,
+              backgroundColor: COLORS.primary,
+              borderRadius: 10,
+            }}
+            titleStyle={{color: COLORS.white}}
+            title="Upload Image"
+          />
+        )}
         <Form {...formProps}>
           <View style={styles.link}>
             <Text style={styles.text}>Already have an account? </Text>
@@ -84,7 +169,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   master: {
-    marginTop: 100,
+    marginTop: 40,
     alignContent: 'center',
     padding: 20,
     flex: 1,

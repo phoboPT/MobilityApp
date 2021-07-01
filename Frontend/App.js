@@ -15,6 +15,7 @@ import {
   Onboarding,
   UserProfile,
   SingleMessage,
+  CreateVehicle,
 } from './screens';
 import {createStackNavigator} from '@react-navigation/stack';
 import Map from './components/Map';
@@ -51,8 +52,9 @@ const App = () => {
   const MyStack = () => {
     return (
       <AppStack.Navigator headerMode="none" initialRouteName="Onboarding">
-        <AppStack.Screen name="SignIn" component={SignInScreen} />
-        <AppStack.Screen name="SignUp" component={SignUpScreen} />
+        <AppStack.Screen name="SignInScreen" component={SignInScreen} />
+        <AppStack.Screen name="SignUpScreen" component={SignUpScreen} />
+        <AppStack.Screen name="CreateVehicle" component={CreateVehicle} />
         <AppStack.Screen name="Drawer" component={navigationDrawer} />
         <AppStack.Screen name="Onboarding" component={Onboarding} />
         <AppStack.Screen name="AuthLoading" component={AuthLoadingScreen} />

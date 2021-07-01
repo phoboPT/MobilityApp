@@ -51,18 +51,24 @@ const AVATAR_SIZE = 70;
 const ITEM_SIZE = AVATAR_SIZE + SPACING * 3;
 
 const HomeScreen = ({navigation}) => {
-  const [hasNextRide, setHasNextRide] = useState(false);
+  const [hasNextRide, setHasNextRide] = useState(true);
   const [search, setSearch] = useState('');
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
-    {label: 'ESTG', value: 'Escola Superior de Tecnologia e Gestão'},
-    {label: 'ESE', value: 'Escola Superior de Educação'},
-    {label: 'ESA', value: 'Escola Superior Agrária'},
-    {label: 'ESS', value: 'Escola Superior de Saúde'},
-    {label: 'ESDL', value: 'Escola Superior de Desporto e Lazer'},
-    {label: 'ESCE', value: 'Escola Superior de Ciências Empresariais'},
-    {label: 'SAS', value: 'Serviços Académicos'},
+    {
+      label: 'Escola Superior de Tecnologia e Gestão',
+      value: 'ESTG',
+    },
+    {
+      label: 'Escola Superior de Educação',
+      value: 'ESE',
+    },
+    {label: 'Escola Superior Agrária', value: 'ESA'},
+    {label: 'Escola Superior de Saúde', value: 'ESS'},
+    {label: 'Escola Superior de Desporto e Lazer', value: 'ESDL'},
+    {label: 'Escola Superior de Ciências Empresariais', value: 'ESCE'},
+    {label: 'Serviços Académicos', value: 'SAS'},
   ]);
 
   const scrollY = new Animated.Value(0);
@@ -211,8 +217,8 @@ const HomeScreen = ({navigation}) => {
               return obj.value === value;
             });
             navigation.navigate('DestinationSearch', {
-              endLocation: item[0].label,
-              name: item[0].value,
+              endLocation: item[0].value,
+              name: item[0].label,
             });
           }}
           placeholder="Where you want to go?"
