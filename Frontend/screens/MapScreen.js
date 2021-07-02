@@ -3,6 +3,8 @@ import {
   Button,
   StyleSheet,
   SafeAreaView,
+  Image,
+  TouchableOpacity,
   Text,
   Polyline,
   ActivityIndicator,
@@ -21,12 +23,18 @@ let lng;
 const MapScreen = ({navigation, route}) => {
   const [loading, setLoading] = useState(true);
   const [haveUserLocation, setHaveUserLocation] = useState(false);
-  const [localizacao, setLocalizacao] = useState(true);
   const [GeoJsonBus, setGeoJsonBus] = useState(null);
   const [GeoJsonCar, setGeoJsonCar] = useState(null);
-  const [route1, setRoute1] = useState(null);
   const {mapType, startLocation, endLocation} = route.params;
-  const [coordenadas, setCoordenadas] = useState(null);
+  const [endLocationDescription, setEndLocationDescription] = useState({
+    name: endLocation,
+    coordinates: null,
+  });
+
+  const [startLocationDescription, setStartLocationDescription] = useState({
+    name: startLocation,
+    coordinates: null,
+  });
 
   const [initialPosition, setInitialPosition] = useState({
     latitude: 41.6946,
@@ -59,13 +67,12 @@ const MapScreen = ({navigation, route}) => {
 
   const getBusRoute = () => {
     return fetch(
-      'https://raw.githubusercontent.com/phoboPT/MobilityApp/development/mobility-one-routes/ipvc-bus-routes/Bus1-Manha.geojson',
+      'https://raw.githubusercontent.com/phoboPT/MobilityApp/development/mobility-one-routes/BUS/BUS1.geojson',
     )
       .then(response => response.json())
       .then(json => {
         if (json !== null) {
           setGeoJsonBus(json);
-          setRoute1(json.features[0].geometry);
           setLoading(false);
         }
       })
@@ -76,7 +83,7 @@ const MapScreen = ({navigation, route}) => {
 
   const getCarRoute = () => {
     return fetch(
-      'https://raw.githubusercontent.com/helderpgoncalves/mobility-one-routes/main/' +
+      'https://raw.githubusercontent.com/phoboPT/MobilityApp/development/mobility-one-routes/' +
         startLocation +
         '/' +
         endLocation +
@@ -86,6 +93,15 @@ const MapScreen = ({navigation, route}) => {
       .then(json => {
         if (json !== null) {
           setGeoJsonCar(json);
+          setEndLocationDescription({
+            name: json.features[2].properties.name,
+            coordinates: json.features[2].geometry.coordinates,
+          });
+
+          setStartLocationDescription({
+            name: json.features[1].properties.name,
+            coordinates: json.features[2].geometry.coordinates,
+          });
           setLoading(false);
         }
       })
@@ -132,11 +148,34 @@ const MapScreen = ({navigation, route}) => {
     setInitialPosition(initialRegion);
   };
 
+  const renderHeader = () => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          navigation.goBack();
+        }}>
+        <Image
+          source={icons.back}
+          resizeMode="cover"
+          style={{
+            position: 'absolute',
+            top: 50,
+            left: 20,
+            right: 20,
+            width: 30,
+            height: 30,
+          }}
+        />
+      </TouchableOpacity>
+    );
+  };
+
   if (loading) {
     return (
       <ImageBackground
         style={{flex: 1, resizeMode: 'cover'}}
         source={images.background}>
+        {renderHeader()}
         <ActivityIndicator
           size="large"
           color="white"
@@ -151,21 +190,24 @@ const MapScreen = ({navigation, route}) => {
   }
 
   return (
-    <MapView
-      style={styles.map}
-      provider={PROVIDER_GOOGLE}
-      region={initialPosition}
-      showsUserLocation
-      onMarkerPress={e => onMarkerPress(e)}
-      onUserLocationChange={event => userLocationChanged(event)}
-      onRegionChangeComplete={event => changeRegion(event)}>
-      <Geojson
-        geojson={GeoJsonCar}
-        strokeWidth={3}
-        fillColor="green"
-        strokeColor="green"
-      />
-    </MapView>
+    <View style={styles.container}>
+      <MapView
+        style={styles.map}
+        provider={PROVIDER_GOOGLE}
+        region={initialPosition}
+        showsUserLocation
+        onMarkerPress={e => onMarkerPress(e)}
+        onUserLocationChange={event => userLocationChanged(event)}
+        onRegionChangeComplete={event => changeRegion(event)}>
+        {renderHeader()}
+        <Geojson
+          geojson={GeoJsonCar}
+          strokeWidth={4}
+          fillColor="black"
+          strokeColor="black"
+        />
+      </MapView>
+    </View>
   );
 };
 
