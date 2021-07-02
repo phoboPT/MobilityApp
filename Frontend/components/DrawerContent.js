@@ -112,7 +112,9 @@ export function DrawerContent(props) {
               )}
               label="Map"
               onPress={() => {
-                props.navigation.navigate('Map');
+                props.navigation.navigate('Map', {
+                  mapType: 'Bus',
+                });
               }}
             />
             <DrawerItem

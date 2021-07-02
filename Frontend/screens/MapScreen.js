@@ -18,12 +18,15 @@ import {Alert} from 'react-native';
 let lat;
 let lng;
 
-const MapScreen = ({navigation}) => {
+const MapScreen = ({navigation, route}) => {
   const [loading, setLoading] = useState(true);
   const [haveUserLocation, setHaveUserLocation] = useState(false);
   const [localizacao, setLocalizacao] = useState(true);
-  const [GeoJson, setGeoJson] = useState(null);
-  const [route, setRoute] = useState(null);
+  const [GeoJsonBus, setGeoJsonBus] = useState(null);
+  const [GeoJsonCar, setGeoJsonCar] = useState(null);
+  const [route1, setRoute1] = useState(null);
+  const {mapType, startLocation, endLocation} = route.params;
+  const [coordenadas, setCoordenadas] = useState(null);
 
   const [initialPosition, setInitialPosition] = useState({
     latitude: 41.6946,
@@ -56,13 +59,33 @@ const MapScreen = ({navigation}) => {
 
   const getBusRoute = () => {
     return fetch(
-      'https://raw.githubusercontent.com/phoboPT/MobilityApp/development/ipvc-bus-routes/Bus1-Manha.geojson?token=AOEFRDVVSRJDOSPZLVJVSBLA5BELK',
+      'https://raw.githubusercontent.com/phoboPT/MobilityApp/development/geojson-routes/ipvc-bus-routes/Bus1-Manha.geojson?token=AOEFRDQPN7SPDI4LHAUXIJDA5BKRU',
     )
       .then(response => response.json())
       .then(json => {
         if (json !== null) {
-          setGeoJson(json);
-          setRoute(json.features[0].geometry);
+          setGeoJsonBus(json);
+          setRoute1(json.features[0].geometry);
+          setLoading(false);
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  const getCarRoute = () => {
+    return fetch(
+      'https://raw.githubusercontent.com/helderpgoncalves/mobility-one-routes/main/' +
+        startLocation +
+        '/' +
+        endLocation +
+        '.geojson',
+    )
+      .then(response => response.json())
+      .then(json => {
+        if (json !== null) {
+          setGeoJsonCar(json);
           setLoading(false);
         }
       })
@@ -73,7 +96,11 @@ const MapScreen = ({navigation}) => {
 
   useEffect(() => {
     findCoordinates();
-    getBusRoute();
+    if (mapType == 'Bus') {
+      getBusRoute();
+    } else if (mapType == 'Car') {
+      getCarRoute();
+    }
   }, []);
 
   const userLocationChanged = event => {
@@ -133,8 +160,8 @@ const MapScreen = ({navigation}) => {
       onUserLocationChange={event => userLocationChanged(event)}
       onRegionChangeComplete={event => changeRegion(event)}>
       <Geojson
-        geojson={GeoJson}
-        strokeWidth={2}
+        geojson={GeoJsonCar}
+        strokeWidth={3}
         fillColor="green"
         strokeColor="green"
       />

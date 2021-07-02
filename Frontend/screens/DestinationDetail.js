@@ -331,7 +331,11 @@ const DestinationDetail = ({navigation, route}) => {
             marginHorizontal: SIZES.radius,
           }}
           onPress={() => {
-            console.log('Map');
+            navigation.navigate('Map', {
+              mapType: 'Car',
+              startLocation: data.startLocation,
+              endLocation: data.endLocation,
+            });
           }}>
           <LinearGradient
             style={[
