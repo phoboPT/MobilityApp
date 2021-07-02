@@ -38,7 +38,7 @@ export function DrawerContent(props) {
           {user ? (
             <TouchableOpacity
               onPress={() => {
-                props.navigation.navigate('UserProfile');
+                props.navigation.navigate('MyProfile');
               }}>
               <View style={styles.userInfoSection}>
                 <View style={{flexDirection: 'row', marginTop: 15}}>

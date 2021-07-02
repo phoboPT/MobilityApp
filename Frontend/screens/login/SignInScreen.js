@@ -42,10 +42,11 @@ const SignInScreen = ({navigation}) => {
 
       navigation.navigate('Drawer');
     } catch (err) {
-      Alert.alert(
-        'Our server is receiving updates!',
-        'Please try again later.',
-      );
+      if (err.data.errors[0].message !== undefined) {
+        Alert.alert(err.data.errors[0].message);
+      } else {
+        Alert.alert('Error! Please try again!');
+      }
       setLoading(false);
     }
   }

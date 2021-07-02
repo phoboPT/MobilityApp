@@ -112,7 +112,7 @@ const SignUpScreen = ({navigation}) => {
     }
   }
 
-    let formProps = {title: 'Register', fields, onSubmit, loading};
+  let formProps = {title: 'Register', fields, onSubmit, loading};
 
   return (
     <View style={styles.container}>

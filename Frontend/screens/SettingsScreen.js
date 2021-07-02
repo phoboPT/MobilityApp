@@ -14,29 +14,6 @@ import {ListItem, Avatar, Badge} from 'react-native-elements';
 import {icons, COLORS, SIZES, images} from '../constants/index';
 import {SearchBar} from 'react-native-elements';
 
-const list = [
-  {
-    id: 1,
-    name: 'Amy Farha',
-    avatar_url: `https://randomuser.me/api/portraits/${faker.helpers.randomize([
-      'women',
-      'men',
-    ])}/${faker.datatype.number(60)}.jpg`,
-    message: 'Hey how are you?',
-    lastMessageTime: '15:09',
-  },
-  {
-    id: 2,
-    name: 'Chris Jackson',
-    avatar_url: `https://randomuser.me/api/portraits/${faker.helpers.randomize([
-      'women',
-      'men',
-    ])}/${faker.datatype.number(60)}.jpg`,
-    message: 'What are u doing ? Pick me up...',
-    lastMessageTime: '13:09',
-  },
-];
-
 const SettingsScreen = ({navigation}) => {
   const [search, setSearch] = useState('');
 

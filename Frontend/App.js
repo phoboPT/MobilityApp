@@ -18,10 +18,11 @@ import {
   CreateVehicle,
 } from './screens';
 import {createStackNavigator} from '@react-navigation/stack';
-import Map from './components/Map';
 import {navigationRef} from './navigation/RootNavigation';
 import CreateCarPooling from './screens/CreateCarPooling';
 import AuthLoadingScreen from './screens/login/AuthLoadingScreen';
+import MyProfile from './screens/MyProfile';
+import MapScreen from './screens/MapScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -39,7 +40,7 @@ const App = () => {
           component={HomeScreen}
           options={{headerShown: false}}
         />
-        <Drawer.Screen name="Map" component={Map} />
+        <Drawer.Screen name="Map" component={MapScreen} />
         <Drawer.Screen name="Messages" component={MessagesScreen} />
         <Drawer.Screen name="My Routes" component={MyRoutesScreen} />
         <Drawer.Screen name="Settings" component={SettingsScreen} />
@@ -55,8 +56,10 @@ const App = () => {
         <AppStack.Screen name="SignInScreen" component={SignInScreen} />
         <AppStack.Screen name="SignUpScreen" component={SignUpScreen} />
         <AppStack.Screen name="CreateVehicle" component={CreateVehicle} />
+        <AppStack.Screen name="Map" component={MapScreen} />
         <AppStack.Screen name="Drawer" component={navigationDrawer} />
         <AppStack.Screen name="Onboarding" component={Onboarding} />
+        <AppStack.Screen name="MyProfile" component={MyProfile} />
         <AppStack.Screen name="AuthLoading" component={AuthLoadingScreen} />
         <AppStack.Screen
           name="DestinationSearch"
