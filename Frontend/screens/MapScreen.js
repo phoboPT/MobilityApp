@@ -59,7 +59,7 @@ const MapScreen = ({navigation, route}) => {
 
   const getBusRoute = () => {
     return fetch(
-      'https://raw.githubusercontent.com/phoboPT/MobilityApp/development/geojson-routes/ipvc-bus-routes/Bus1-Manha.geojson?token=AOEFRDQPN7SPDI4LHAUXIJDA5BKRU',
+      'https://raw.githubusercontent.com/phoboPT/MobilityApp/development/mobility-one-routes/ipvc-bus-routes/Bus1-Manha.geojson',
     )
       .then(response => response.json())
       .then(json => {
