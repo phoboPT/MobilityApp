@@ -4,22 +4,27 @@ import {
   StyleSheet,
   SafeAreaView,
   Text,
+  Polyline,
   ActivityIndicator,
   View,
   ImageBackground,
 } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {PROVIDER_GOOGLE, Geojson} from 'react-native-maps';
 import {images, icons, COLORS, SIZES} from '../constants';
 import {Icon} from 'react-native-elements';
+import {Alert} from 'react-native';
 
 let lat;
 let lng;
 
 const MapScreen = ({navigation}) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [haveUserLocation, setHaveUserLocation] = useState(false);
   const [localizacao, setLocalizacao] = useState(true);
+  const [GeoJson, setGeoJson] = useState(null);
+  const [route, setRoute] = useState(null);
+
   const [initialPosition, setInitialPosition] = useState({
     latitude: 41.6946,
     longitude: -8.83016,
@@ -41,7 +46,6 @@ const MapScreen = ({navigation}) => {
             latitudeDelta: 0.02,
             longitudeDelta: 0.02,
           });
-          setLoading(false);
           setHaveUserLocation(true);
         }
       },
@@ -51,10 +55,16 @@ const MapScreen = ({navigation}) => {
   };
 
   const getBusRoute = () => {
-    return fetch('https://reactnative.dev/movies.json')
+    return fetch(
+      'https://raw.githubusercontent.com/phoboPT/MobilityApp/development/ipvc-bus-routes/Bus1-Manha.geojson?token=AOEFRDVVSRJDOSPZLVJVSBLA5BELK',
+    )
       .then(response => response.json())
       .then(json => {
-        return json.movies;
+        if (json !== null) {
+          setGeoJson(json);
+          setRoute(json.features[0].geometry);
+          setLoading(false);
+        }
       })
       .catch(error => {
         console.error(error);
@@ -63,6 +73,7 @@ const MapScreen = ({navigation}) => {
 
   useEffect(() => {
     findCoordinates();
+    getBusRoute();
   }, []);
 
   const userLocationChanged = event => {
@@ -79,6 +90,10 @@ const MapScreen = ({navigation}) => {
     lngDelta = event.longitudeDelta * 0.77426815;
   };
 
+  const onMarkerPress = e => {
+    console.log(e.nativeEvent.coordinate);
+  };
+
   const centrarUtl = () => {
     var initialRegion = {
       latitude: Number(lat),
@@ -90,15 +105,39 @@ const MapScreen = ({navigation}) => {
     setInitialPosition(initialRegion);
   };
 
+  if (loading) {
+    return (
+      <ImageBackground
+        style={{flex: 1, resizeMode: 'cover'}}
+        source={images.background}>
+        <ActivityIndicator
+          size="large"
+          color="white"
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignContent: 'center',
+          }}
+        />
+      </ImageBackground>
+    );
+  }
+
   return (
     <MapView
       style={styles.map}
       provider={PROVIDER_GOOGLE}
       region={initialPosition}
       showsUserLocation
+      onMarkerPress={e => onMarkerPress(e)}
       onUserLocationChange={event => userLocationChanged(event)}
       onRegionChangeComplete={event => changeRegion(event)}>
-      <View style={styles.bubble}></View>
+      <Geojson
+        geojson={GeoJson}
+        strokeWidth={2}
+        fillColor="green"
+        strokeColor="green"
+      />
     </MapView>
   );
 };
