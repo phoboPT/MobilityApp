@@ -8,194 +8,245 @@ import {
   Image,
   SafeAreaView,
   ImageBackground,
+  Alert,
+  ActivityIndicator,
   Animated,
 } from 'react-native';
 import {icons, COLORS, SIZES, images} from '../constants/index';
 import ActionButton from 'react-native-action-button';
 import faker from 'faker';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
-import {SearchBar} from 'react-native-elements';
-import {ScrollView} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import {Value} from 'react-native-reanimated';
-import {loadOptions} from '@babel/core';
-
-// PASSOS
-/*
-1 - Verificar se existe próxima boleia 
-2 - Verificar boleia se existe boleias recomendadas a partir do meu local
-*/
-
-faker.seed(10);
-const DATA = [...Array(3).keys()].map((_, i) => {
-  return {
-    key: faker.datatype.uuid(),
-    image: `https://randomuser.me/api/portraits/${faker.helpers.randomize([
-      'women',
-      'men',
-    ])}/${faker.datatype.number(60)}.jpg`,
-    name: faker.name.findName(),
-    title: faker.random.words(),
-    description: faker.random.words(),
-    city: faker.address.city(),
-    address: faker.address.streetAddress(),
-    date: faker.date.future().toLocaleDateString(),
-    vehicle: faker.vehicle.vehicle(),
-    phoneNumber: faker.phone.phoneNumber(),
-    time: faker.date.soon.toString(),
-  };
-});
+import Geolocation from '@react-native-community/geolocation';
+import {FlatGrid} from 'react-native-super-grid';
+import api from '../services/api';
+import {Avatar} from 'react-native-elements';
+import Moment from 'moment';
 
 const SPACING = 20;
-const AVATAR_SIZE = 70;
-const ITEM_SIZE = AVATAR_SIZE + SPACING * 3;
 
 const HomeScreen = ({navigation}) => {
-  const [hasNextRide, setHasNextRide] = useState(true);
-  const [search, setSearch] = useState('');
+  const [hasNextRide, setHasNextRide] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [recommendations, setRecommendations] = useState(null);
   const [open, setOpen] = useState(false);
+  const [nextTravel, setNextTravel] = useState(null);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
     {
       label: 'Escola Superior de Tecnologia e Gestão',
       value: 'ESTG',
+      position: {
+        lat: 41.693463,
+        long: -8.846654,
+      },
     },
     {
       label: 'Escola Superior de Educação',
       value: 'ESE',
+      position: {
+        lat: 41.702491,
+        long: -8.820698,
+      },
     },
-    {label: 'Escola Superior Agrária', value: 'ESA'},
-    {label: 'Escola Superior de Saúde', value: 'ESS'},
-    {label: 'Escola Superior de Desporto e Lazer', value: 'ESDL'},
-    {label: 'Escola Superior de Ciências Empresariais', value: 'ESCE'},
-    {label: 'Serviços Académicos', value: 'SAS'},
+    {
+      label: 'Escola Superior Agrária',
+      value: 'ESA',
+      position: {
+        lat: 41.793549,
+        long: -8.54277,
+      },
+    },
+    {
+      label: 'Escola Superior de Saúde',
+      value: 'ESS',
+      position: {
+        lat: 41.697553,
+        long: -8.836266,
+      },
+    },
+    {
+      label: 'Escola Superior de Desporto e Lazer',
+      value: 'ESDL',
+      position: {
+        lat: 42.117427,
+        long: -8.271185,
+      },
+    },
+    {
+      label: 'Escola Superior de Ciências Empresariais',
+      value: 'ESCE',
+      position: {
+        lat: 42.031629,
+        long: -8.632825,
+      },
+    },
+    {
+      label: 'Serviços Académicos',
+      value: 'SAS',
+      position: {
+        lat: 41.693286,
+        long: -8.832566,
+      },
+    },
   ]);
-
-  const scrollY = new Animated.Value(0);
-  const NEXT_TRAVEL_2 = [
-    {
-      id: 1,
-      title: 'Bike',
-      startTime: faker.date.soon().toLocaleDateString(),
-      address: faker.address.streetAddress(),
-      time: '10 Minutes',
-    },
-    {
-      id: 2,
-      title: 'Bus',
-      address: faker.address.streetAddress(),
-      startTime: faker.date.soon().toLocaleDateString(),
-      time: '1 Hour',
-    },
-    {
-      id: 3,
-      title: 'Train',
-      startTime: faker.date.soon().toLocaleDateString(),
-      address: faker.address.streetAddress(),
-      time: '50 m',
-    },
-    {
-      id: 4,
-      title: 'FINISH',
-      startTime: faker.date.soon().toLocaleDateString(),
-      address: faker.address.streetAddress(),
-      time: null,
-    },
-  ];
 
   function recommendationsNearMe() {
     return (
-      <View>
+      <>
         <Text
           style={{
             marginLeft: 15,
             fontSize: 24,
-            marginTop: 10,
+            zIndex: -1,
             fontFamily: 'Arial',
             color: 'white',
+            position: 'relative',
             fontWeight: '400',
           }}>
           Recommendations
         </Text>
-        <View>
-          <Animated.FlatList
-            onScroll={Animated.event(
-              [{nativeEvent: {contentOffset: {y: scrollY}}}],
-              {useNativeDriver: true},
-            )}
-            data={DATA}
-            contentContainerStyle={{padding: 20}}
-            keyExtractor={item => item.key}
-            renderItem={({item, index}) => {
-              const inputRange = [
-                -1,
-                0,
-                ITEM_SIZE * index,
-                ITEM_SIZE * (index + 2),
-              ];
-
-              const opacityInputRange = [
-                -1,
-                0,
-                ITEM_SIZE * index,
-                ITEM_SIZE * (index + 2),
-              ];
-
-              const scale = scrollY.interpolate({
-                inputRange,
-                outputRange: [1, 1, 1, 0],
-              });
-
-              const opacity = scrollY.interpolate({
-                inputRange: opacityInputRange,
-                outputRange: [1, 1, 1, 0],
-              });
-              return (
-                <Animated.View
-                  style={{
-                    flexDirection: 'row',
-                    padding: SPACING,
-                    marginBottom: SPACING,
-                    opacity,
-                    transform: [{scale}],
-                    borderRadius: 12,
-                    backgroundColor: 'rgba(255,255,255,0.9)',
-                  }}>
-                  <Image
-                    source={{uri: item.image}}
-                    style={{
-                      width: AVATAR_SIZE,
-                      height: AVATAR_SIZE,
-                      borderRadius: AVATAR_SIZE,
-                      marginRight: SPACING / 2,
+        <FlatGrid
+          itemDimension={130}
+          data={recommendations}
+          style={styles.gridView}
+          spacing={15}
+          renderItem={({item}) => (
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('DestinationDetail', {
+                  data: item,
+                })
+              }>
+              <View style={[styles.itemContainer, {backgroundColor: 'white'}]}>
+                {item.userImage === 'nothing.png' ? (
+                  <Avatar
+                    size="medium"
+                    rounded
+                    source={{
+                      uri: item.userImage,
                     }}
+                    activeOpacity={0.7}
+                    titleStyle={{color: 'white'}}
+                    containerStyle={{backgroundColor: 'black', marginBottom: 2}}
                   />
-                  <View>
-                    <Text style={{fontSize: 22, fontWeight: '700'}}>
-                      {item.title}
-                    </Text>
-                    <Text style={{fontSize: 14, opacity: 0.7}}>
-                      From: {item.city}
-                    </Text>
-                    <Text style={{fontSize: 14, opacity: 0.7}}>
-                      To: {item.city}
-                    </Text>
-                    <Text style={{fontSize: 12, opacity: 0.8, color: 'blue'}}>
-                      {item.date}
-                    </Text>
-                  </View>
-                </Animated.View>
-              );
-            }}
-          />
-        </View>
-      </View>
+                ) : (
+                  <Avatar
+                    size="medium"
+                    rounded
+                    source={{
+                      uri: 'https://res.cloudinary.com/hegs/image/upload/v1625155512/default-user_amkn6r.png',
+                    }}
+                    activeOpacity={0.7}
+                    titleStyle={{color: 'white'}}
+                    containerStyle={{backgroundColor: 'black', marginBottom: 2}}
+                  />
+                )}
+                <Text style={styles.userName}>Hélder Gonçalves</Text>
+                <View>
+                  <Text style={styles.itemName}>
+                    Start: {item.startLocation}
+                  </Text>
+                  <Text style={styles.itemName}>End: {item.endLocation}</Text>
+                  <Text style={styles.itemDate}>
+                    {Moment(item.startDate).format('lll')}
+                  </Text>
+                  <Text style={styles.itemCode}>
+                    Estimated Time: {item.estimatedTime} Minutes
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
+      </>
     );
   }
 
-  function getMyNextRide() {}
+  useEffect(() => {
+    findCoordinates();
+  }, []);
 
-  function getRecommendations() {}
+  const findCoordinates = () => {
+    Geolocation.getCurrentPosition(
+      position => {
+        const lat = JSON.stringify(position.coords.latitude);
+        const lng = JSON.stringify(position.coords.longitude);
+
+        const myLocation = {
+          position: {
+            lat: lat,
+            lng: lng,
+          },
+        };
+
+        nearestLocation(myLocation);
+      },
+      error => {
+        console.log(error);
+        getMyNextTravel();
+      },
+      {enableHighAccuracy: true, timeout: 1000, maximumAge: 1000},
+    );
+  };
+
+  // Calculate distance from my location to all the 6 locations and get the nearest
+  // It uses haversine formula
+  /* 
+  φ is latitude, λ is longitude, R is earth’s radius (mean radius = 6,371km);
+  note that angles need to be in radians to pass to trig functions!
+  */
+  function nearestLocation(myLocation) {
+    const R = 6371e3; // metres
+    var startLocations = [];
+    for (var i = 0; i < items.length; i++) {
+      const φ1 = (myLocation.position.lat * Math.PI) / 180; // φ, λ in radians
+      const φ2 = (items[i].position.long * Math.PI) / 180;
+      const Δφ =
+        ((items[i].position.lat - myLocation.position.lat) * Math.PI) / 180;
+      const Δλ =
+        ((items[i].position.long - myLocation.position.lng) * Math.PI) / 180;
+
+      const a =
+        Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+        Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+      const d = R * c; // in metres
+
+      startLocations.push({distance: d, startLocation: items[i].value});
+    }
+
+    var startLocation = startLocations.reduce(function (prev, curr) {
+      return prev.distance < curr.distance ? prev : curr;
+    });
+
+    getRecommendations(startLocation.startLocation);
+  }
+
+  async function getRecommendations(startLocation) {
+    try {
+      const response = await api.get('/routes/startLocation/' + startLocation);
+      setRecommendations(response.data);
+      getMyNextTravel();
+    } catch (err) {
+      getMyNextTravel();
+      console.log(err);
+      Alert.alert('Error! Fetching Recommndations!');
+    }
+  }
+
+  async function getMyNextTravel() {
+    try {
+      const response = await api.get('/routes/user');
+      setNextTravel(response.data);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+      Alert.alert('Error! Fetching Recommndations!');
+    }
+  }
 
   function renderMyNextTravel() {
     return (
@@ -254,45 +305,71 @@ const HomeScreen = ({navigation}) => {
           }}>
           Your next travel
         </Text>
-        <View style={{flexDirection: 'row'}}>
-          <Animated.FlatList
+        <View
+          style={{
+            flexDirection: 'row',
+          }}>
+          <FlatGrid
+            data={nextTravel}
             horizontal
-            data={NEXT_TRAVEL_2}
-            contentContainerStyle={{padding: SPACING}}
-            keyExtractor={item => item.id}
-            renderItem={({item, index}) => {
-              return (
-                <TouchableWithoutFeedback
-                  onPress={() => navigation.navigate('DestinationDetail')}>
-                  <Animated.View
+            style={{alignSelf: 'center', marginLeft: 15}}
+            renderItem={({item}) => (
+              <TouchableOpacity
+                style={{flexDirection: 'row'}}
+                onPress={() =>
+                  navigation.navigate('DestinationDetail', {
+                    data: item,
+                  })
+                }>
+                <View
+                  style={[
+                    styles.nextTravelContainer,
+                    {backgroundColor: 'white', marginRight: 10},
+                  ]}>
+                  <View>
+                    <Text style={styles.itemName}>
+                      Start: {item.startLocation}
+                    </Text>
+                    <Text style={styles.itemDate}>
+                      {Moment(item.startDate).format('lll')}
+                    </Text>
+                    <Text style={styles.itemCode}>
+                      Estimated Time: {item.estimatedTime} Minutes
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={[
+                    styles.nextTravelContainer,
+                    {backgroundColor: 'white', marginLeft: 10},
+                  ]}>
+                  <View
                     style={{
-                      flexDirection: 'row',
-                      padding: SPACING,
-                      marginBottom: SPACING,
-                      shadowRadius: 20,
-                      marginRight: 20,
-                      borderRadius: 12,
-                      backgroundColor: 'rgba(255,255,255,0.9)',
+                      flexDirection: 'column',
+                      alignContent: 'center',
+                      alignItems: 'center',
+                      alignSelf: 'center',
                     }}>
-                    <View>
-                      <Text style={{fontSize: 22, fontWeight: '700'}}>
-                        {item.title}
+                    <Text style={{fontWeight: '400', fontSize: 20}}>End</Text>
+                    <View style={{flexDirection: 'row'}}>
+                      <Text style={{fontWeight: '700', fontSize: 25}}>
+                        {item.endLocation}
                       </Text>
-                      <Text
-                        style={{fontSize: 18, opacity: 0.9, fontWeight: '500'}}>
-                        {item.startTime}
-                      </Text>
-                      <Text style={{fontSize: 16, opacity: 0.7}}>
-                        {item.address}
-                      </Text>
-                      <Text style={{fontSize: 12, opacity: 0.8, color: 'blue'}}>
-                        Travel time: {item.time}
-                      </Text>
+                      <Image
+                        source={icons.end}
+                        style={{
+                          marginLeft: 5,
+                          marginTop: 2,
+                          width: 23,
+                          height: 23,
+                          tintColor: COLORS.primary,
+                        }}
+                      />
                     </View>
-                  </Animated.View>
-                </TouchableWithoutFeedback>
-              );
-            }}
+                  </View>
+                </View>
+              </TouchableOpacity>
+            )}
           />
         </View>
       </View>
@@ -326,8 +403,8 @@ const HomeScreen = ({navigation}) => {
                 <TouchableOpacity
                   onPress={() =>
                     navigation.navigate('DestinationSearch', {
-                      endLocation: item.label,
-                      name: item.value,
+                      endLocation: item.value,
+                      name: item.label,
                     })
                   }>
                   <Animated.View
@@ -337,7 +414,7 @@ const HomeScreen = ({navigation}) => {
                       marginBottom: SPACING,
                       shadowRadius: 20,
                       marginRight: 20,
-                      borderRadius: 12,
+                      borderRadius: 15,
                       backgroundColor: 'rgba(255,255,255,0.9)',
                     }}>
                     <View>
@@ -421,6 +498,25 @@ const HomeScreen = ({navigation}) => {
       />
     );
   }
+
+  if (loading) {
+    return (
+      <ImageBackground
+        style={{flex: 1, resizeMode: 'cover'}}
+        source={images.background}>
+        {renderHeader()}
+        <ActivityIndicator
+          size="large"
+          color="white"
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignContent: 'center',
+          }}
+        />
+      </ImageBackground>
+    );
+  }
   return (
     <ImageBackground
       style={{flex: 1, resizeMode: 'cover'}}
@@ -437,7 +533,38 @@ const HomeScreen = ({navigation}) => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  gridView: {
+    marginTop: 5,
+  },
+  nextTravelContainer: {
+    justifyContent: 'flex-start',
+    borderRadius: 15,
+    width: 170,
+    padding: 20,
+    height: 100,
+  },
+  itemContainer: {
+    justifyContent: 'flex-start',
+    borderRadius: 15,
+    padding: 10,
+    height: 200,
+  },
+  itemName: {
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  itemDate: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  userName: {
+    fontSize: 16,
+    marginTop: 3,
+    fontWeight: '800',
+  },
+  itemCode: {
+    fontWeight: '500',
+    fontSize: 12,
+    opacity: 0.99,
   },
 });

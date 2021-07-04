@@ -14,8 +14,6 @@ import {
 import Geolocation from '@react-native-community/geolocation';
 import MapView, {PROVIDER_GOOGLE, Geojson} from 'react-native-maps';
 import {images, icons, COLORS, SIZES} from '../constants';
-import {Icon} from 'react-native-elements';
-import {Alert} from 'react-native';
 
 let lat;
 let lng;
@@ -26,14 +24,17 @@ const MapScreen = ({navigation, route}) => {
   const [GeoJsonBus, setGeoJsonBus] = useState(null);
   const [GeoJsonCar, setGeoJsonCar] = useState(null);
   const {mapType, startLocation, endLocation} = route.params;
+  const {region, setRegion} = useState([]);
   const [endLocationDescription, setEndLocationDescription] = useState({
     name: endLocation,
-    coordinates: null,
+    latitude: null,
+    longitude: null,
   });
 
   const [startLocationDescription, setStartLocationDescription] = useState({
     name: startLocation,
-    coordinates: null,
+    latitude: null,
+    longitude: null,
   });
 
   const [initialPosition, setInitialPosition] = useState({
@@ -54,8 +55,8 @@ const MapScreen = ({navigation, route}) => {
           setInitialPosition({
             latitude: Number(lat),
             longitude: Number(lng),
-            latitudeDelta: 0.02,
-            longitudeDelta: 0.02,
+            latitudeDelta: 0.03,
+            longitudeDelta: 0.03,
           });
           setHaveUserLocation(true);
         }
@@ -95,14 +96,18 @@ const MapScreen = ({navigation, route}) => {
           setGeoJsonCar(json);
           setEndLocationDescription({
             name: json.features[2].properties.name,
-            coordinates: json.features[2].geometry.coordinates,
+            latitude: json.features[2].geometry.coordinates[1],
+            longitude: json.features[2].geometry.coordinates[0],
           });
-
           setStartLocationDescription({
             name: json.features[1].properties.name,
-            coordinates: json.features[2].geometry.coordinates,
+            latitude: json.features[1].geometry.coordinates[1],
+            longitude: json.features[1].geometry.coordinates[0],
           });
-          setLoading(false);
+          getRegionForCoordinates(
+            startLocationDescription,
+            endLocationDescription,
+          );
         }
       })
       .catch(error => {
@@ -146,6 +151,37 @@ const MapScreen = ({navigation, route}) => {
     };
 
     setInitialPosition(initialRegion);
+  };
+
+  const getRegionForCoordinates = (startPoint, finishPoint) => {
+    // points should be an array of { latitude: X, longitude: Y }
+    const points = [];
+    points.push(startPoint);
+    points.push(finishPoint);
+    let minX, maxX, minY, maxY;
+
+    // init first point
+    (point => {
+      minX = point.latitude;
+      maxX = point.latitude;
+      minY = point.longitude;
+      maxY = point.longitude;
+    })(points[0]);
+
+    // calculate rect
+    points.map(point => {
+      minX = Math.min(minX, point.latitude);
+      maxX = Math.max(maxX, point.latitude);
+      minY = Math.min(minY, point.longitude);
+      maxY = Math.max(maxY, point.longitude);
+    });
+
+    const midX = (minX + maxX) / 2;
+    const midY = (minY + maxY) / 2;
+    const deltaX = maxX - minX;
+    const deltaY = maxY - minY;
+
+    setLoading(false);
   };
 
   const renderHeader = () => {

@@ -16,7 +16,6 @@ import {images, icons, SIZES, COLORS} from '../constants';
 import api from '../services/api';
 import {FlatGrid} from 'react-native-super-grid';
 import {Avatar} from 'react-native-elements';
-import faker from 'faker';
 import Moment from 'moment';
 
 const DestinationSearch = ({route, navigation}) => {
