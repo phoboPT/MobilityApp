@@ -21,7 +21,7 @@ router.post('/api/users/edit', async (req, res) => {
         throw new NotFoundError({ from: 'User not found, verify the user id' })
     }
     user.set({
-        photoUrl
+        photoUrl:photoUrl
     })
 
    await user.save()

@@ -15,6 +15,12 @@ router.get('/api/routes/user', requiredAuth, async (req: Request, res: Response)
     res.send(route)
 })
 
+router.get('/api/routes/user/:id', requiredAuth, async (req: Request, res: Response) => {
+    const route = await Route.find({userId:req.params.id})
+    console.log(route)
+    res.send(route)
+})
+
 export { router as indexRouteRouter }
 
 

@@ -28,11 +28,11 @@ it('returns a 400 with empty fields', async () => {
 
 it('disallows duplicate emails', async () => {
     await request(app).post('/api/users/signup').send({
-        email: 'teste@teste.com',
+        email: 'teste@teste12.com',
         password: 'asdf'
     }).expect(201)
     await request(app).post('/api/users/signup').send({
-        email: 'teste@teste.com',
+        email: 'teste@teste12.com',
         password: 'asdf'
     }).expect(400)
 })
