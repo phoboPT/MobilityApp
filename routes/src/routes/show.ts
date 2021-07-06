@@ -1,41 +1,33 @@
-import { NotFoundError } from "@mobileorg/common-lib"
-import express, { Request, Response } from "express"
-import { Route } from "../models/route"
+import { NotFoundError } from '@mobileorg/common-lib';
+import express, { Request, Response } from 'express';
+import { Route } from '../models/route';
 
-
-
-const router = express.Router()
+const router = express.Router();
 router.get('/api/routes/endLocation/:location', async (req: Request, res: Response) => {
-    console.log("hey")
-    const route = await Route.find({endLocation:req.params.location})
+    const route = await Route.find({ endLocation: req.params.location });
 
     if (!route) {
-        throw new NotFoundError({ from: 'show ride' })
+        throw new NotFoundError({ from: 'show ride' });
     }
-    res.send(route)
-
-})
+    res.send(route);
+});
 
 router.get('/api/routes/startLocation/:location', async (req: Request, res: Response) => {
-    console.log("hey")
-    const route = await Route.find({startLocation:req.params.location})
+    const route = await Route.find({ startLocation: req.params.location });
 
     if (!route) {
-        throw new NotFoundError({ from: 'show ride' })
+        throw new NotFoundError({ from: 'show ride' });
     }
-    res.send(route)
-
-})
+    res.send(route);
+});
 
 router.get('/api/routes/:id', async (req: Request, res: Response) => {
-    const route = await Route.findById(req.params.id)
+    const route = await Route.findById(req.params.id);
 
     if (!route) {
-        throw new NotFoundError({ from: 'show ride' })
+        throw new NotFoundError({ from: 'show ride' });
     }
-    res.send(route)
+    res.send(route);
+});
 
-})
-
-
-export { router as showRouteRouter }
+export { router as showRouteRouter };

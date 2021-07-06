@@ -13,6 +13,7 @@ interface RouteAttrs {
     startDate: string
     userImage: string
     rating: number
+    capacity:number
 }
 
 interface RouteDoc extends mongoose.Document {
@@ -28,6 +29,7 @@ interface RouteDoc extends mongoose.Document {
     startDate: string
     userImage: string
     rating: number
+    capacity:number
 }
 
 
@@ -83,6 +85,10 @@ const routeSchema = new mongoose.Schema({
     rating: {
         type: Number,
         required: true
+    },
+    capacity:{
+        type:Number,
+        required:true
     }
 }, {
     toJSON: {
