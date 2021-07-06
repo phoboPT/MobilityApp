@@ -19,9 +19,9 @@ router.post('/api/users/edit', async (req, res) => {
     }
 
     user.set({
-        photoUrl: photoUrl || user.photoUrl,
-        biography: biography || user.briography,
-        contact: contact || user.contact,
+        photoUrl: photoUrl || user.photoUrl || '',
+        biography: biography || user.briography || '',
+        contact: contact || user.contact || '',
         name: name || user.name,
     });
 
