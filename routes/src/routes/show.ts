@@ -11,7 +11,7 @@ router.get('/api/routes/endLocation/:location', async (req: Request, res: Respon
     const route = await Route.find({
         endLocation: req.params.location,
         state: 'Available',
-        startDate: { $gte: today.toDate() },
+        startDate: { $gte: moment() },
     });
 
     if (!route) {
