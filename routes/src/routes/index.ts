@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/api/routes', requiredAuth, async (req: Request, res: Response) => {
     const route = await Route.find({});
-    Route.deleteMany();
+    Route.deleteMany({});
     res.send(route);
 });
 
