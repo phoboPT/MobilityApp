@@ -8,7 +8,7 @@ router.get('/api/routes/endLocation/:location', async (req: Request, res: Respon
 
     // $gte = greater than equals
     // Não listar rotas em que já tenha passado o dia
-    const route = await Route.find({ endLocation: req.params.location, state: "Available", startDate: { $gte: currentDate }});
+    const route = await Route.find({ endLocation: req.params.location, state: "Available", {startDate: { $gte: currentDate }}});
 
     if (!route) {
         throw new NotFoundError({ from: 'show ride' });
