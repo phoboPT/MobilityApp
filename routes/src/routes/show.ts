@@ -4,7 +4,11 @@ import { Route } from '../models/route';
 
 const router = express.Router();
 router.get('/api/routes/endLocation/:location', async (req: Request, res: Response) => {
-    const route = await Route.find({ endLocation: req.params.location, state: "Available"});
+    let currentDate = new Date();
+
+    // $gte = greater than equals
+    // Não listar rotas em que já tenha passado o dia
+    const route = await Route.find({ endLocation: req.params.location, state: "Available", startDate: { $gte: currentDate }});
 
     if (!route) {
         throw new NotFoundError({ from: 'show ride' });
