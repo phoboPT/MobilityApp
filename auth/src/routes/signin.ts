@@ -14,7 +14,7 @@ router.post(
     ],
     validateRequest,
     async (req: Request, res: Response) => {
-        const { email, password, rating } = req.body;
+        const { email, password } = req.body;
         const existingUser = await User.findOne({ email });
         if (!existingUser) {
             throw new BadRequestError('Bad credentials provided', { from: 'Signin, invalid credentials' });
@@ -29,7 +29,7 @@ router.post(
             {
                 id: existingUser.id,
                 email: existingUser.email,
-                rating: rating || 0,
+                rating: existingUser.rating,
             },
             process.env.JWT_KEY!
         );
