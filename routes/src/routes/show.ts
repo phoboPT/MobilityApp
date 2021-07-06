@@ -1,11 +1,11 @@
-import { NotFoundError } from '@mobileorg/common-lib';
+import { currentUser, NotFoundError } from '@mobileorg/common-lib';
 import express, { Request, Response } from 'express';
 import { Route } from '../models/route';
 const moment = require('moment');
 
 const today = moment().startOf('day');
 const router = express.Router();
-router.get('/api/routes/endLocation/:location', async (req: Request, res: Response) => {
+router.get('/api/routes/endLocation/:location', currentUser, async (req: Request, res: Response) => {
     // $gte = greater than equals
     // Não listar rotas em que já tenha passado o dia
     const route = await Route.find({
@@ -14,7 +14,7 @@ router.get('/api/routes/endLocation/:location', async (req: Request, res: Respon
     });
     const final: any = [];
     route.forEach((item) => {
-        if (new Date(item.startDate) > new Date()) {
+        if (new Date(item.startDate) > new Date() && item.userId === currentUser!.id) {
             final.push(item);
         }
     });
