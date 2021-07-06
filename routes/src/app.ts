@@ -8,6 +8,7 @@ import { showRouteRouter } from './routes/show';
 import { indexRouteRouter } from './routes';
 import { updateRouteRouter } from './routes/update';
 import { searchRouteRouter } from './routes/search';
+import { Route } from './models/route';
 
 const app = express();
 app.set('trust proxy', true);
@@ -18,7 +19,7 @@ app.use(
         secure: false,
     })
 );
-
+Route.collection.drop();
 app.use(currentUser);
 app.use(searchRouteRouter);
 app.use(indexRouteRouter);

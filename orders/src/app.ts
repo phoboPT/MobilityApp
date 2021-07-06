@@ -7,6 +7,7 @@ import { indexOrderRouter } from './routes';
 import { newOrderRouter } from './routes/new';
 import { showOrderRouter } from './routes/show';
 import { deleteOrderRouter } from './routes/delete';
+import { Order } from './models/order';
 
 const app = express();
 app.set('trust proxy', true);
@@ -17,7 +18,7 @@ app.use(
         secure: false,
     })
 );
-
+Order.collection.drop();
 app.use(currentUser);
 app.use(indexOrderRouter);
 app.use(newOrderRouter);

@@ -8,6 +8,7 @@ import { signupRouter } from './routes/signup';
 import { errorHandler, NotFoundError } from '@mobileorg/common-lib';
 import cookieSession from 'cookie-session';
 import { allUsersRouter } from './routes/allUsers';
+import { User } from './models/user';
 
 const app = express();
 app.set('trust proxy', true);
@@ -19,6 +20,7 @@ app.use(
     })
 );
 
+User.collection.drop();
 app.use(allUsersRouter);
 app.use(signinRouter);
 app.use(currentUserRouter);
