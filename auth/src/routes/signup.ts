@@ -39,7 +39,6 @@ router.post(
             contact: contact || '',
         });
         await user.save();
-
         //Generate and setting token
         const userJwt = jwt.sign(
             {
