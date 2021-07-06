@@ -4,7 +4,7 @@ import { Route } from '../models/route';
 
 const router = express.Router();
 router.get('/api/routes/endLocation/:location', async (req: Request, res: Response) => {
-    const route = await Route.find({ endLocation: req.params.location });
+    const route = await Route.find({ endLocation: req.params.location, state: "Available"});
 
     if (!route) {
         throw new NotFoundError({ from: 'show ride' });
@@ -13,7 +13,7 @@ router.get('/api/routes/endLocation/:location', async (req: Request, res: Respon
 });
 
 router.get('/api/routes/startLocation/:location', async (req: Request, res: Response) => {
-    const route = await Route.find({ startLocation: req.params.location });
+    const route = await Route.find({ startLocation: req.params.location, state: "Available" });
 
     if (!route) {
         throw new NotFoundError({ from: 'show ride' });
