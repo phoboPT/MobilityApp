@@ -1,12 +1,16 @@
 import { requiredAuth } from '@mobileorg/common-lib';
 import express, { Response, Request } from 'express';
+import { forEachChild } from 'typescript';
 import { Route } from '../models/route';
 
 const router = express.Router();
 
 router.get('/api/routes', requiredAuth, async (req: Request, res: Response) => {
     const route = await Route.find({});
-    Route.remove({});
+    route.forEach((item) => {
+        Route.deleteOne(item.id);
+    });
+
     res.send(route);
 });
 
