@@ -11,13 +11,18 @@ router.get('/api/routes/endLocation/:location', async (req: Request, res: Respon
     const route = await Route.find({
         endLocation: req.params.location,
         state: 'Available',
-        startDate: { $gte: today.toDate() },
+    });
+    const final: any = [];
+    route.forEach((item) => {
+        if (new Date(item.startDate) > new Date()) {
+            final.push(item);
+        }
     });
 
-    if (!route) {
+    if (!final) {
         throw new NotFoundError({ from: 'show ride' });
     }
-    res.send(route);
+    res.send(final);
 });
 
 router.get('/api/routes/startLocation/:location', async (req: Request, res: Response) => {
