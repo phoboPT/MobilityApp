@@ -1,54 +1,54 @@
-import request from 'supertest'
-import { MongoMemoryServer } from 'mongodb-memory-server'
-import mongoose from 'mongoose'
-import { app } from '../app'
+import request from 'supertest';
+import { MongoMemoryServer } from 'mongodb-memory-server';
+import mongoose from 'mongoose';
+import { app } from '../app';
 
 declare global {
     namespace NodeJS {
         interface Global {
-            signin(): Promise<string[]>
+            signin(): Promise<string[]>;
         }
     }
 }
 
-
-let mongo: any
+let mongo: any;
 beforeAll(async () => {
-    process.env.JWT_KEY = 'gdhgdhgd'
+    process.env.JWT_KEY = 'gdhgdhgd';
 
-    mongo = new MongoMemoryServer()
-    const mongoUri = await mongo.getUri()
+    mongo = new MongoMemoryServer();
+    const mongoUri = await mongo.getUri();
 
     await mongoose.connect(mongoUri, {
         useNewUrlParser: true,
-        useUnifiedTopology: true
-    })
-})
+        useUnifiedTopology: true,
+    });
+});
 
 beforeEach(async () => {
-    const collections = await mongoose.connection.db.collections()
+    const collections = await mongoose.connection.db.collections();
 
     for (const collection of collections) {
-        await collection.deleteMany({})
+        await collection.deleteMany({});
     }
-})
+});
 
 afterAll(async () => {
-    await mongo.stop()
-    await mongoose.connection.close()
-})
+    await mongo.stop();
+    await mongoose.connection.close();
+});
 
 global.signin = async () => {
-    const email = 'teste@teste.com'
-    const password = 'asdf'
+    const email = 'teste@teste.com';
+    const password = 'asdf';
 
-    const response = await request(app).post('/api/users/signup').send(
-        {
-            email, password
-        }
-    ).expect(201)
+    const response = await request(app)
+        .post('/api/users/signup')
+        .send({
+            email,
+            password,
+        })
+        .expect(201);
 
-    const cookie = response.get('Set-Cookie')
-    return cookie
-
-}
+    const cookie = response.get('Set-Cookie');
+    return cookie;
+};

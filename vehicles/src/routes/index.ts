@@ -1,15 +1,12 @@
-import express, { Response, Request } from "express"
-import { Vehicle } from "../models/vehicle"
+import express, { Response, Request } from 'express';
+import { Vehicle } from '../models/vehicle';
 
-const router = express.Router()
-
+const router = express.Router();
 
 router.get('/api/vehicles', async (req: Request, res: Response) => {
+    const vehicles = await Vehicle.find({});
 
-    const vehicles = await Vehicle.find({})
+    res.send(vehicles);
+});
 
-    res.send(vehicles)
-
-})
-
-export { router as indexVehicleRouter }
+export { router as indexVehicleRouter };

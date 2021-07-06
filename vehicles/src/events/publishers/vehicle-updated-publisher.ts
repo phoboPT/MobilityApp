@@ -1,8 +1,5 @@
-import { Publisher, Subjects, VehiculeUpdatedEvent } from '@mobileorg/common-lib'
+import { Publisher, Subjects, VehiculeUpdatedEvent } from '@mobileorg/common-lib';
 
-export class VehiculeUpdatedPublisher extends Publisher<VehiculeUpdatedEvent>{
-
-    subject: Subjects.VehiculeUpdated = Subjects.VehiculeUpdated
-
-
+export class VehiculeUpdatedPublisher extends Publisher<VehiculeUpdatedEvent> {
+    subject: Subjects.VehiculeUpdated = Subjects.VehiculeUpdated;
 }

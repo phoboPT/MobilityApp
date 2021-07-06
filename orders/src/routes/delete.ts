@@ -1,28 +1,21 @@
 import express, { Request, Response } from 'express';
-import {
-  requiredAuth,
-  NotFoundError,
-  NotAuthorizedError,
-} from '@mobileorg/common-lib';
+import { requiredAuth, NotFoundError, NotAuthorizedError } from '@mobileorg/common-lib';
 import { Order, OrderStatus } from '../models/order';
 import { OrderCancelledPublisher } from '../events/publishers/order-cancelled-publisher';
 import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
-router.delete(
-  '/api/orders/:orderId',
-  requiredAuth,
-  async (req: Request, res: Response) => {
+router.delete('/api/orders/:orderId', requiredAuth, async (req: Request, res: Response) => {
     const { orderId } = req.params;
 
     const order = await Order.findById(orderId).populate('ticket');
 
     if (!order) {
-      throw new NotFoundError({ details: "error" });
+        throw new NotFoundError({ details: 'error' });
     }
     if (order.userId !== req.currentUser!.id) {
-      throw new NotAuthorizedError();
+        throw new NotAuthorizedError();
     }
     order.status = OrderStatus.Cancelled;
     await order.save();
@@ -37,7 +30,6 @@ router.delete(
     // });
 
     res.status(204).send(order);
-  }
-);
+});
 
 export { router as deleteOrderRouter };
