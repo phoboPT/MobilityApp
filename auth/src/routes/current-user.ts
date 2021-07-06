@@ -10,9 +10,9 @@ router.get('/api/users/currentUser', currentUser, async (req, res) => {
     res.send(user);
 });
 
-router.post('/api/users/edit', async (req, res) => {
+router.post('/api/users/edit', currentUser, async (req, res) => {
     const { photoUrl, biography, contact } = req.body;
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.currentUser?.id);
 
     if (!user) {
         throw new NotFoundError({ from: 'User not found, verify the user id' });
