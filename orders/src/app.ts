@@ -18,7 +18,6 @@ app.use(
         secure: false,
     })
 );
-Order.collection.drop();
 app.use(currentUser);
 app.use(indexOrderRouter);
 app.use(newOrderRouter);

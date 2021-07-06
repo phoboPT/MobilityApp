@@ -20,7 +20,6 @@ app.use(
     })
 );
 
-User.collection.drop();
 app.use(allUsersRouter);
 app.use(signinRouter);
 app.use(currentUserRouter);
