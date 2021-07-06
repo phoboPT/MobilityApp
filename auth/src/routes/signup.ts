@@ -31,12 +31,12 @@ router.post(
             email,
             password,
             rating: 0,
-            name,
+            name: name || '',
             photoUrl:
                 photoUrl ||
                 'https://toppng.com/uploads/preview/app-icon-set-login-icon-comments-avatar-icon-11553436380yill0nchdm.png',
-            biography,
-            contact,
+            biography: biography || '',
+            contact: contact || '',
         });
         await user.save();
 
