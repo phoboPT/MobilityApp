@@ -1,14 +1,18 @@
 import { NotFoundError } from '@mobileorg/common-lib';
 import express, { Request, Response } from 'express';
 import { Route } from '../models/route';
+const moment = require('moment');
 
+const today = moment().startOf('day');
 const router = express.Router();
 router.get('/api/routes/endLocation/:location', async (req: Request, res: Response) => {
-    let currentDate = new Date();
-
     // $gte = greater than equals
     // Não listar rotas em que já tenha passado o dia
-    const route = await Route.find({ endLocation: req.params.location, state: "Available", startDate: { $gte: currentDate }});
+    const route = await Route.find({
+        endLocation: req.params.location,
+        state: 'Available',
+        startDate: { $gte: today.toDate() },
+    });
 
     if (!route) {
         throw new NotFoundError({ from: 'show ride' });
@@ -17,7 +21,7 @@ router.get('/api/routes/endLocation/:location', async (req: Request, res: Respon
 });
 
 router.get('/api/routes/startLocation/:location', async (req: Request, res: Response) => {
-    const route = await Route.find({ startLocation: req.params.location, state: "Available" });
+    const route = await Route.find({ startLocation: req.params.location, state: 'Available' });
 
     if (!route) {
         throw new NotFoundError({ from: 'show ride' });

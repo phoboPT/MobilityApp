@@ -17,7 +17,7 @@ router.get('/api/routes/start/:start/end/:end', async (req: Request, res: Respon
     let routeDetails: IVisit = {};
     if (allRoutes) {
         allPaths = searchRoute(start, end, allRoutes, []);
-
+        //split the routes to populate later
         allPaths.forEach((path): void => {
             path.split(',').forEach((subpath: any): void => {
                 if (!routeDetails[subpath]) {
@@ -30,7 +30,9 @@ router.get('/api/routes/start/:start/end/:end', async (req: Request, res: Respon
             });
         });
     }
+
     const response: RouteDoc[] = [];
+    //populate the array with the data
     allPaths?.forEach((path): void => {
         let tempArray: any = [];
         path.split(',').forEach((subpath: any): void => {
