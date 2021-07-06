@@ -105,13 +105,13 @@ const DestinationDetail = ({navigation, route}) => {
   const [loading, setLoading] = useState(true);
   const [endLocationImage, setEndLocationImage] = useState(null);
   const [user, setUser] = useState(null);
-
   useEffect(() => {
     setBackgroundImage(data.endLocation);
     async function getUserInfo() {
       try {
         const response = await api.get('/users/' + data.userId);
         setUser(response.data);
+        console.log(response.data);
         setLoading(false);
       } catch (err) {
         Alert.alert(err);
@@ -196,11 +196,16 @@ const DestinationDetail = ({navigation, route}) => {
             },
             styles.shadow,
           ]}>
-          <View style={{flexDirection: 'row'}}>
-            <View style={styles.shadow}>
-              {data.userImage === 'nothing.png' ? (
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('UserProfile', {
+                user: user,
+              })
+            }>
+            <View style={{flexDirection: 'row'}}>
+              <View style={styles.shadow}>
                 <Image
-                  source={{uri: data.userImage}}
+                  source={{uri: user.photoUrl}}
                   resizeMode="cover"
                   style={{
                     width: 70,
@@ -208,32 +213,22 @@ const DestinationDetail = ({navigation, route}) => {
                     borderRadius: 15,
                   }}
                 />
-              ) : (
-                <Image
-                  source={images.defaultUser}
-                  resizeMode="cover"
-                  style={{
-                    width: 70,
-                    height: 70,
-                    borderRadius: 15,
-                  }}
-                />
-              )}
-            </View>
+              </View>
 
-            <View
-              style={{
-                marginHorizontal: SIZES.radius,
-                justifyContent: 'space-around',
-              }}>
-              <Text style={{...SIZES.h3}}>{user.name}</Text>
+              <View
+                style={{
+                  marginHorizontal: SIZES.radius,
+                  justifyContent: 'space-around',
+                }}>
+                <Text style={{...SIZES.h3}}>{user.name}</Text>
 
-              <StarReview rate="4" />
-              <View style={{marginTop: 5}}>
-                <Text style={{color: COLORS.primary}}>{user.email}</Text>
+                <StarReview rate={user.rating} />
+                <View style={{marginTop: 5}}>
+                  <Text style={{color: COLORS.primary}}>{user.email}</Text>
+                </View>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         </View>
 
         {/* Header Buttons */}
@@ -287,14 +282,22 @@ const DestinationDetail = ({navigation, route}) => {
           </ScrollView>
         </View>
 
-        {/* About */}
         <View style={{marginTop: 10, paddingHorizontal: SIZES.padding}}>
           <Text style={{...SIZES.body2, fontWeight: '700'}}>
             Start Date: {Moment(data.startDate).format('LLL')}
           </Text>
         </View>
 
-        {/* About */}
+        <View
+          style={{
+            marginTop: 10,
+            paddingHorizontal: SIZES.padding,
+          }}>
+          <Text style={{...SIZES.body2, fontWeight: '700'}}>
+            Available Seats: {data.capacity - 1}
+          </Text>
+        </View>
+
         <View
           style={{
             marginTop: SIZES.padding - 10,

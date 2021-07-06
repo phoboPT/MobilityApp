@@ -17,12 +17,13 @@ import api from '../services/api';
 import {FlatGrid} from 'react-native-super-grid';
 import {Avatar} from 'react-native-elements';
 import Moment from 'moment';
+import {ColorPropType} from 'react-native';
 
 const DestinationSearch = ({route, navigation}) => {
   const [loading, setLoading] = useState(true);
   const {name, endLocation} = route.params;
   const [routes, setRoutes] = useState(null);
-
+  const capacity = 2;
   useEffect(() => {
     // temail@testdefff.com
     async function getRoutes() {
@@ -110,33 +111,14 @@ const DestinationSearch = ({route, navigation}) => {
               })
             }>
             <View style={[styles.itemContainer, {backgroundColor: 'white'}]}>
-              {item.userImage === 'nothing.png' ? (
-                <Avatar
-                  size="medium"
-                  rounded
-                  source={{
-                    uri: item.userImage,
-                  }}
-                  activeOpacity={0.7}
-                  titleStyle={{color: 'white'}}
-                  containerStyle={{backgroundColor: 'black', marginBottom: 2}}
-                />
-              ) : (
-                <Avatar
-                  size="medium"
-                  rounded
-                  source={{
-                    uri: 'https://res.cloudinary.com/hegs/image/upload/v1625155512/default-user_amkn6r.png',
-                  }}
-                  activeOpacity={0.7}
-                  titleStyle={{color: 'white'}}
-                  containerStyle={{backgroundColor: 'black', marginBottom: 2}}
-                />
-              )}
-              <Text style={styles.userName}>Hélder Gonçalves</Text>
               <View>
                 <Text style={styles.itemName}>Start: {item.startLocation}</Text>
                 <Text style={styles.itemName}>End: {item.endLocation}</Text>
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={styles.itemName}>
+                    Available Seats: {item.capacity - 1}
+                  </Text>
+                </View>
                 <Text style={styles.itemDate}>
                   {Moment(item.startDate).format('lll')}
                 </Text>
@@ -185,7 +167,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     borderRadius: 25,
     padding: 10,
-    height: 200,
+    height: 150,
   },
   itemName: {
     fontSize: 16,

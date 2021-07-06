@@ -11,7 +11,10 @@ export function DrawerContent(props) {
   const [user, setUser] = useState(null);
   async function signOut() {
     await AsyncStorage.removeItem('@App:userID');
-    props.navigation.navigate('SignInScreen');
+    props.navigation.reset({
+      index: 0,
+      routes: [{name: 'SignInScreen'}],
+    });
   }
 
   useEffect(() => {
@@ -26,7 +29,10 @@ export function DrawerContent(props) {
         }
       } catch (err) {
         AsyncStorage.removeItem('@App:userID');
-        props.navigation.navigate('SignInScreen');
+        props.navigation.reset({
+          index: 0,
+          routes: [{name: 'SignInScreen'}],
+        });
       }
     }
     getCurrentUserDetails();

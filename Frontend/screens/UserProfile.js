@@ -1,17 +1,17 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
   Text,
-  Image,
-  TouchableOpacity,
   ImageBackground,
+  Image,
+  ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import faker, {image} from 'faker';
+import faker from 'faker';
 import {images, icons, COLORS, SIZES} from '../constants';
 import {ScrollView} from 'react-native';
-import {Alert} from 'react-native';
 
 const StarReview = ({rate}) => {
   var starComponents = [];
@@ -75,40 +75,13 @@ const StarReview = ({rate}) => {
   );
 };
 
-const IconLabel = ({icon, label}) => {
-  return (
-    <View style={{alignItems: 'center', marginLeft: 30}}>
-      <Image
-        source={icon}
-        resizeMode="cover"
-        style={{
-          tintColor: COLORS.primary,
-          width: 45,
-          height: 45,
-        }}
-      />
-      <Text style={{marginTop: SIZES.padding, color: COLORS.gray, ...SIZES.h3}}>
-        {label}
-      </Text>
-    </View>
-  );
-};
+const UserProfile = ({navigation, route}) => {
+  const {user} = route.params;
 
-const UserProfile = ({navigation}) => {
-  // Render
+  useEffect(() => {
+    console.log(user);
+  }, []);
 
-  const userData = {
-    id: 1,
-    userName: 'Hélder Gonçalves',
-    userDescription: 'Sou como sou no Alta-Definição',
-    userImage: `https://randomuser.me/api/portraits/${faker.helpers.randomize([
-      'women',
-      'men',
-    ])}/${faker.datatype.number(60)}.jpg`,
-    userRating: 3.5,
-    userLocation: 'Barcelos',
-    userContact: '+351 911979115',
-  };
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -136,15 +109,27 @@ const UserProfile = ({navigation}) => {
           ]}>
           <View style={{flexDirection: 'row'}}>
             <View style={styles.shadow}>
-              <Image
-                source={{uri: userData.userImage}}
-                resizeMode="cover"
-                style={{
-                  width: 70,
-                  height: 70,
-                  borderRadius: 15,
-                }}
-              />
+              {user.urlPhoto ? (
+                <Image
+                  source={{uri: user.urlPhoto}}
+                  resizeMode="cover"
+                  style={{
+                    width: 70,
+                    height: 70,
+                    borderRadius: 15,
+                  }}
+                />
+              ) : (
+                <Image
+                  source={images.defaultUser}
+                  resizeMode="cover"
+                  style={{
+                    width: 70,
+                    height: 70,
+                    borderRadius: 15,
+                  }}
+                />
+              )}
             </View>
 
             <View
@@ -152,16 +137,10 @@ const UserProfile = ({navigation}) => {
                 marginHorizontal: SIZES.radius,
                 justifyContent: 'space-around',
               }}>
-              <Text style={{...SIZES.h3}}>{userData.userName}</Text>
-              <Text style={{color: COLORS.gray, ...SIZES.body3}}>
-                {userData.userLocation}
-              </Text>
-
-              <StarReview rate={userData.userRating} />
+              <Text style={{...SIZES.h3}}>{user.name}</Text>
+              <StarReview rate={user.rating} />
               <View style={{marginTop: 5}}>
-                <Text style={{color: COLORS.primary}}>
-                  {userData.userContact}
-                </Text>
+                <Text style={{color: COLORS.primary}}>{user.contact}</Text>
               </View>
             </View>
           </View>
@@ -195,16 +174,14 @@ const UserProfile = ({navigation}) => {
           <View style={{flex: 1, alignItems: 'flex-end'}}></View>
         </View>
       </View>
-
       {/* Body */}
       <View style={{flex: 1.5}}>
-        {/* About */}
         <View
           style={{
             marginTop: SIZES.padding - 10,
             paddingHorizontal: SIZES.padding,
           }}>
-          <Text style={{...SIZES.h2}}>Description</Text>
+          <Text style={{...SIZES.h2}}>Biography</Text>
           <ScrollView style={{marginBottom: 140}}>
             <Text
               style={{
@@ -212,12 +189,11 @@ const UserProfile = ({navigation}) => {
                 color: COLORS.gray,
                 ...SIZES.body3,
               }}>
-              {userData.userDescription}
+              {user.biography}
             </Text>
           </ScrollView>
         </View>
       </View>
-
       {/* Footer */}
       <View
         style={{
@@ -234,10 +210,8 @@ const UserProfile = ({navigation}) => {
           }}
           onPress={() =>
             navigation.navigate('SingleMessage', {
-              userId: 2,
-              userName: userData.userName,
-              userAvatar: userData.userImage,
-              userMessage: '',
+              user: user,
+              name: user.name,
             })
           }>
           <LinearGradient

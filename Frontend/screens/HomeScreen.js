@@ -22,13 +22,16 @@ import {FlatGrid} from 'react-native-super-grid';
 import api from '../services/api';
 import {Avatar} from 'react-native-elements';
 import Moment from 'moment';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const SPACING = 20;
 
 const HomeScreen = ({navigation}) => {
   const [hasNextRide, setHasNextRide] = useState(false);
+  const [hasRecommendations, setHasRecommendations] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [recommendations, setRecommendations] = useState(null);
+  const [recommendations, setRecommendations] = useState([]);
+  const [userId, setUserId] = useState(null);
   const [open, setOpen] = useState(false);
   const [nextTravel, setNextTravel] = useState(null);
   const [value, setValue] = useState(null);
@@ -119,30 +122,6 @@ const HomeScreen = ({navigation}) => {
                 })
               }>
               <View style={[styles.itemContainer, {backgroundColor: 'white'}]}>
-                {item.userImage === 'nothing.png' ? (
-                  <Avatar
-                    size="medium"
-                    rounded
-                    source={{
-                      uri: item.userImage,
-                    }}
-                    activeOpacity={0.7}
-                    titleStyle={{color: 'white'}}
-                    containerStyle={{backgroundColor: 'black', marginBottom: 2}}
-                  />
-                ) : (
-                  <Avatar
-                    size="medium"
-                    rounded
-                    source={{
-                      uri: 'https://res.cloudinary.com/hegs/image/upload/v1625155512/default-user_amkn6r.png',
-                    }}
-                    activeOpacity={0.7}
-                    titleStyle={{color: 'white'}}
-                    containerStyle={{backgroundColor: 'black', marginBottom: 2}}
-                  />
-                )}
-                <Text style={styles.userName}>Hélder Gonçalves</Text>
                 <View>
                   <Text style={styles.itemName}>
                     Start: {item.startLocation}
@@ -164,6 +143,11 @@ const HomeScreen = ({navigation}) => {
   }
 
   useEffect(() => {
+    async function handleUserNextScreen() {
+      const id = await AsyncStorage.getItem('@App:userID');
+      setUserId(id);
+    }
+    handleUserNextScreen();
     findCoordinates();
   }, []);
 
@@ -222,29 +206,50 @@ const HomeScreen = ({navigation}) => {
     });
 
     getRecommendations(startLocation.startLocation);
+    getMyNextTravel();
   }
 
+  // A função serve para receber as recomendacoes pelo simples pedido da procura de boleias que
+  // se inciam no local onde estamos mais perto
+  // o forEach serve unicamente para nao mostrar boleias criadas por nos
   async function getRecommendations(startLocation) {
+    const recommendations = [];
+
     try {
       const response = await api.get('/routes/startLocation/' + startLocation);
-      setRecommendations(response.data);
+      if (response.data.length !== 0) {
+        response.data.forEach(element => {
+          if (element.userId !== JSON.parse(userId)) {
+            recommendations.push(element);
+          }
+        });
+      }
+      if (recommendations.length != 0) {
+        setRecommendations(recommendations);
+        setHasRecommendations(true);
+      }
       getMyNextTravel();
     } catch (err) {
       getMyNextTravel();
       console.log(err);
-      Alert.alert('Error! Fetching Recommndations!');
+      Alert.alert('Error! Fetching Recommendations!');
     }
   }
 
   async function getMyNextTravel() {
     try {
       const response = await api.get('/routes/user');
-      setNextTravel(response.data);
+      if (response.data.lenght !== undefined) {
+        setHasNextRide(true);
+        setNextTravel(response.data);
+      } else {
+        setHasNextRide(false);
+      }
       setLoading(false);
     } catch (err) {
       console.log(err);
       setLoading(false);
-      Alert.alert('Error! Fetching Recommndations!');
+      Alert.alert('Error! Fetching Next Travel!');
     }
   }
 
@@ -391,7 +396,7 @@ const HomeScreen = ({navigation}) => {
           }}>
           Destinations
         </Text>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{flexDirection: 'column'}}>
           <Animated.FlatList
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -438,7 +443,7 @@ const HomeScreen = ({navigation}) => {
     return (
       <View>
         {hasNextRide ? renderMyNextTravel() : renderDestinations()}
-        {recommendationsNearMe()}
+        {hasRecommendations ? recommendationsNearMe() : null}
       </View>
     );
   }
@@ -521,7 +526,7 @@ const HomeScreen = ({navigation}) => {
     <ImageBackground
       style={{flex: 1, resizeMode: 'cover'}}
       source={images.background}>
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={{flex: 1}}>
         {renderHeader()}
         {renderBody()}
         {renderActionButton()}
@@ -547,7 +552,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     borderRadius: 15,
     padding: 10,
-    height: 200,
   },
   itemName: {
     fontSize: 16,

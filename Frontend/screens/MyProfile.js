@@ -5,8 +5,11 @@ import {
   Text,
   Alert,
   Image,
+  Pressable,
+  Modal,
   TouchableOpacity,
   ActivityIndicator,
+  TextInput,
   ScrollView,
   ImageBackground,
 } from 'react-native';
@@ -14,12 +17,19 @@ import {images, icons, COLORS, SIZES} from '../constants';
 import api from '../services/api';
 import {Icon} from 'react-native-elements';
 import {launchImageLibrary} from 'react-native-image-picker';
+import {Button} from 'react-native-elements';
 
 const MyProfile = ({navigation}) => {
   // Render
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [photo, setPhoto] = useState(false);
+  const [biography, setBiography] = useState('');
+  const [contact, setContact] = useState('');
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible2, setModalVisible2] = useState(false);
+
   const options = [
     {label: '2', value: 2},
     {label: '3', value: 3},
@@ -30,16 +40,40 @@ const MyProfile = ({navigation}) => {
     {label: '8', value: 8},
   ];
 
-  useEffect(() => {
-    async function getMyInfo() {
-      try {
-        const response = await api.get('/users/currentUser');
-        setData(response.data);
-        setLoading(false);
-      } catch (err) {
-        console.log(err);
-      }
+  const updateUserDetails = async bio => {
+    if (bio == true) {
+      setModalVisible(!modalVisible);
+    } else {
+      setModalVisible2(!modalVisible2);
     }
+    try {
+      const response = await api.post('/users/edit', {
+        biography: biography,
+        photoUrl:
+          'https://barcelosnahora.pt/wp-content/uploads/2020/12/helder.png',
+        contact: contact,
+      });
+      getMyInfo();
+    } catch (err) {
+      console.log(err);
+      Alert.alert('Error updating your Details!');
+    }
+  };
+
+  async function getMyInfo() {
+    try {
+      const response = await api.get('/users/currentUser');
+      setData(response.data);
+      setContact(response.data.contact);
+      setBiography(response.data.biography);
+      setPhoto(response.data.photoUrl);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
     getMyInfo();
   }, []);
 
@@ -199,15 +233,18 @@ const MyProfile = ({navigation}) => {
               <Text style={{color: COLORS.gray, ...SIZES.body3}}>
                 {data.email}
               </Text>
-              {data.contact ? (
-                <View style={{marginTop: 5}}>
-                  <Text style={{color: COLORS.primary}}>{data.contact}</Text>
-                </View>
-              ) : (
-                <View style={{marginTop: 5}}>
-                  <Text style={{color: COLORS.primary}}>Add Contact</Text>
-                </View>
-              )}
+              <TouchableOpacity
+                onPress={() => setModalVisible2(!modalVisible2)}>
+                {data.contact ? (
+                  <View style={{marginTop: 5}}>
+                    <Text style={{color: COLORS.primary}}>{data.contact}</Text>
+                  </View>
+                ) : (
+                  <View style={{marginTop: 5}}>
+                    <Text style={{color: COLORS.primary}}>Add Contact</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -250,17 +287,81 @@ const MyProfile = ({navigation}) => {
             paddingHorizontal: SIZES.padding,
           }}>
           <Text style={{...SIZES.h2, fontWeight: '500'}}>Biography</Text>
-          <ScrollView style={{marginBottom: 140}}>
-            {data.biography ? (
-              <View style={{marginTop: 5}}>
-                <Text style={{color: COLORS.primary}}>{data.biography}</Text>
+          <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+            <ScrollView style={{marginBottom: 140}}>
+              {data.biography ? (
+                <View style={{marginTop: 5}}>
+                  <Text style={{color: COLORS.primary}}>{data.biography}</Text>
+                </View>
+              ) : (
+                <View style={{marginTop: 5}}>
+                  <Text style={{color: COLORS.primary}}>Add Biography</Text>
+                </View>
+              )}
+            </ScrollView>
+          </TouchableOpacity>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => setModalVisible(!modalVisible)}>
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <TextInput
+                  multiline
+                  placeholder="Edit Biography"
+                  onChangeText={text => setBiography(text)}
+                  placeholderTextColor="gray"
+                  showSoftInputOnFocus
+                  style={styles.modalText}
+                />
+                <View style={{flexDirection: 'row', margin: 10}}>
+                  <Button
+                    title="Cancel"
+                    type="outline"
+                    style={{marginRight: 10}}
+                    onPress={() => setModalVisible(!modalVisible)}
+                  />
+                  <Button
+                    style={{marginLeft: 10}}
+                    title="Save"
+                    onPress={() => updateUserDetails(true)}
+                  />
+                </View>
               </View>
-            ) : (
-              <View style={{marginTop: 5}}>
-                <Text style={{color: COLORS.primary}}>Add Biography</Text>
+            </View>
+          </Modal>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible2}
+            onRequestClose={() => setModalVisible2(!modalVisible2)}>
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <TextInput
+                  multiline
+                  placeholder="Edit Contact"
+                  onChangeText={text => setContact(text)}
+                  placeholderTextColor="gray"
+                  showSoftInputOnFocus
+                  style={styles.modalText}
+                />
+                <View style={{flexDirection: 'row', margin: 10}}>
+                  <Button
+                    title="Cancel"
+                    type="outline"
+                    style={{marginRight: 10}}
+                    onPress={() => setModalVisible2(!modalVisible2)}
+                  />
+                  <Button
+                    style={{marginLeft: 10}}
+                    title="Save"
+                    onPress={() => updateUserDetails(false)}
+                  />
+                </View>
               </View>
-            )}
-          </ScrollView>
+            </View>
+          </Modal>
         </View>
       </View>
     </View>
@@ -282,6 +383,37 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
 
     elevation: 5,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: COLORS.lightGray,
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    color: 'black',
+    textAlign: 'center',
   },
 });
 

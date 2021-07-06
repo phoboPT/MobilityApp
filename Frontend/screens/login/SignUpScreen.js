@@ -62,11 +62,9 @@ const SignUpScreen = ({navigation}) => {
       secure: true,
       autoCapitalize: 'none',
     },
+    {name: 'contact', label: 'Contact', require: true},
+    {name: 'biography', label: 'Biography', multiline: true},
   ];
-
-  async function saveUser(user) {
-    await AsyncStorage.setItem('@App:userID', JSON.stringify(user));
-  }
 
   async function onSubmit(state) {
     setLoading(false);
@@ -102,10 +100,14 @@ const SignUpScreen = ({navigation}) => {
         email: state.email,
         password: state.password,
         photoUrl: photo,
+        biography: state.biography,
+        contact: state.contact,
       });
-      saveUser(response.data.id);
-      setLoading(false);
-      navigation.navigate('SignInScreen');
+      if (response.data !== undefined) {
+        setLoading(false);
+        Alert.alert('User successfully registered!');
+        navigation.navigate('SignInScreen');
+      }
     } catch (err) {
       Alert.alert(err.data.errors[0].message);
       setLoading(false);

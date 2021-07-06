@@ -18,7 +18,7 @@ const list = [
   {
     id: 1,
     name: 'Amy Farha',
-    avatar_url: `https://randomuser.me/api/portraits/${faker.helpers.randomize([
+    photoUrl: `https://randomuser.me/api/portraits/${faker.helpers.randomize([
       'women',
       'men',
     ])}/${faker.datatype.number(60)}.jpg`,
@@ -28,7 +28,7 @@ const list = [
   {
     id: 2,
     name: 'Chris Jackson',
-    avatar_url: `https://randomuser.me/api/portraits/${faker.helpers.randomize([
+    photoUrl: `https://randomuser.me/api/portraits/${faker.helpers.randomize([
       'women',
       'men',
     ])}/${faker.datatype.number(60)}.jpg`,
@@ -91,10 +91,7 @@ const MessagesScreen = ({navigation}) => {
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('SingleMessage', {
-                  userId: list[i].id,
-                  userName: list[i].name,
-                  userAvatar: list[i].avatar_url,
-                  userMessage: list[i].message,
+                  user: list[i],
                 })
               }>
               <ListItem key={i} bottomDivider>

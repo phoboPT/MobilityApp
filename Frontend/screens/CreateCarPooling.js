@@ -25,15 +25,22 @@ const CreateCarPooling = ({navigation}) => {
   const [estimatedTime, setEstimatedTime] = React.useState(10);
   const [userVehicles, setUserVehicles] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
-  const [userVehicle, setUserVehicle] = React.useState(null);
+  const [vehicle, setVehicle] = React.useState(null);
+  const [capacities, setCapacities] = React.useState(null);
+  const [capacity, setCapacity] = React.useState(null);
   const [userImage, setUserImage] = React.useState(null);
+  const [vehicleChoosed, setVehicleChoosed] = React.useState(false);
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
+  const [open3, setOpen3] = useState(false);
   const [value, setValue] = useState(null);
   const [value1, setValue1] = useState(null);
   const [value2, setValue2] = useState(null);
+  const [value3, setValue3] = useState(null);
+
+  const [capacityOptions, setCapacityOptions] = useState(null);
 
   const [items, setItems] = useState([
     {label: 'ESTG', value: 'Escola Superior de Tecnologia e Gestão'},
@@ -99,7 +106,8 @@ const CreateCarPooling = ({navigation}) => {
       startLocation === '' ||
       endLocation === '' ||
       date == null ||
-      userVehicle == null
+      vehicle == null ||
+      capacity == null
     ) {
       Alert.alert('There is missing information!');
     } else {
@@ -113,13 +121,13 @@ const CreateCarPooling = ({navigation}) => {
         type: '2',
         startLocation: startLocation,
         endLocation: endLocation,
-        availableTime: null,
-        vehicleId: userVehicle,
+        vehicleId: vehicle,
         state: 'Available',
         description: description,
         estimatedTime: estimatedTime,
         startDate: date,
         userImage: userImage,
+        capacity: capacity,
       });
       Alert.alert('Ride created with success!');
       navigation.navigate('Drawer');
@@ -128,6 +136,32 @@ const CreateCarPooling = ({navigation}) => {
     }
   };
 
+  const CarPoolingCapacity = async idVehicle => {
+    setVehicle(idVehicle);
+    var capacityList = [];
+    var arrayOfObjects = [];
+    var vehicleCapacity = 0;
+
+    // Find Vehicle Capacity By ID
+    for (var i = 0; i < userVehicles.length; i++) {
+      if (userVehicles[i].id === idVehicle) {
+        vehicleCapacity = userVehicles[i].capacity;
+      }
+    }
+
+    // Generate Numbers from Max Capacity to 2 (Driver + Someone is the Minimum Value)
+    capacityList = Array(vehicleCapacity - 1)
+      .fill()
+      .map((d, i) => i + 2);
+
+    // For each element create an object to push to array so we can list on Dropdown
+    capacityList.forEach(element => {
+      arrayOfObjects.push({value: element, label: element});
+    });
+
+    setCapacities(arrayOfObjects);
+    setVehicleChoosed(true);
+  };
   function renderHeader() {
     return (
       <View style={{flexDirection: 'row', height: 50}}>
@@ -253,7 +287,7 @@ const CreateCarPooling = ({navigation}) => {
           placeholder="Vehicle"
           setOpen={setOpen2}
           setValue={setValue2}
-          onChangeValue={() => setUserVehicle(value2)}
+          onChangeValue={() => CarPoolingCapacity(value2)}
           containerStyle={{
             width: '88%',
             marginBottom: 10,
@@ -271,13 +305,42 @@ const CreateCarPooling = ({navigation}) => {
             alignItems: 'center',
           }}
         />
-        <Input
-          placeholder="Description"
-          multiline
-          placeholderTextColor="black"
-          containerStyle={{width: '90%', zIndex: -2}}
-          onChangeText={value => setDescription(value)}
-        />
+
+        {vehicleChoosed ? (
+          <DropDownPicker
+            open={open3}
+            closeAfterSelecting={true}
+            itemSeparator={true}
+            value={value3}
+            theme="DARK"
+            schema={{
+              label: 'label',
+              value: 'value',
+            }}
+            items={capacities}
+            placeholder="Seats"
+            setOpen={setOpen3}
+            setValue={setValue3}
+            onChangeValue={() => setCapacity(value3)}
+            containerStyle={{
+              width: '88%',
+              marginBottom: 10,
+              zIndex: -2,
+              marginLeft: 30,
+              marginRight: 30,
+              borderRadius: 30,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            searchTextInputStyle={{
+              borderRadius: 30,
+              backgroundColor: 'transparent',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          />
+        ) : null}
+
         <View style={{zIndex: -3}}>
           <Text
             style={{
@@ -314,6 +377,14 @@ const CreateCarPooling = ({navigation}) => {
             leftButtonBackgroundColor={COLORS.gray}
           />
         </View>
+
+        <Input
+          placeholder="Description"
+          multiline
+          placeholderTextColor="black"
+          containerStyle={{width: '90%', zIndex: -3}}
+          onChangeText={value => setDescription(value)}
+        />
 
         <View style={{zIndex: -3}}>
           <Text
