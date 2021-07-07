@@ -12,7 +12,6 @@ router.get('/api/orders/routeId/:id', currentUser, requiredAuth, async (req: Req
 
     res.send(order);
 });
-
 router.get('/api/orders/:orderId', requiredAuth, async (req: Request, res: Response) => {
     const order = await Order.findById(req.params.orderId).populate('route');
 
