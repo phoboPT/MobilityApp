@@ -25,7 +25,11 @@ router.get('/api/routes/endLocation/:location', currentUser, async (req: Request
 });
 
 router.get('/api/routes/startLocation/:location', async (req: Request, res: Response) => {
-    const route = await Route.find({ startLocation: req.params.location, state: 'Available' });
+    const route = await Route.find({
+        startLocation: req.params.location,
+        state: 'Available',
+        userId: { $ne: req.currentUser!.id },
+    });
 
     if (!route) {
         throw new NotFoundError({ from: 'show ride' });
