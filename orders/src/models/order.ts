@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 import { OrderStatus } from '@mobileorg/common-lib';
-import { TicketDoc } from './ticket';
+import { RouteDoc } from './route';
 
 export { OrderStatus };
 
@@ -9,15 +9,17 @@ interface OrderAttrs {
     userId: string;
     status: OrderStatus;
     expiresAt: Date;
-    ticket: TicketDoc;
+    ticket: RouteDoc;
+    routeId: string;
 }
 
 interface OrderDoc extends mongoose.Document {
     userId: string;
     status: OrderStatus;
     expiresAt: Date;
-    ticket: TicketDoc;
+    ticket: RouteDoc;
     version: number;
+    routeId: string;
 }
 
 interface OrderModel extends mongoose.Model<OrderDoc> {
@@ -42,6 +44,10 @@ const orderSchema = new mongoose.Schema(
         ticket: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Ticket',
+        },
+        routeId: {
+            type: String,
+            required: true,
         },
     },
     {

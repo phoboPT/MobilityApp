@@ -1,4 +1,4 @@
-import { requiredAuth, validateRequest, NotAuthorizedError, NotFoundError } from '@mobileorg/common-lib';
+import { requiredAuth, validateRequest, NotAuthorizedError, NotFoundError, currentUser } from '@mobileorg/common-lib';
 import express, { Response, Request, request } from 'express';
 import { body } from 'express-validator';
 import { RouteUpdatedPublisher } from '../events/publishers/route-updated-publisher';
@@ -7,7 +7,7 @@ import { Route } from '../models/route';
 
 const router = express.Router();
 
-router.put('/api/routes/:id', requiredAuth, validateRequest, async (req: Request, res: Response) => {
+router.put('/api/routes/:id', currentUser, requiredAuth, validateRequest, async (req: Request, res: Response) => {
     const route = await Route.findById(req.params.id);
     const {
         startLocation,
@@ -22,6 +22,7 @@ router.put('/api/routes/:id', requiredAuth, validateRequest, async (req: Request
         rating,
         capacity,
         availableTime,
+        actualCapacity,
     } = req.body;
     if (!route) {
         throw new NotFoundError({ from: 'Route not found, verify the route id' });
@@ -44,8 +45,11 @@ router.put('/api/routes/:id', requiredAuth, validateRequest, async (req: Request
         userImage: userImage || route.userImage,
         rating: rating || route.rating,
         capacity: capacity || route.capacity,
+        actualCapacity: actualCapacity || route.actualCapacity,
     });
+
     await route.save();
+    console.log('hey');
     // new RouteUpdatedPublisher(natsWrapper.client).publish({
     //     id: route.id,
     //     type: route.type,

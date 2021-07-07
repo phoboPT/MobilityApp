@@ -5,7 +5,7 @@ import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import mongoose from 'mongoose';
 import { Order } from '../models/order';
-import { Ticket } from '../models/ticket';
+import { Route } from '../models/route';
 
 const router = express.Router();
 const EXPIRATION_WINDOW_SECONDS = 15 * 60;
@@ -21,16 +21,17 @@ router.post(
     ],
     validateRequest,
     async (req: Request, res: Response) => {
-        const { ticketId } = req.body;
+        const { routeId } = req.body;
 
-        const ticket = await Ticket.findById(ticketId);
-        if (!ticket) {
-            throw new NotFoundError({ details: 'New order ' });
+        let route = await Route.findById(routeId);
+        if (!route) {
+            // throw new NotFoundError({ details: 'New order ' });
+            route = Route.build({ id: routeId });
         }
-        const isReserved = await ticket.isReserved();
-        if (isReserved) {
-            throw new BadRequestError('Already reserved', { details: 'order a ride' });
-        }
+        // const isReserved = await ticket.isReserved();
+        // if (isReserved) {
+        //     throw new BadRequestError('Already reserved', { details: 'order a ride' });
+        // }
         const expiration = new Date();
 
         expiration.setSeconds(expiration.getSeconds() + EXPIRATION_WINDOW_SECONDS);
@@ -38,7 +39,8 @@ router.post(
             userId: req.currentUser!.id,
             status: OrderStatus.Created,
             expiresAt: expiration,
-            ticket,
+            ticket: route,
+            routeId,
         });
 
         await order.save();
@@ -46,11 +48,13 @@ router.post(
         new OrderCreatedPublisher(natsWrapper.client).publish({
             id: order.id,
             status: order.status,
+            version: order.version,
             ticket: {
-                id: ticket.id,
+                id: route.id,
             },
             userId: order.userId,
             expiresAt: order.expiresAt.toISOString(),
+            routeId: order.routeId,
         });
         res.status(201).send(order);
     }

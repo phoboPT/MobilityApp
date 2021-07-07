@@ -14,6 +14,7 @@ interface RouteAttrs {
     userImage: string;
     rating: number;
     capacity: number;
+    actualCapacity: number;
 }
 
 interface RouteDoc extends mongoose.Document {
@@ -30,6 +31,7 @@ interface RouteDoc extends mongoose.Document {
     userImage: string;
     rating: number;
     capacity: number;
+    actualCapacity: number;
 }
 
 interface RouteModel extends mongoose.Model<RouteDoc> {
@@ -87,6 +89,10 @@ const routeSchema = new mongoose.Schema(
             required: true,
         },
         capacity: {
+            type: Number,
+            required: true,
+        },
+        actualCapacity: {
             type: Number,
             required: true,
         },

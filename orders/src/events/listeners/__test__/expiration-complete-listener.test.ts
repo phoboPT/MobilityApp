@@ -4,15 +4,13 @@ import { OrderStatus, ExpirationCompleteEvent } from '@sgtickets/common';
 import { ExpirationCompleteListener } from '../expiration-complete-listener';
 import { natsWrapper } from '../../../nats-wrapper';
 import { Order } from '../../../models/order';
-import { Ticket } from '../../../models/ticket';
+import { Route } from '../../../models/route';
 
 const setup = async () => {
     const listener = new ExpirationCompleteListener(natsWrapper.client);
 
-    const ticket = Ticket.build({
+    const ticket = Route.build({
         id: mongoose.Types.ObjectId().toHexString(),
-        title: 'concert',
-        price: 20,
     });
     await ticket.save();
     const order = Order.build({

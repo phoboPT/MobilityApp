@@ -29,8 +29,7 @@ spec:
               '2',
               '-SD',
               '-cid',
-              'orders',
-            
+              'orders',            
             ]
 ---
 apiVersion: v1
