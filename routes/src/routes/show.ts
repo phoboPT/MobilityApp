@@ -3,7 +3,6 @@ import express, { Request, Response } from 'express';
 import { Route } from '../models/route';
 const moment = require('moment');
 
-const today = moment().startOf('day');
 const router = express.Router();
 router.get('/api/routes/endLocation/:location', currentUser, async (req: Request, res: Response) => {
     // $gte = greater than equals
@@ -14,7 +13,7 @@ router.get('/api/routes/endLocation/:location', currentUser, async (req: Request
     });
     const final: any = [];
     route.forEach((item) => {
-        if (new Date(item.startDate) > new Date() && item.userId === currentUser!.id) {
+        if (new Date(item.startDate) > new Date() && item.userId === req.currentUser!.id) {
             final.push(item);
         }
     });

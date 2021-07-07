@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
-import { requiredAuth, NotFoundError, NotAuthorizedError } from '@mobileorg/common-lib';
-import { Order, OrderStatus } from '../models/order';
+import { requiredAuth, NotFoundError, NotAuthorizedError, OrderStatus } from '@mobileorg/common-lib';
+import { Order } from '../models/order';
 import { OrderCancelledPublisher } from '../events/publishers/order-cancelled-publisher';
 import { natsWrapper } from '../nats-wrapper';
 
@@ -20,14 +20,13 @@ router.delete('/api/orders/:orderId', requiredAuth, async (req: Request, res: Re
     order.status = OrderStatus.Cancelled;
     await order.save();
 
-    // // publishing an event saying this was cancelled!
-    // new OrderCancelledPublisher(natsWrapper.client).publish({
-    //   id: order.id,
-    //   version: order.version,
-    //   ticket: {
-    //     id: order.ticket.id,
-    //   },
-    // });
+    // publishing an event saying this was cancelled!
+    new OrderCancelledPublisher(natsWrapper.client).publish({
+        id: order.id,
+        ticket: {
+            id: order.ticket.id,
+        },
+    });
 
     res.status(204).send(order);
 });
