@@ -13,6 +13,7 @@ export class RouteCreatedListener extends Listener<RouteCreatedEvent> {
             id,
             capacity,
         });
+        console.log(route);
         await route.save();
 
         msg.ack();
