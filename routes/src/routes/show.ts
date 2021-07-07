@@ -1,7 +1,6 @@
 import { currentUser, NotFoundError } from '@mobileorg/common-lib';
 import express, { Request, Response } from 'express';
 import { Route } from '../models/route';
-const moment = require('moment');
 
 const router = express.Router();
 router.get('/api/routes/endLocation/:location', currentUser, async (req: Request, res: Response) => {
@@ -9,8 +8,9 @@ router.get('/api/routes/endLocation/:location', currentUser, async (req: Request
     // Não listar rotas em que já tenha passado o dia
     const route = await Route.find({
         endLocation: req.params.location,
-        state: 'Available',
+        state: 'AVAILABLE',
     });
+    console.log(route, req.params.location);
     const final: any = [];
     route.forEach((item) => {
         if (new Date(item.startDate) > new Date() && item.userId === req.currentUser!.id) {
@@ -27,11 +27,17 @@ router.get('/api/routes/endLocation/:location', currentUser, async (req: Request
 router.get('/api/routes/startLocation/:location', async (req: Request, res: Response) => {
     const route = await Route.find({
         startLocation: req.params.location,
-        state: 'Available',
-        userId: { $ne: req.currentUser!.id },
+        state: 'AVAILABLE',
+    });
+    console.log(route, req.params.location);
+    const final: any = [];
+    route.forEach((item) => {
+        if (new Date(item.startDate) > new Date() && item.userId === req.currentUser!.id) {
+            final.push(item);
+        }
     });
 
-    if (!route) {
+    if (!final) {
         throw new NotFoundError({ from: 'show ride' });
     }
     res.send(route);
