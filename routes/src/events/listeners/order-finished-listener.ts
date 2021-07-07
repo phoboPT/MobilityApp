@@ -8,11 +8,11 @@ export class OrderFinishedListener extends Listener<OrderFinishEvent> {
     queueGroupName = queueGroupName;
 
     async onMessage(data: OrderFinishEvent['data'], msg: Message) {
-        const { id, ticket } = data;
-        const route = await Route.findById(ticket.id);
-        if (route) {
-            route.set({ actualCapacity: route.capacity });
-            await route.save();
+        const { id, route } = data;
+        const routes = await Route.findById(route.id);
+        if (routes) {
+            routes.set({ actualCapacity: routes.capacity });
+            await routes.save();
         }
         msg.ack();
     }
