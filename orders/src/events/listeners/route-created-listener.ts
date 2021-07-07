@@ -11,9 +11,8 @@ export class RouteCreatedListener extends Listener<RouteCreatedEvent> {
         const { id, capacity } = data;
         const route = Route.build({
             id,
-            capacity,
+            capacity: capacity,
         });
-        console.log(route);
         await route.save();
 
         msg.ack();

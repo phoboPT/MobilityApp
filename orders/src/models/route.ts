@@ -42,6 +42,7 @@ routeSchema.statics.findByEvent = (event: { id: string; version: number }) => {
 routeSchema.statics.build = (attrs: RouteAttrs) => {
     return new Route({
         _id: attrs.id,
+        capacity: attrs.capacity,
     });
 };
 routeSchema.methods.isReserved = async function () {
