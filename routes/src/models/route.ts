@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 interface RouteAttrs {
     userId: string;
     type: string;
@@ -32,6 +32,7 @@ interface RouteDoc extends mongoose.Document {
     rating: number;
     capacity: number;
     actualCapacity: number;
+    version: number;
 }
 
 interface RouteModel extends mongoose.Model<RouteDoc> {
@@ -107,6 +108,8 @@ const routeSchema = new mongoose.Schema(
         },
     }
 );
+routeSchema.set('versionKey', 'version');
+routeSchema.plugin(updateIfCurrentPlugin);
 
 routeSchema.statics.build = (attrs: RouteAttrs) => {
     return new Route(attrs);

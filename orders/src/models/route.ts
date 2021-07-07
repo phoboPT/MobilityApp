@@ -4,10 +4,12 @@ import { Order, OrderStatus } from './order';
 
 interface RouteAttrs {
     id: string;
+    capacity: number;
 }
 
 export interface RouteDoc extends mongoose.Document {
     version: number;
+    capacity: number;
     isReserved(): Promise<boolean>;
 }
 
@@ -17,7 +19,7 @@ interface RouteModel extends mongoose.Model<RouteDoc> {
 }
 
 const routeSchema = new mongoose.Schema(
-    {},
+    { capacity: { type: String, required: true } },
     {
         toJSON: {
             transform(doc, ret) {

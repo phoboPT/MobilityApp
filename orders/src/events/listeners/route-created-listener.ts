@@ -8,9 +8,10 @@ export class RouteCreatedListener extends Listener<RouteCreatedEvent> {
     queueGroupName = queueGroupName;
 
     async onMessage(data: RouteCreatedEvent['data'], msg: Message) {
-        const { id } = data;
+        const { id, capacity } = data;
         const route = Route.build({
             id,
+            capacity,
         });
         await route.save();
 

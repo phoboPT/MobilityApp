@@ -9,7 +9,6 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
 
     async onMessage(data: OrderCreatedEvent['data'], msg: Message) {
         const { routeId } = data;
-        console.log('message order', data);
         const route = await Route.findById(routeId);
         if (route) {
             route.set({ actualCapacity: route.actualCapacity - 1 });

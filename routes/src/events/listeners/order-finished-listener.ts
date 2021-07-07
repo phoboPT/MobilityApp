@@ -9,7 +9,6 @@ export class OrderFinishedListener extends Listener<OrderFinishEvent> {
 
     async onMessage(data: OrderFinishEvent['data'], msg: Message) {
         const { id, ticket } = data;
-        console.log('message', data);
         const route = await Route.findById(ticket.id);
         if (route) {
             route.set({ actualCapacity: route.capacity });

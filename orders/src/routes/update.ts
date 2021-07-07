@@ -42,10 +42,49 @@ router.post(
 
         new OrderCancelledPublisher(natsWrapper.client).publish({
             id: order.id,
-            ticket: {
+            route: {
                 id: order.routeId,
             },
         });
+        res.status(201).send(order);
+    }
+);
+
+router.post(
+    '/api/orders/accepted',
+    requiredAuth,
+    [
+        body('id')
+            .not()
+            .isEmpty()
+            .custom((input: string) => mongoose.Types.ObjectId.isValid(input))
+            .withMessage('Id must be valid'),
+    ],
+    validateRequest,
+    async (req: Request, res: Response) => {
+        const { id } = req.body;
+
+        const order = await Order.findById(id);
+        if (!order) {
+            throw new NotFoundError({ details: 'New order ' });
+        }
+        // const isReserved = await ticket.isReserved();
+        // if (isReserved) {
+        //     throw new BadRequestError('Already reserved', { details: 'order a ride' });
+        // }
+
+        order.set({
+            status: OrderStatus.Accepted,
+        });
+
+        await order.save();
+
+        // new OrderCancelledPublisher(natsWrapper.client).publish({
+        //     id: order.id,
+        //     ticket: {
+        //         id: order.routeId,
+        //     },
+        // });
         res.status(201).send(order);
     }
 );
@@ -64,7 +103,7 @@ router.post(
     async (req: Request, res: Response) => {
         const { id } = req.body;
 
-        const order = await Order.findOne({ routeId: id });
+        const order = await Order.find({ routeId: id });
         console.log(order);
         if (!order) {
             throw new NotFoundError({ details: 'New order ' });
@@ -74,18 +113,17 @@ router.post(
         //     throw new BadRequestError('Already reserved', { details: 'order a ride' });
         // }
 
-        order.set({
-            status: OrderStatus.Complete,
+        order.forEach(async (item) => {
+            item.set({ status: OrderStatus.Complete });
+            new OrderFinishPublisher(natsWrapper.client).publish({
+                id: item.id,
+                route: {
+                    id: item.routeId,
+                },
+            });
+            await item.save();
         });
 
-        await order.save();
-
-        new OrderFinishPublisher(natsWrapper.client).publish({
-            id: order.id,
-            ticket: {
-                id: order.routeId,
-            },
-        });
         res.status(201).send(order);
     }
 );

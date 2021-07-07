@@ -9,7 +9,7 @@ interface OrderAttrs {
     userId: string;
     status: OrderStatus;
     expiresAt: Date;
-    ticket: RouteDoc;
+    route: RouteDoc;
     routeId: string;
 }
 
@@ -17,7 +17,7 @@ interface OrderDoc extends mongoose.Document {
     userId: string;
     status: OrderStatus;
     expiresAt: Date;
-    ticket: RouteDoc;
+    route: RouteDoc;
     version: number;
     routeId: string;
 }
@@ -41,7 +41,7 @@ const orderSchema = new mongoose.Schema(
         expiresAt: {
             type: mongoose.Schema.Types.Date,
         },
-        ticket: {
+        route: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Ticket',
         },

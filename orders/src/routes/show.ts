@@ -1,11 +1,20 @@
 import express, { Request, Response } from 'express';
-import { requiredAuth, NotFoundError, NotAuthorizedError } from '@mobileorg/common-lib';
+import { requiredAuth, NotFoundError, NotAuthorizedError, currentUser, OrderStatus } from '@mobileorg/common-lib';
 import { Order } from '../models/order';
 
 const router = express.Router();
+router.get('/api/orders/routeId/:id', currentUser, requiredAuth, async (req: Request, res: Response) => {
+    const order = await Order.find({ routeId: req.params.id, status: OrderStatus.Created }).populate('route');
+
+    if (!order) {
+        throw new NotFoundError({ details: 'notFound' });
+    }
+
+    res.send(order);
+});
 
 router.get('/api/orders/:orderId', requiredAuth, async (req: Request, res: Response) => {
-    const order = await Order.findById(req.params.orderId).populate('ticket');
+    const order = await Order.findById(req.params.orderId).populate('route');
 
     if (!order) {
         throw new NotFoundError({ details: 'notFound' });

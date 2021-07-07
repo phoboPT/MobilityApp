@@ -9,7 +9,6 @@ export class OrderCancelledListener extends Listener<OrderCancelledEvent> {
 
     async onMessage(data: OrderCancelledEvent['data'], msg: Message) {
         const { id, ticket } = data;
-        console.log('message', data);
         const route = await Route.findById(ticket.id);
         if (route) {
             route.set({ actualCapacity: route.actualCapacity + 1 });

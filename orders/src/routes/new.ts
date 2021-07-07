@@ -21,12 +21,12 @@ router.post(
     ],
     validateRequest,
     async (req: Request, res: Response) => {
-        const { routeId } = req.body;
+        const { routeId, capacity } = req.body;
 
         let route = await Route.findById(routeId);
         if (!route) {
-            // throw new NotFoundError({ details: 'New order ' });
-            route = Route.build({ id: routeId });
+            throw new NotFoundError({ details: 'New order ' });
+            // route = Route.build({ id: routeId });
         }
         // const isReserved = await ticket.isReserved();
         // if (isReserved) {
@@ -39,7 +39,7 @@ router.post(
             userId: req.currentUser!.id,
             status: OrderStatus.Created,
             expiresAt: expiration,
-            ticket: route,
+            route: route,
             routeId,
         });
 
@@ -49,7 +49,7 @@ router.post(
             id: order.id,
             status: order.status,
             version: order.version,
-            ticket: {
+            route: {
                 id: route.id,
             },
             userId: order.userId,

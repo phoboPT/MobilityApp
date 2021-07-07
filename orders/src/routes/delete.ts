@@ -9,7 +9,7 @@ const router = express.Router();
 router.delete('/api/orders/:orderId', requiredAuth, async (req: Request, res: Response) => {
     const { orderId } = req.params;
 
-    const order = await Order.findById(orderId).populate('ticket');
+    const order = await Order.findById(orderId).populate('route');
 
     if (!order) {
         throw new NotFoundError({ details: 'error' });
@@ -23,8 +23,8 @@ router.delete('/api/orders/:orderId', requiredAuth, async (req: Request, res: Re
     // publishing an event saying this was cancelled!
     new OrderCancelledPublisher(natsWrapper.client).publish({
         id: order.id,
-        ticket: {
-            id: order.ticket.id,
+        route: {
+            id: order.route.id,
         },
     });
 

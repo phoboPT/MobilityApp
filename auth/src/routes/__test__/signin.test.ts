@@ -18,7 +18,7 @@ it('fails when an incorrect password is supplied', async () => {
             email: 'teste@teste.com',
             password: 'asdf',
         })
-        .expect(201);
+        .expect(400);
 
     await request(app)
         .post('/api/users/signin')
@@ -35,6 +35,7 @@ it('respondes with a cookie with valid credentials', async () => {
         .send({
             email: 'teste@teste.com',
             password: 'asdf',
+            name: 'easdasfsda',
         })
         .expect(201);
 

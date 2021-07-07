@@ -22,9 +22,9 @@ app.use(
 
 app.use(allUsersRouter);
 app.use(signinRouter);
-app.use(currentUserRouter);
 app.use(signoutRouter);
 app.use(signupRouter);
+app.use(currentUserRouter);
 
 app.all('*', async () => {
     console.log('Auth');
