@@ -21,7 +21,7 @@ router.post(
     ],
     validateRequest,
     async (req: Request, res: Response) => {
-        const { routeId, capacity } = req.body;
+        const { routeId } = req.body;
 
         let route = await Route.findById(routeId);
         if (!route) {
