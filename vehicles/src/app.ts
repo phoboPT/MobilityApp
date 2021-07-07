@@ -7,7 +7,6 @@ import { createVehicleRouter } from './routes/new';
 import { showVehicleRouter } from './routes/show';
 import { indexVehicleRouter } from './routes';
 import { updateVehicleRouter } from './routes/update';
-import { Vehicle } from './models/vehicle';
 
 const app = express();
 app.set('trust proxy', true);
@@ -18,7 +17,7 @@ app.use(
         secure: false,
     })
 );
-Vehicle.collection.drop();
+// Vehicle.collection.drop()
 app.use(currentUser);
 app.use(createVehicleRouter);
 app.use(showVehicleRouter);
