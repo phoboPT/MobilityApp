@@ -15,6 +15,7 @@ router.post(
     [
         body('routeId')
             .not()
+
             .isEmpty()
             .custom((input: string) => mongoose.Types.ObjectId.isValid(input))
             .withMessage('Id must be valid'),
