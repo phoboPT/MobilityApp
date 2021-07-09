@@ -5,7 +5,7 @@ import { Route } from '../models/route';
 const router = express.Router();
 router.get('/api/routes/endLocation/:location', currentUser, async (req: Request, res: Response) => {
     // $gte = greater than equals
-    // Não listar rotas em que já tenha passado o dia
+    // Não listar rotas em que já tenha passado o dia nem que seja do utilizador
     const route = await Route.find({
         endLocation: req.params.location,
         state: 'AVAILABLE',
