@@ -13,7 +13,7 @@ router.get('/api/routes/endLocation/:location', currentUser, async (req: Request
     console.log(route, req.params.location);
     const final: any = [];
     route.forEach((item) => {
-        if (new Date(item.startDate) > new Date() && item.userId != req.currentUser!.id) {
+        if (new Date(item.startDate) > new Date() && item.userId !== req.currentUser!.id) {
             final.push(item);
         }
     });
@@ -32,7 +32,7 @@ router.get('/api/routes/startLocation/:location', async (req: Request, res: Resp
     console.log(route, req.params.location);
     const final: any = [];
     route.forEach((item) => {
-        if (new Date(item.startDate) > new Date() && item.userId != req.currentUser!.id) {
+        if (new Date(item.startDate) > new Date() && item.userId !== req.currentUser!.id) {
             final.push(item);
         }
     });
