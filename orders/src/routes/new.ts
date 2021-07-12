@@ -1,6 +1,6 @@
 import { natsWrapper } from './../nats-wrapper';
 import { OrderCreatedPublisher } from './../events/publishers/order-created-publisher';
-import { requiredAuth, validateRequest, NotFoundError, OrderStatus, BadRequestError } from '@mobileorg/common-lib';
+import { requiredAuth, validateRequest, NotFoundError, OrderStatus, BadRequestError,currentUser } from '@mobileorg/common-lib';
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import mongoose from 'mongoose';
@@ -20,6 +20,7 @@ router.post(
             .custom((input: string) => mongoose.Types.ObjectId.isValid(input))
             .withMessage('Id must be valid'),
     ],
+    currentUser,
     validateRequest,
     async (req: Request, res: Response) => {
         const { routeId } = req.body;
@@ -33,6 +34,11 @@ router.post(
         // if (isReserved) {
         //     throw new BadRequestError('Already reserved', { details: 'order a ride' });
         // }
+        const userOrder=await Order.find({userId:req.currentUser?.id,routeId:routeId})
+        console.log(userOrder)
+        if(userOrder.length>0){
+            throw new BadRequestError('Already ordered', { details: 'order a ride' });
+        }
         const expiration = new Date();
 
         expiration.setSeconds(expiration.getSeconds() + EXPIRATION_WINDOW_SECONDS);
