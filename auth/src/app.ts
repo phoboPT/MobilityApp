@@ -21,7 +21,7 @@ app.use(
     })
 );
 
-// User.collection.drop();
+ User.collection.drop();
 app.use(allUsersRouter);
 app.use(signinRouter);
 app.use(signoutRouter);
