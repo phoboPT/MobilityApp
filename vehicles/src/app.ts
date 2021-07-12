@@ -18,7 +18,7 @@ app.use(
         secure: false,
     })
 );
- Vehicle.collection.drop();
+// Vehiclee.collection.drop();
 app.use(currentUser);
 app.use(createVehicleRouter);
 app.use(showVehicleRouter);
