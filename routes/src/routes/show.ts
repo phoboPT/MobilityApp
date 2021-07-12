@@ -43,6 +43,14 @@ router.get('/api/routes/startLocation/:location', async (req: Request, res: Resp
     res.send(route);
 });
 
+router.get('/api/routes/user', currentUser, async (req: Request, res: Response) => {
+    const route = await Route.find({userId: req.currentUser!.id});
+    if (!route) {
+        throw new NotFoundError({ from: 'show ride' });
+    }
+    res.send(route);
+});
+
 router.get('/api/routes/:id', async (req: Request, res: Response) => {
     const route = await Route.findById(req.params.id);
 
