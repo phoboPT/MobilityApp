@@ -23,7 +23,7 @@ router.get('/api/orders/userOrders', currentUser, requiredAuth, async (req: Requ
 
     res.send(orders);
 });
-router.get('/api/orders/routeId/:id', currentUser, requiredAuth, async (req: Request, res: Response) => {
+router.get('/api/orders/routeId/:id', async (req: Request, res: Response) => {
     const order = await Order.find({ routeId: req.params.id, status: OrderStatus.Created }).populate('route');
     console.log(order);
     if (!order) {
