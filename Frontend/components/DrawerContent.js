@@ -10,11 +10,17 @@ import AsyncStorage from '@react-native-community/async-storage';
 export function DrawerContent(props) {
   const [user, setUser] = useState(null);
   async function signOut() {
-    await AsyncStorage.removeItem('@App:userID');
-    props.navigation.reset({
-      index: 0,
-      routes: [{name: 'SignInScreen'}],
-    });
+    try {
+      const response = await api.get('/users/signout');
+      await AsyncStorage.removeItem('@App:userID');
+    } catch (err) {
+      console.log(err);
+      await AsyncStorage.removeItem('@App:userID');
+      props.navigation.reset({
+        index: 0,
+        routes: [{name: 'SignInScreen'}],
+      });
+    }
   }
 
   useEffect(() => {
@@ -99,7 +105,7 @@ export function DrawerContent(props) {
                   }}
                 />
               )}
-              label="Routes"
+              label="Requests"
               onPress={() => {
                 props.navigation.navigate('My Routes');
               }}

@@ -5,8 +5,8 @@ import {
   Text,
   Alert,
   Image,
-  Pressable,
   Modal,
+  FlatList,
   TouchableOpacity,
   ActivityIndicator,
   TextInput,
@@ -18,6 +18,7 @@ import api from '../services/api';
 import {Icon} from 'react-native-elements';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {Button} from 'react-native-elements';
+import LinearGradient from 'react-native-linear-gradient';
 
 const MyProfile = ({navigation}) => {
   // Render
@@ -26,7 +27,7 @@ const MyProfile = ({navigation}) => {
   const [photo, setPhoto] = useState(false);
   const [biography, setBiography] = useState('');
   const [contact, setContact] = useState('');
-
+  const [userVehicles, setUserVehicles] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
 
@@ -74,6 +75,16 @@ const MyProfile = ({navigation}) => {
   }
 
   useEffect(() => {
+    async function checkIfUserHasVehicles() {
+      try {
+        const response = await api.get('/vehicles/me');
+        console.log(response.data);
+        setUserVehicles(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    checkIfUserHasVehicles();
     getMyInfo();
   }, []);
 
@@ -281,12 +292,26 @@ const MyProfile = ({navigation}) => {
       {/* Body */}
       <View style={{flex: 1.5}}>
         {/* About */}
+
         <View
           style={{
             marginTop: SIZES.padding - 10,
             paddingHorizontal: SIZES.padding,
           }}>
-          <Text style={{...SIZES.h2, fontWeight: '500'}}>Biography</Text>
+          <View style={{marginBottom: 10}}>
+            <Text style={{...SIZES.h1, fontWeight: '700'}}>My Cars</Text>
+            <FlatList
+              data={userVehicles}
+              renderItem={({item}) => (
+                <View style={{flexDirection: 'row'}}>
+                  <Text>{item.carModel} </Text>
+                  <Text style={{...SIZES.h2, fontWeight: '600'}}>Car Capacity: </Text>
+                  <Text>{item.capacity}</Text>
+                </View>
+              )}
+            />
+          </View>
+          <Text style={{...SIZES.h1, fontWeight: '600'}}>Biography</Text>
           <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
             <ScrollView style={{marginBottom: 140}}>
               {data.biography ? (
@@ -363,6 +388,51 @@ const MyProfile = ({navigation}) => {
             </View>
           </Modal>
         </View>
+      </View>
+      {/* Footer */}
+      <View
+        style={{
+          flex: 1,
+          alignContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'column',
+        }}>
+        <TouchableOpacity
+          style={{
+            width: 200,
+            marginBottom: 20,
+            height: '30%',
+          }}
+          onPress={() => navigation.navigate('CreateVehicle')}>
+          <LinearGradient
+            style={[
+              {
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 10,
+              },
+            ]}
+            colors={[COLORS.primary, '#5884ff']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}>
+            <View style={{flexDirection: 'row'}}>
+              <Text
+                style={{
+                  marginTop: 3,
+                  marginRight: 15,
+                  color: COLORS.white,
+                  ...SIZES.h2,
+                }}>
+                Create Vehicle
+              </Text>
+              <Image
+                style={{width: 25, height: 25, tintColor: COLORS.white}}
+                source={icons.send}
+              />
+            </View>
+          </LinearGradient>
+        </TouchableOpacity>
       </View>
     </View>
   );

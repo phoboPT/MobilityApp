@@ -122,7 +122,7 @@ const CreateCarPooling = ({navigation}) => {
         startLocation: startLocation,
         endLocation: endLocation,
         vehicleId: vehicle,
-        state: 'Available',
+        state: 'AVAILABLE',
         description: description,
         estimatedTime: estimatedTime,
         startDate: date,
@@ -379,7 +379,7 @@ const CreateCarPooling = ({navigation}) => {
         </View>
 
         <Input
-          placeholder="Description"
+          placeholder="Description (Optional)"
           multiline
           placeholderTextColor="black"
           containerStyle={{width: '90%', zIndex: -3}}

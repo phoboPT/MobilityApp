@@ -5,7 +5,6 @@ import {
   View,
   ActivityIndicator,
   Text,
-  Button,
   Alert,
   TouchableOpacity,
   Image,
@@ -17,7 +16,6 @@ import api from '../services/api';
 import {FlatGrid} from 'react-native-super-grid';
 import {Avatar} from 'react-native-elements';
 import Moment from 'moment';
-import {ColorPropType} from 'react-native';
 
 const DestinationSearch = ({route, navigation}) => {
   const [loading, setLoading] = useState(true);

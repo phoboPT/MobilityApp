@@ -23,6 +23,7 @@ import CreateCarPooling from './screens/CreateCarPooling';
 import AuthLoadingScreen from './screens/login/AuthLoadingScreen';
 import MyProfile from './screens/MyProfile';
 import MapScreen from './screens/MapScreen';
+import OrdersScreen from './screens/OrdersScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -56,6 +57,7 @@ const App = () => {
         <AppStack.Screen name="SignInScreen" component={SignInScreen} />
         <AppStack.Screen name="SignUpScreen" component={SignUpScreen} />
         <AppStack.Screen name="CreateVehicle" component={CreateVehicle} />
+        <AppStack.Screen name="OrdersScreen" component={OrdersScreen} />
         <AppStack.Screen name="Map" component={MapScreen} />
         <AppStack.Screen name="Drawer" component={navigationDrawer} />
         <AppStack.Screen name="Onboarding" component={Onboarding} />

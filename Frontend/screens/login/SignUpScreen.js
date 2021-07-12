@@ -10,7 +10,7 @@ import {launchImageLibrary} from 'react-native-image-picker';
 
 const SignUpScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
-  const [photo, setPhoto] = useState(false);
+  const [photo, setPhoto] = useState(null);
   const options = [
     {label: '2', value: 2},
     {label: '3', value: 3},
@@ -67,7 +67,10 @@ const SignUpScreen = ({navigation}) => {
   ];
 
   async function onSubmit(state) {
-    setLoading(false);
+    setLoading(true);
+    if (photo == null) {
+      signUp(state, null);
+    }
     try {
       const data = new FormData();
       data.append('file', photo);
@@ -109,7 +112,8 @@ const SignUpScreen = ({navigation}) => {
         navigation.navigate('SignInScreen');
       }
     } catch (err) {
-      Alert.alert(err.data.errors[0].message);
+      console.log(err);
+      Alert.alert('Error creating new user!');
       setLoading(false);
     }
   }

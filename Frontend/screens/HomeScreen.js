@@ -8,19 +8,15 @@ import {
   Image,
   SafeAreaView,
   ImageBackground,
-  Alert,
   ActivityIndicator,
   Animated,
 } from 'react-native';
 import {icons, COLORS, SIZES, images} from '../constants/index';
 import ActionButton from 'react-native-action-button';
-import faker from 'faker';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Geolocation from '@react-native-community/geolocation';
 import {FlatGrid} from 'react-native-super-grid';
 import api from '../services/api';
-import {Avatar} from 'react-native-elements';
 import Moment from 'moment';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -232,7 +228,6 @@ const HomeScreen = ({navigation}) => {
     } catch (err) {
       getMyNextTravel();
       console.log(err);
-      Alert.alert('Error! Fetching Recommendations!');
     }
   }
 
@@ -249,7 +244,6 @@ const HomeScreen = ({navigation}) => {
     } catch (err) {
       console.log(err);
       setLoading(false);
-      Alert.alert('Error! Fetching Next Travel!');
     }
   }
 

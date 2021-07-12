@@ -111,7 +111,6 @@ const DestinationDetail = ({navigation, route}) => {
       try {
         const response = await api.get('/users/' + data.userId);
         setUser(response.data);
-        console.log(response.data);
         setLoading(false);
       } catch (err) {
         Alert.alert(err);
@@ -121,6 +120,20 @@ const DestinationDetail = ({navigation, route}) => {
     getUserInfo();
   }, []);
 
+  const createOrder = async () => {
+    try {
+      const response = await api.post('/orders', {
+        routeId: data.id,
+      });
+      if (response.data != undefined) {
+        console.log(response.data);
+        Alert.alert('Your request was sent!');
+        navigation.navigate('Home');
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const setBackgroundImage = endLocation => {
     if (endLocation === 'ESTG') {
       setEndLocationImage(
@@ -362,7 +375,7 @@ const DestinationDetail = ({navigation, route}) => {
             height: '50%',
           }}
           onPress={() => {
-            console.log('Booking on pressed');
+            createOrder();
           }}>
           <LinearGradient
             style={[

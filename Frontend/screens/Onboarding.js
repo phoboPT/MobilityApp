@@ -29,12 +29,13 @@ const Onboarding = ({navigation}) => {
 
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
         <View style={{alignItems: 'center', marginHorizontal: SIZES.padding}}>
-          <Text style={{fontWeight: '500'}}>Mobility One</Text>
+          <Text style={{fontWeight: '600', fontSize: 45}}>Mobility One</Text>
           <Text
             style={{
               color: COLORS.gray,
               marginTop: SIZES.padding,
               textAlign: 'center',
+              fontSize: 15,
             }}>
             TODOTODOTODOTODOTODOTODO
           </Text>

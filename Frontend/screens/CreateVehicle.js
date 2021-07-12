@@ -35,7 +35,6 @@ const CreateVehicle = ({navigation}) => {
         type: 2,
         capacity: capacity,
       });
-      console.log(response.data);
       if (response.data != undefined) {
         Alert.alert('Vehicle created');
         navigation.navigate('Drawer');

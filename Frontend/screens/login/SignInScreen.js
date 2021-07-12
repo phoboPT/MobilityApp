@@ -42,6 +42,7 @@ const SignInScreen = ({navigation}) => {
 
       navigation.navigate('Drawer');
     } catch (err) {
+      console.log(err);
       if (err.data.errors[0].message !== undefined) {
         Alert.alert(err.data.errors[0].message);
       } else {

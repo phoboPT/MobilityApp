@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import faker from 'faker';
 import {images, icons, COLORS, SIZES} from '../constants';
 import {ScrollView} from 'react-native';
 
@@ -78,10 +77,6 @@ const StarReview = ({rate}) => {
 const UserProfile = ({navigation, route}) => {
   const {user} = route.params;
 
-  useEffect(() => {
-    console.log(user);
-  }, []);
-
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -109,27 +104,15 @@ const UserProfile = ({navigation, route}) => {
           ]}>
           <View style={{flexDirection: 'row'}}>
             <View style={styles.shadow}>
-              {user.urlPhoto ? (
-                <Image
-                  source={{uri: user.urlPhoto}}
-                  resizeMode="cover"
-                  style={{
-                    width: 70,
-                    height: 70,
-                    borderRadius: 15,
-                  }}
-                />
-              ) : (
-                <Image
-                  source={images.defaultUser}
-                  resizeMode="cover"
-                  style={{
-                    width: 70,
-                    height: 70,
-                    borderRadius: 15,
-                  }}
-                />
-              )}
+              <Image
+                source={{uri: user.photoUrl}}
+                resizeMode="cover"
+                style={{
+                  width: 70,
+                  height: 70,
+                  borderRadius: 15,
+                }}
+              />
             </View>
 
             <View
