@@ -15,6 +15,18 @@ router.get('/api/orders/routeId/:id', currentUser, requiredAuth, async (req: Req
 
     res.send(order);
 });
+
+router.get('/api/orders/userId', currentUser, requiredAuth, async (req: Request, res: Response) => {
+        console.log("hey",req.params.id)
+    const order = await Order.find({ userId: req.currentUser!.id});
+    console.log("order",order);
+    if (!order) {
+        throw new NotFoundError({ details: 'notFound' });
+    }
+
+    res.send(order);
+});
+
 router.get('/api/orders/:orderId', requiredAuth, async (req: Request, res: Response) => {
     const order = await Order.findById(req.params.orderId);
 
