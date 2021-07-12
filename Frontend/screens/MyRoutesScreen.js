@@ -13,38 +13,14 @@ import {
 } from 'react-native';
 import {images, icons, SIZES, COLORS} from '../constants';
 import api from '../services/api';
-import {FlatGrid} from 'react-native-super-grid';
-import {Avatar} from 'react-native-elements';
 import Moment from 'moment';
 import {SectionGrid} from 'react-native-super-grid';
+import {Avatar} from 'react-native-elements';
 
 const MyRoutesScreen = ({navigation}) => {
   const [loading, setLoading] = useState(true);
-  const [requests, setRequests] = useState(null);
   const [myRoutes, setMyRoutes] = useState(null);
-
-  const [items, setItems] = React.useState([
-    {name: 'TURQUOISE', code: '#1abc9c'},
-    {name: 'EMERALD', code: '#2ecc71'},
-    {name: 'PETER RIVER', code: '#3498db'},
-    {name: 'AMETHYST', code: '#9b59b6'},
-    {name: 'WET ASPHALT', code: '#34495e'},
-    {name: 'GREEN SEA', code: '#16a085'},
-    {name: 'NEPHRITIS', code: '#27ae60'},
-    {name: 'BELIZE HOLE', code: '#2980b9'},
-    {name: 'WISTERIA', code: '#8e44ad'},
-    {name: 'MIDNIGHT BLUE', code: '#2c3e50'},
-    {name: 'SUN FLOWER', code: '#f1c40f'},
-    {name: 'CARROT', code: '#e67e22'},
-    {name: 'ALIZARIN', code: '#e74c3c'},
-    {name: 'CLOUDS', code: '#ecf0f1'},
-    {name: 'CONCRETE', code: '#95a5a6'},
-    {name: 'ORANGE', code: '#f39c12'},
-    {name: 'PUMPKIN', code: '#d35400'},
-    {name: 'POMEGRANATE', code: '#c0392b'},
-    {name: 'SILVER', code: '#bdc3c7'},
-    {name: 'ASBESTOS', code: '#7f8c8d'},
-  ]);
+  const [sentRequests, setSentRequests] = useState(null);
 
   useEffect(() => {
     async function getRequests() {
@@ -52,6 +28,16 @@ const MyRoutesScreen = ({navigation}) => {
       try {
         const response = await api.get('/routes/user');
         setMyRoutes(response.data);
+        getRequestsSent();
+      } catch (err) {
+        console.log(err);
+        setLoading(false);
+      }
+    }
+    async function getRequestsSent() {
+      try {
+        const response = await api.get('/orders/userId');
+        setSentRequests(response.data);
         console.log(response.data);
         setLoading(false);
       } catch (err) {
@@ -101,6 +87,88 @@ const MyRoutesScreen = ({navigation}) => {
     );
   }
 
+  function whatImageToRender(item) {
+    if (item.status === 'created') {
+      return <Avatar
+        source={icons.waiting}
+        style={{
+          marginTop: 2,
+          width: 45,
+          height: 45,
+        }}
+      />;
+    } else if (item.status === 'cancelled') {
+      return <Avatar
+        source={images.decline}
+        style={{
+          marginTop: 2,
+          width: 45,
+          height: 45,
+        }}
+      />;
+    } else {
+      return <Avatar
+        source={images.accept}
+        style={{
+          marginTop: 2,
+          width: 45,
+          height: 45,
+        }}
+      />;
+    }
+  }
+
+  function renderSentRequests() {
+    return (
+      <SectionGrid
+        itemDimension={90}
+        // staticDimension={300}
+        // fixed
+        // spacing={20}
+        sections={[
+          {
+            title: 'Sent',
+            data: sentRequests, // TODO
+            color: '#f1c40f',
+          },
+        ]}
+        style={styles.gridView}
+        renderItem={({item}) => (
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('DestinationDetail', {
+                data: item,
+              })
+            }>
+            <View style={[styles.itemContainer, {backgroundColor: 'white'}]}>
+              <Text style={styles.itemDate}>
+                {Moment(item.expiresAt).format('lll')}
+              </Text>
+              <Text style={styles.itemName}>{item.status.toUpperCase()}</Text>
+              {whatImageToRender(item)}
+            </View>
+          </TouchableOpacity>
+        )}
+        renderSectionHeader={({section}) => (
+          <Text
+            style={{
+              flex: 1,
+              fontSize: 20,
+              fontWeight: '600',
+              alignContent: 'center',
+              alignItems: 'center',
+              height: 50,
+              color: 'white',
+              padding: 12,
+              backgroundColor: section.color,
+            }}>
+            {section.title}
+          </Text>
+        )}
+      />
+    );
+  }
+
   function renderRequests() {
     return (
       <SectionGrid
@@ -113,11 +181,6 @@ const MyRoutesScreen = ({navigation}) => {
             title: 'Received',
             data: myRoutes,
             color: '#2ecc71',
-          },
-          {
-            title: 'Sent',
-            data: items.slice(6, 12),
-            color: '#f1c40f',
           },
         ]}
         style={styles.gridView}
@@ -172,7 +235,7 @@ const MyRoutesScreen = ({navigation}) => {
             style={{flex: 1, justifyContent: 'center', alignContent: 'center'}}
           />
         ) : (
-          renderRequests()
+          (renderRequests(), renderSentRequests())
         )}
       </SafeAreaView>
     </ImageBackground>
@@ -191,9 +254,11 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     justifyContent: 'center',
+    alignContent: 'center',
+    alignSelf: 'center',
+    alignItems: 'center',
     borderRadius: 25,
-    padding: 10,
-    height: 100,
+    height: 140,
   },
   itemName: {
     fontSize: 16,

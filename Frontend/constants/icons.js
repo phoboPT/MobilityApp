@@ -19,6 +19,7 @@ export const back = require('../assets/icons/back_icon.png');
 export const send = require('../assets/icons/send.png');
 export const graduationHat = require('../assets/icons/graduation-hat.png');
 export const fastest = require('../assets/icons/fastest.png');
+export const waiting = require('../assets/icons/stopwatch.png');
 
 export default {
   settings,
@@ -42,4 +43,5 @@ export default {
   send,
   graduationHat,
   fastest,
+  waiting,
 };

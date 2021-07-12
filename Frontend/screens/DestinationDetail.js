@@ -106,7 +106,9 @@ const DestinationDetail = ({navigation, route}) => {
   const [endLocationImage, setEndLocationImage] = useState(null);
   const [user, setUser] = useState(null);
   useEffect(() => {
-    setBackgroundImage(data.endLocation);
+    if (data.endLocation != undefined) {
+      setBackgroundImage(data.endLocation);
+    }
     async function getUserInfo() {
       try {
         const response = await api.get('/users/' + data.userId);
@@ -131,7 +133,11 @@ const DestinationDetail = ({navigation, route}) => {
         navigation.navigate('Home');
       }
     } catch (err) {
-      console.log(err);
+      if (err.data.errors[0].message != undefined) {
+        Alert.alert(err.data.errors[0].message);
+      } else {
+        Alert.alert('An error occurred!');
+      }
     }
   };
   const setBackgroundImage = endLocation => {

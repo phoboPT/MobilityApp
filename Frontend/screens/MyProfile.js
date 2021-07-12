@@ -78,7 +78,6 @@ const MyProfile = ({navigation}) => {
     async function checkIfUserHasVehicles() {
       try {
         const response = await api.get('/vehicles/me');
-        console.log(response.data);
         setUserVehicles(response.data);
       } catch (error) {
         console.log(error);
@@ -428,7 +427,7 @@ const MyProfile = ({navigation}) => {
               </Text>
               <Image
                 style={{width: 25, height: 25, tintColor: COLORS.white}}
-                source={icons.send}
+                source={icons.frontCar}
               />
             </View>
           </LinearGradient>

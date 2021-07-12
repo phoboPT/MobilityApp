@@ -5,7 +5,6 @@ import {
   View,
   ActivityIndicator,
   Text,
-  Alert,
   TouchableOpacity,
   Image,
   StyleSheet,
@@ -15,27 +14,81 @@ import {images, icons, SIZES, COLORS} from '../constants';
 import api from '../services/api';
 import {FlatGrid} from 'react-native-super-grid';
 import {Avatar} from 'react-native-elements';
-import Moment from 'moment';
-import {SectionGrid} from 'react-native-super-grid';
+import {Alert} from 'react-native';
 
 const OrdersScreen = ({navigation, route}) => {
   const [loading, setLoading] = useState(true);
-  const [requests, setRequests] = useState(null);
-  const [myRoutes, setMyRoutes] = useState(null);
+  const [orders, setOrders] = useState(null);
+  const [users, setUsers] = useState([]);
   const {data} = route.params;
 
   useEffect(() => {
-    async function getRequests() {
-      console.log(data.id);
-      try {
-        const response = await api.get('/orders/routeId/' + data.id);
-        console.log(response.data);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    getRequests();
+    getOrders();
   }, []);
+
+  async function getOrders() {
+    setLoading(true);
+    try {
+      const response = await api.get('/orders/routeId/' + data.id);
+      setOrders(response.data);
+      getUsers(response.data);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  function getUsers(data) {
+    var i = 0;
+    for (i = 0; i < data.length; i++) {
+      getUserInfo(data[i].userId);
+    }
+  }
+
+  async function getUserInfo(id) {
+    try {
+      const response = await api.get('/users/' + id);
+      setUsers(users => [...users, response.data]);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  function updateOrder(accept, userId) {
+    // Nos estamos a receber o id do utilizador pois vamos realizar uma query nas orders
+    // Na Flatgrid nao sabemos a order e temos que descobrila atraves do userId
+    let order = orders.filter(item => item.userId === userId);
+    console.log(order);
+    if (accept) {
+      acceptOrder(order[0]);
+    } else {
+      cancelledOrder(order[0]);
+    }
+  }
+
+  async function acceptOrder(order) {
+    try {
+      const response = await api.post('/orders/accepted', {
+        id: order.id,
+      });
+      Alert.alert('Order Accepted!');
+      getOrders()
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function cancelledOrder(order) {
+    try {
+      const response = await api.post('/orders/cancelled', {
+        id: order.id,
+      });
+      Alert.alert('Order Cancelled!');
+      getOrders()
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   function renderHeader() {
     return (
@@ -69,66 +122,64 @@ const OrdersScreen = ({navigation, route}) => {
               fontSize: 24,
               fontWeight: '400',
             }}>
-            Requests
+            Orders
           </Text>
         </View>
       </View>
     );
   }
 
-  function renderRequests() {
+  function renderOrders() {
     return (
-      <SectionGrid
-        itemDimension={90}
-        // staticDimension={300}
-        // fixed
-        // spacing={20}
-        sections={[
-          {
-            title: 'Received',
-            data: myRoutes,
-            color: '#2ecc71',
-          },
-          {
-            title: 'Sent',
-            data: myRoutes,
-            color: '#f1c40f',
-          },
-        ]}
+      <FlatGrid
+        data={users}
         style={styles.gridView}
         renderItem={({item}) => (
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('DestinationDetail', {
-                data: item,
-              })
-            }>
-            <View style={[styles.itemContainer, {backgroundColor: 'white'}]}>
-              <View>
-                <Text style={styles.itemName}>Start: {item.startLocation}</Text>
-                <Text style={styles.itemName}>End: {item.endLocation}</Text>
-                <Text style={styles.itemDate}>
-                  {Moment(item.startDate).format('lll')}
-                </Text>
+          <View style={[styles.itemContainer, {backgroundColor: 'white'}]}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('UserProfile', {
+                  user: item,
+                })
+              }>
+              <View
+                style={{
+                  flexDirection: 'column',
+                  alignContent: 'center',
+                  alignSelf: 'center',
+                  alignItems: 'center',
+                  marginBottom: 10,
+                }}>
+                <Avatar
+                  style={{width: 60, height: 60, marginBottom: 5}}
+                  rounded={true}
+                  source={{
+                    uri: item.photoUrl,
+                  }}
+                />
+                <Text style={{fontWeight: '700'}}>{item.name}</Text>
               </View>
+            </TouchableOpacity>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignContent: 'center',
+                alignSelf: 'center',
+              }}>
+              <TouchableOpacity onPress={() => updateOrder(true, item.id)}>
+                <Avatar
+                  style={{width: 50, height: 50, marginRight: 10}}
+                  source={images.accept}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => updateOrder(false, item.id)}>
+                <Avatar
+                  style={{width: 50, height: 50, marginLeft: 10}}
+                  source={images.decline}
+                />
+              </TouchableOpacity>
             </View>
-          </TouchableOpacity>
-        )}
-        renderSectionHeader={({section}) => (
-          <Text
-            style={{
-              flex: 1,
-              fontSize: 20,
-              fontWeight: '600',
-              alignContent: 'center',
-              alignItems: 'center',
-              height: 50,
-              color: 'white',
-              padding: 12,
-              backgroundColor: section.color,
-            }}>
-            {section.title}
-          </Text>
+          </View>
         )}
       />
     );
@@ -147,7 +198,7 @@ const OrdersScreen = ({navigation, route}) => {
             style={{flex: 1, justifyContent: 'center', alignContent: 'center'}}
           />
         ) : (
-          null
+          renderOrders()
         )}
       </SafeAreaView>
     </ImageBackground>
@@ -161,31 +212,31 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   gridView: {
-    marginTop: 10,
+    marginTop: 20,
     flex: 1,
   },
   itemContainer: {
-    justifyContent: 'center',
-    borderRadius: 25,
+    borderRadius: 12,
     padding: 10,
-    height: 100,
+    height: 160,
   },
   itemName: {
     fontSize: 16,
-    fontWeight: '700',
-  },
-  itemDate: {
-    fontSize: 13,
+    color: '#fff',
     fontWeight: '600',
   },
-  userName: {
-    fontSize: 16,
-    marginTop: 3,
-    fontWeight: '800',
-  },
   itemCode: {
-    fontWeight: '500',
+    fontWeight: '600',
     fontSize: 12,
-    opacity: 0.99,
+    color: '#fff',
+  },
+  sectionHeader: {
+    flex: 1,
+    fontSize: 15,
+    fontWeight: '600',
+    alignItems: 'center',
+    backgroundColor: '#636e72',
+    color: 'white',
+    padding: 10,
   },
 });

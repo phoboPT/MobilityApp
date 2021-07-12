@@ -113,26 +113,6 @@ export function DrawerContent(props) {
             <DrawerItem
               icon={({color, size}) => (
                 <Image
-                  source={icons.map}
-                  name="map-outline"
-                  style={{
-                    tintColor: COLORS.primary,
-                    resizeMode: 'contain',
-                    height: 24,
-                    width: 24,
-                  }}
-                />
-              )}
-              label="Map"
-              onPress={() => {
-                props.navigation.navigate('Map', {
-                  mapType: 'Bus',
-                });
-              }}
-            />
-            <DrawerItem
-              icon={({color, size}) => (
-                <Image
                   source={icons.messages}
                   style={{
                     tintColor: COLORS.primary,

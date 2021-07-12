@@ -37,7 +37,7 @@ const Onboarding = ({navigation}) => {
               textAlign: 'center',
               fontSize: 15,
             }}>
-            TODOTODOTODOTODOTODOTODO
+            All transports in your pocket
           </Text>
         </View>
 
