@@ -1,18 +1,25 @@
 import express, { Request, Response } from 'express';
 import { requiredAuth, NotFoundError, NotAuthorizedError, currentUser, OrderStatus } from '@mobileorg/common-lib';
-import { Order } from '../models/order';
+import { Order,OrderDoc } from '../models/order';
 import { Route } from '../models/route';
 
 const router = express.Router();
 router.get('/api/orders/userOrders', currentUser, requiredAuth, async (req: Request, res: Response) => {
-    const orders = await Route.find({ userId: req.currentUser?.id, state: "AVAILABLE" });
-    console.log(orders);
+    const routes = await Route.find({ userId: req.currentUser?.id, state: "AVAILABLE" });
+    console.log(routes);
     
-    if (!orders) {
+    if (!routes) {
         throw new NotFoundError({ details: 'notFound' });
     }
-   
-    
+   const orders:any=[]
+   //find all orders for the current user in the routes
+   //{userId:"dasd",routeId:"asdasd",status:"AVAILABLE"}
+   //for each order, fetch the oeder for the userId
+
+    routes.forEach(async  (route):Promise<void> => {
+        const order = await Order.find({ userId: route.userId }); 
+        orders.push(order);
+    });
 
     res.send(orders);
 });

@@ -3,8 +3,7 @@ import express, { Response, Request } from 'express';
 import { body } from 'express-validator';
 import { RouteCreatedPublisher } from '../events/publishers/route-created-publisher';
 import { Route } from '../models/route';
-import { natsWrapper } from '../nats-wrapper';
-//import { natsWrapper } from "../nats-wrapper"
+import { natsWrapper } from '../nats-wrapper';//import { natsWrapper } from "../nats-wrapper"
 
 const router = express.Router();
 
