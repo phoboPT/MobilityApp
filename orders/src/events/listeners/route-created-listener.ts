@@ -12,7 +12,8 @@ export class RouteCreatedListener extends Listener<RouteCreatedEvent> {
         const route = Route.build({
             id,
             userId,
-            capacity,state
+            capacity,
+            state
         });
         await route.save();
 

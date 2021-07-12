@@ -19,13 +19,11 @@ app.use(
         secure: false,
     })
 );
-
 // Order.collection.drop();
 app.use(currentUser);
 app.use(updateOrderRouter);
 app.use(newOrderRouter);
 app.use(indexOrderRouter);
-
 app.use(showOrderRouter);
 app.use(deleteOrderRouter);
 
