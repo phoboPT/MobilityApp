@@ -56,10 +56,14 @@ router.get('/api/routes/start/:start/end/:end', async (req: Request, res: Respon
             delete unfilteredData[index]
         }
 
+        delete item[item.length - 1];
+
     })
     const filteredData = unfilteredData.filter((item: any) => {
+      
 
-        return item
+            return item
+        
     })
 
     const after = Date.now();
