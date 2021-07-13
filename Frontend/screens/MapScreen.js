@@ -20,7 +20,7 @@ const MapScreen = ({navigation, route}) => {
   const [haveUserLocation, setHaveUserLocation] = useState(false);
   const [GeoJsonBus, setGeoJsonBus] = useState(null);
   const [GeoJsonCar, setGeoJsonCar] = useState(null);
-  const [haveBus, setBus] = useState(null);
+  const [haveBus, setHaveBus] = useState(false);
   const {mapType, startLocation, endLocation, middleLocation} = route.params;
   const {region, setRegion} = useState([]);
   const [endLocationDescription, setEndLocationDescription] = useState({
@@ -65,7 +65,6 @@ const MapScreen = ({navigation, route}) => {
   };
 
   const getBusRoute = (start, end) => {
-    console.log(start, end);
     return fetch(
       'https://raw.githubusercontent.com/phoboPT/MobilityApp/development/mobility-one-routes/' +
         start +
@@ -75,9 +74,9 @@ const MapScreen = ({navigation, route}) => {
     )
       .then(response => response.json())
       .then(json => {
-        console.log(json);
         if (json !== null) {
           setGeoJsonBus(json);
+          setHaveBus(true)
           setLoading(false);
         }
       })
