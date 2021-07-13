@@ -9,18 +9,19 @@ router.get('/api/routes/endLocation/:location', currentUser, async (req: Request
     const route = await Route.find({
         endLocation: req.params.location,
         state: 'AVAILABLE',
-    });
-    console.log(route, req.params.location);
+    }).sort({startDate:1});
+    console.log(route)
+    if (!route) {
+        throw new NotFoundError({ from: 'show ride' });
+    }
     const final: any = [];
     route.forEach((item) => {
+        
         if (new Date(item.startDate) > new Date() && item.userId !== req.currentUser!.id) {
             final.push(item);
         }
     });
 
-    if (!final) {
-        throw new NotFoundError({ from: 'show ride' });
-    }
     res.send(final);
 });
 
@@ -28,7 +29,7 @@ router.get('/api/routes/startLocation/:location', async (req: Request, res: Resp
     const route = await Route.find({
         startLocation: req.params.location,
         state: 'AVAILABLE',
-    });
+    }).sort({startDate:1});
     console.log(route, req.params.location);
     const final: any = [];
     route.forEach((item) => {
