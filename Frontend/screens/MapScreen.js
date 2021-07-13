@@ -1,18 +1,15 @@
 import React, {useState, useEffect} from 'react';
 import {
-  Button,
   StyleSheet,
-  SafeAreaView,
   Image,
   TouchableOpacity,
-  Text,
-  Polyline,
   ActivityIndicator,
   View,
   ImageBackground,
+  Alert,
 } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
-import MapView, {PROVIDER_GOOGLE, Geojson} from 'react-native-maps';
+import MapView, {PROVIDER_GOOGLE, Geojson, Marker} from 'react-native-maps';
 import {images, icons, COLORS, SIZES} from '../constants';
 
 let lat;
@@ -23,7 +20,8 @@ const MapScreen = ({navigation, route}) => {
   const [haveUserLocation, setHaveUserLocation] = useState(false);
   const [GeoJsonBus, setGeoJsonBus] = useState(null);
   const [GeoJsonCar, setGeoJsonCar] = useState(null);
-  const {mapType, startLocation, endLocation} = route.params;
+  const [haveBus, setBus] = useState(null);
+  const {mapType, startLocation, endLocation, middleLocation} = route.params;
   const {region, setRegion} = useState([]);
   const [endLocationDescription, setEndLocationDescription] = useState({
     name: endLocation,
@@ -66,9 +64,14 @@ const MapScreen = ({navigation, route}) => {
     );
   };
 
-  const getBusRoute = () => {
+  const getBusRoute = (start, end) => {
+    console.log(start, end);
     return fetch(
-      'https://raw.githubusercontent.com/phoboPT/MobilityApp/development/mobility-one-routes/BUS/BUS1.geojson',
+      'https://raw.githubusercontent.com/phoboPT/MobilityApp/development/mobility-one-routes/' +
+        start +
+        '/' +
+        end +
+        '.geojson',
     )
       .then(response => response.json())
       .then(json => {
@@ -82,12 +85,12 @@ const MapScreen = ({navigation, route}) => {
       });
   };
 
-  const getCarRoute = () => {
+  const getCarRoute = (start, end) => {
     return fetch(
       'https://raw.githubusercontent.com/phoboPT/MobilityApp/development/mobility-one-routes/' +
-        startLocation +
+        start +
         '/' +
-        endLocation +
+        end +
         '.geojson',
     )
       .then(response => response.json())
@@ -121,6 +124,9 @@ const MapScreen = ({navigation, route}) => {
       getBusRoute();
     } else if (mapType == 'Car') {
       getCarRoute();
+    } else if (mapType == 'Mixed') {
+      getCarRoute(startLocation, middleLocation);
+      getBusRoute(middleLocation, endLocation);
     }
   }, []);
 
@@ -232,10 +238,17 @@ const MapScreen = ({navigation, route}) => {
         provider={PROVIDER_GOOGLE}
         region={initialPosition}
         showsUserLocation
-        onMarkerPress={e => onMarkerPress(e)}
         onUserLocationChange={event => userLocationChanged(event)}
         onRegionChangeComplete={event => changeRegion(event)}>
         {renderHeader()}
+        {haveBus ? (
+          <Geojson
+            geojson={GeoJsonBus}
+            strokeWidth={4}
+            fillColor="green"
+            strokeColor="green"
+          />
+        ) : null}
         <Geojson
           geojson={GeoJsonCar}
           strokeWidth={4}

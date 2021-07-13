@@ -122,6 +122,8 @@ const HomeScreen = ({navigation}) => {
               onPress={() =>
                 navigation.navigate('DestinationDetail', {
                   data: item,
+                  allData: null,
+                  endLocation: item.endLocation,
                 })
               }>
               <View style={[styles.itemContainer, {backgroundColor: 'white'}]}>
@@ -341,6 +343,8 @@ const HomeScreen = ({navigation}) => {
                 onPress={() =>
                   navigation.navigate('DestinationDetail', {
                     data: item,
+                    allData: null,
+                    endLocation: item.endLocation,
                   })
                 }>
                 <View

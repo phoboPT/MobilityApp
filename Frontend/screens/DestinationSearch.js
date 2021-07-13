@@ -15,8 +15,8 @@ import {
 import {images, icons, SIZES, COLORS} from '../constants';
 import api from '../services/api';
 import {FlatGrid} from 'react-native-super-grid';
-import {Avatar, Button} from 'react-native-elements';
 import Moment from 'moment';
+import {company} from 'faker';
 
 const DestinationSearch = ({route, navigation}) => {
   const [loading, setLoading] = useState(true);
@@ -32,7 +32,6 @@ const DestinationSearch = ({route, navigation}) => {
         const response = await api.get(
           '/routes/start/' + startLocation + '/end/' + endLocation,
         );
-        console.log(response.data);
         filterRoutes(response.data);
       } catch (err) {
         console.log(err);
@@ -43,13 +42,22 @@ const DestinationSearch = ({route, navigation}) => {
     getRoutes();
   }, []);
 
+  const getRouteDetails = route => {
+    const allData = route
+    navigation.navigate('DestinationDetail', {
+      data: route[0],
+      allData: allData,
+      endLocation: endLocation,
+    });
+  };
+
   const filterRoutes = routes => {
     if (routes.length == 0) {
       setRoutes([]);
       Alert.alert('No Routes Available');
     } else {
       routes.forEach(element => {
-        setRoutesList(oldArray => [...oldArray, element[0]]);
+        setRoutesList(oldArray => [...oldArray, element]);
       });
     }
     setLoading(false);
@@ -121,26 +129,16 @@ const DestinationSearch = ({route, navigation}) => {
         style={styles.gridView}
         spacing={10}
         renderItem={({item}) => (
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('DestinationDetail', {
-                data: item,
-              })
-            }>
+          <TouchableOpacity onPress={() => getRouteDetails(item)}>
             <View style={[styles.itemContainer, {backgroundColor: 'white'}]}>
               <View>
-                <Text style={styles.itemName}>Start: {item.startLocation}</Text>
-                <Text style={styles.itemName}>End: {item.endLocation}</Text>
-                <View style={{flexDirection: 'row'}}>
-                  <Text style={styles.itemName}>
-                    Available Seats: {item.capacity - 1}
-                  </Text>
-                </View>
+                <Text style={styles.itemName}>Start: {startLocation}</Text>
+                <Text style={styles.itemName}>End: {endLocation}</Text>
+                <Text style={styles.itemName}>
+                  Estimated Time: {item[0].estimatedTime} Minutes
+                </Text>
                 <Text style={styles.itemDate}>
                   {Moment(item.startDate).format('lll')}
-                </Text>
-                <Text style={styles.itemCode}>
-                  Estimated Time: {item.estimatedTime} Minutes
                 </Text>
               </View>
             </View>

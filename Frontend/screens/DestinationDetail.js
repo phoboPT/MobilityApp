@@ -7,11 +7,9 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
-  SafeAreaView,
   ImageBackground,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import faker from 'faker';
 import {images, icons, COLORS, SIZES} from '../constants';
 import {ScrollView} from 'react-native';
 import api from '../services/api';
@@ -99,13 +97,15 @@ const IconLabel = ({icon, label}) => {
 };
 
 const DestinationDetail = ({navigation, route}) => {
-  // Render
-
-  const {data} = route.params;
+  const {data, allData, endLocation} = route.params;
   const [loading, setLoading] = useState(true);
   const [endLocationImage, setEndLocationImage] = useState(null);
   const [user, setUser] = useState(null);
+  const [haveBus, setHaveBus] = useState(null);
   useEffect(() => {
+    if (allData != undefined && allData.length > 1) {
+      setHaveBus(true);
+    }
     async function getUserInfo() {
       try {
         const response = await api.get('/users/' + data.userId);
@@ -116,7 +116,7 @@ const DestinationDetail = ({navigation, route}) => {
         setLoading(true);
       }
     }
-    setBackgroundImage(data.endLocation);
+    setBackgroundImage(endLocation);
     getUserInfo();
   }, []);
 
@@ -136,6 +136,37 @@ const DestinationDetail = ({navigation, route}) => {
       } else {
         Alert.alert('An error occurred!');
       }
+    }
+  };
+
+  const showRoute = () => {
+    if (haveBus) {
+      navigation.navigate('Map', {
+        mapType: 'Mixed',
+        startLocation: data.startLocation,
+        middleLocation: data.endLocation,
+        endLocation: endLocation,
+      });
+    } else {
+      navigation.navigate('Map', {
+        mapType: 'Car',
+        startLocation: data.startLocation,
+        endLocation: data.endLocation,
+      });
+    }
+  };
+  const iconToShow = (item, index) => {
+    if (index == 0) {
+      return (
+        <IconLabel
+          icon={icons.frontCar}
+          label={`${item.estimatedTime} Minutes`}
+        />
+      );
+    } else {
+      return (
+        <IconLabel icon={icons.frontBus} label={`${item.estimatedTime}`} />
+      );
     }
   };
   const setBackgroundImage = endLocation => {
@@ -287,18 +318,44 @@ const DestinationDetail = ({navigation, route}) => {
             justifyContent: 'space-between',
           }}>
           <ScrollView horizontal>
-            <IconLabel
-              icon={icons.graduationHat}
-              label={`${data.startLocation}`}
-            />
-            <IconLabel
-              icon={icons.frontCar}
-              label={`${data.estimatedTime} Minutes`}
-            />
-            <IconLabel icon={icons.end} label={data.endLocation} />
+            {haveBus ? (
+              allData.map((item, index) => {
+                if (index >= 2) return null;
+                return (
+                  <>
+                    <IconLabel
+                      icon={icons.graduationHat}
+                      label={`${item.startLocation}`}
+                    />
+                    {iconToShow(item, index)}
+                  </>
+                );
+              })
+            ) : (
+              <>
+                <IconLabel
+                  icon={icons.graduationHat}
+                  label={`${data.startLocation}`}
+                />
+                <IconLabel
+                  icon={icons.frontCar}
+                  label={`${data.estimatedTime} Minutes`}
+                />
+              </>
+            )}
+            <IconLabel icon={icons.end} label={endLocation} />
           </ScrollView>
         </View>
 
+        {haveBus ? (
+          <View style={{marginTop: 10, paddingHorizontal: SIZES.padding}}>
+            <Text style={{...SIZES.body2, fontWeight: '700'}}>
+              Route done with {user.name} on his car from{' '}
+              {allData[0].startLocation} to {allData[1].startLocation} and then
+              by bus from {allData[1].startLocation} to {allData[1].endLocation}
+            </Text>
+          </View>
+        ) : null}
         <View style={{marginTop: 10, paddingHorizontal: SIZES.padding}}>
           <Text style={{...SIZES.body2, fontWeight: '700'}}>
             Start Date: {Moment(data.startDate).format('LLL')}
@@ -310,9 +367,15 @@ const DestinationDetail = ({navigation, route}) => {
             marginTop: 10,
             paddingHorizontal: SIZES.padding,
           }}>
-          <Text style={{...SIZES.body2, fontWeight: '700'}}>
-            Available Seats: {data.capacity - 1}
-          </Text>
+          {haveBus ? (
+            <Text style={{...SIZES.body2, fontWeight: '700'}}>
+              Available Seats on Car: {data.capacity - 1}
+            </Text>
+          ) : (
+            <Text style={{...SIZES.body2, fontWeight: '700'}}>
+              Available Seats: {data.capacity - 1}
+            </Text>
+          )}
         </View>
 
         <View
@@ -350,13 +413,7 @@ const DestinationDetail = ({navigation, route}) => {
             height: '50%',
             marginHorizontal: SIZES.radius,
           }}
-          onPress={() => {
-            navigation.navigate('Map', {
-              mapType: 'Car',
-              startLocation: data.startLocation,
-              endLocation: data.endLocation,
-            });
-          }}>
+          onPress={() => showRoute()}>
           <LinearGradient
             style={[
               {
