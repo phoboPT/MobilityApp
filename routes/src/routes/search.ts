@@ -10,7 +10,7 @@ const router = express.Router();
 router.get('/api/routes/start/:start/end/:end', async (req: Request, res: Response) => {
     const before = Date.now();
     const { start, end } = req.params;
-    const allRoutes = await Route.find({});
+    const allRoutes = await Route.find({state:"AVAILABLE"});
 
     let allPaths;
     let routeDetails: IVisit = {};
