@@ -4,6 +4,7 @@ import {
   View,
   Text,
   StyleSheet,
+  Alert,
   TouchableOpacity,
   Image,
   SafeAreaView,
@@ -18,6 +19,7 @@ import Geolocation from '@react-native-community/geolocation';
 import {FlatGrid} from 'react-native-super-grid';
 import api from '../services/api';
 import Moment from 'moment';
+import {Button, Icon} from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const SPACING = 20;
@@ -28,9 +30,14 @@ const HomeScreen = ({navigation}) => {
   const [loading, setLoading] = useState(true);
   const [recommendations, setRecommendations] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [startLocation, setStartLocation] = React.useState('');
+  const [endLocation, setEndLocation] = React.useState('');
   const [open, setOpen] = useState(false);
+  const [open1, setOpen1] = useState(false);
   const [nextTravel, setNextTravel] = useState(null);
   const [value, setValue] = useState(null);
+  const [value1, setValue1] = useState(null);
+
   const [items, setItems] = useState([
     {
       label: 'Escola Superior de Tecnologia e Gestão',
@@ -97,7 +104,7 @@ const HomeScreen = ({navigation}) => {
           style={{
             marginLeft: 15,
             fontSize: 24,
-            zIndex: -1,
+            zIndex: -3,
             fontFamily: 'Arial',
             color: 'white',
             position: 'relative',
@@ -147,6 +154,22 @@ const HomeScreen = ({navigation}) => {
     findCoordinates();
   }, []);
 
+  const searchRoutes = () => {
+    if (startLocation == endLocation) {
+      Alert.alert(
+        'Start Location and End Location are the same! Please change!',
+      );
+    } else {
+      var nameLocation = items.filter(obj => {
+        return obj.value === endLocation;
+      });
+      navigation.navigate('DestinationSearch', {
+        startLocation: startLocation,
+        endLocation: endLocation,
+        name: nameLocation[0].label,
+      });
+    }
+  };
   const findCoordinates = () => {
     Geolocation.getCurrentPosition(
       position => {
@@ -386,48 +409,98 @@ const HomeScreen = ({navigation}) => {
             color: 'white',
             position: 'relative',
             fontWeight: '400',
-            marginTop: 30,
           }}>
-          Destinations
+          Search Routes
         </Text>
-        <View style={{flexDirection: 'column'}}>
-          <Animated.FlatList
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            data={items}
-            contentContainerStyle={{padding: SPACING}}
-            keyExtractor={item => item.id}
-            renderItem={({item, index}) => {
-              return (
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate('DestinationSearch', {
-                      endLocation: item.value,
-                      name: item.label,
-                    })
-                  }>
-                  <Animated.View
-                    style={{
-                      flexDirection: 'row',
-                      padding: SPACING,
-                      marginBottom: SPACING,
-                      shadowRadius: 20,
-                      marginRight: 20,
-                      borderRadius: 15,
-                      backgroundColor: 'rgba(255,255,255,0.9)',
-                    }}>
-                    <View>
-                      <Text style={{fontSize: 22, fontWeight: '700'}}>
-                        {item.label}
-                      </Text>
-                      <Text style={{fontSize: 14, fontWeight: '500'}}>
-                        {item.value}
-                      </Text>
-                    </View>
-                  </Animated.View>
-                </TouchableOpacity>
-              );
+        <View style={{alignContent: 'center', alignItems: 'center'}}>
+          <DropDownPicker
+            open={open}
+            closeAfterSelecting={true}
+            itemSeparator={true}
+            value={value}
+            itemKey="label"
+            theme="DARK"
+            schema={{
+              label: 'label',
+              value: 'value',
             }}
+            items={items}
+            placeholder="Start Location"
+            setOpen={setOpen}
+            setValue={setValue}
+            onChangeValue={() => setStartLocation(value)}
+            containerStyle={{
+              width: '88%',
+              marginBottom: 10,
+              zIndex: 2,
+              marginLeft: 30,
+              marginRight: 30,
+              marginTop: 10,
+              borderRadius: 30,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            searchTextInputStyle={{
+              borderRadius: 30,
+              backgroundColor: 'transparent',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          />
+          <DropDownPicker
+            open={open1}
+            closeAfterSelecting={true}
+            itemSeparator={true}
+            value={value1}
+            itemKey="label"
+            theme="DARK"
+            schema={{
+              label: 'label',
+              value: 'value',
+            }}
+            items={items}
+            placeholder="End Location"
+            onChangeValue={() => setEndLocation(value1)}
+            setOpen={setOpen1}
+            setValue={setValue1}
+            containerStyle={{
+              width: '88%',
+              marginBottom: 10,
+              zIndex: 1,
+              marginLeft: 30,
+              marginRight: 30,
+              borderRadius: 30,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            searchTextInputStyle={{
+              borderRadius: 30,
+              backgroundColor: 'transparent',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          />
+          <Button
+            iconRight
+            onPress={() => searchRoutes()}
+            containerStyle={{
+              borderRadius: 30,
+              marginTop: 10,
+              marginBottom: 10,
+              width: 150,
+            }}
+            icon={
+              <Image
+                source={icons.search}
+                style={{
+                  marginLeft: 5,
+                  width: 30,
+                  height: 30,
+                  tintColor: 'white',
+                }}
+              />
+            }
+            title="Search"
           />
         </View>
       </View>
@@ -533,6 +606,7 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   gridView: {
+    zIndex: -3,
     marginTop: 5,
   },
   nextTravelContainer: {

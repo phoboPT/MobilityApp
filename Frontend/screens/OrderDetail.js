@@ -5,17 +5,17 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  Modal,
   ActivityIndicator,
   Alert,
-  SafeAreaView,
   ImageBackground,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import faker from 'faker';
 import {images, icons, COLORS, SIZES} from '../constants';
 import {ScrollView} from 'react-native';
 import api from '../services/api';
 import Moment from 'moment';
+import {Rating, Button} from 'react-native-elements';
 
 const StarReview = ({rate}) => {
   var starComponents = [];
@@ -98,46 +98,66 @@ const IconLabel = ({icon, label}) => {
   );
 };
 
-const DestinationDetail = ({navigation, route}) => {
-  // Render
-
+const OrderDetail = ({navigation, route}) => {
   const {data} = route.params;
   const [loading, setLoading] = useState(true);
   const [endLocationImage, setEndLocationImage] = useState(null);
+  const [routeInfo, setRouteInfo] = useState(null);
+  const [rating, setRating] = useState(false);
+  const [userRating, setUserRating] = useState(0);
+  const [cancelRequest, setCancelRequest] = useState(false);
   const [user, setUser] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+
   useEffect(() => {
-    async function getUserInfo() {
-      try {
-        const response = await api.get('/users/' + data.userId);
-        setUser(response.data);
-        setLoading(false);
-      } catch (err) {
-        Alert.alert(err);
-        setLoading(true);
-      }
+    if (data.status == 'created') {
+      setCancelRequest(true);
+    } else if (data.status == 'accepted') {
+      setRating(true);
     }
-    setBackgroundImage(data.endLocation);
-    getUserInfo();
+    getRouteInfo(data.routeId);
   }, []);
 
-  const createOrder = async () => {
+  async function getRouteInfo(id) {
     try {
-      const response = await api.post('/orders', {
-        routeId: data.id,
-      });
-      if (response.data != undefined) {
-        console.log(response.data);
-        Alert.alert('Your request was sent!');
-        navigation.navigate('Home');
-      }
+      const response = await api.get('/routes/' + id);
+      setRouteInfo(response.data);
+      setBackgroundImage(response.data.endLocation);
+      getUserInfo(response.data.userId);
     } catch (err) {
-      if (err.data.errors[0].message != undefined) {
-        Alert.alert(err.data.errors[0].message);
-      } else {
-        Alert.alert('An error occurred!');
-      }
+      Alert.alert(err);
+      setLoading(true);
     }
+  }
+
+  async function getUserInfo(id) {
+    try {
+      const response = await api.get('/users/' + id);
+      setUser(response.data);
+      setLoading(false);
+    } catch (err) {
+      Alert.alert(err);
+      setLoading(true);
+    }
+  }
+
+  const rateUser = async () => {
+    setModalVisible(!modalVisible);
+    console.log('O valor do rating foi de: ' + userRating);
   };
+
+  async function cancelledOrder() {
+    try {
+      const response = await api.post('/orders/cancelled', {
+        id: data.id,
+      });
+      Alert.alert('Order Cancelled!');
+      navigation.navigate('My Routes');
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const setBackgroundImage = endLocation => {
     if (endLocation === 'ESTG') {
       setEndLocationImage(
@@ -289,13 +309,13 @@ const DestinationDetail = ({navigation, route}) => {
           <ScrollView horizontal>
             <IconLabel
               icon={icons.graduationHat}
-              label={`${data.startLocation}`}
+              label={`${routeInfo.startLocation}`}
             />
             <IconLabel
               icon={icons.frontCar}
-              label={`${data.estimatedTime} Minutes`}
+              label={`${routeInfo.estimatedTime} Minutes`}
             />
-            <IconLabel icon={icons.end} label={data.endLocation} />
+            <IconLabel icon={icons.end} label={routeInfo.endLocation} />
           </ScrollView>
         </View>
 
@@ -311,7 +331,7 @@ const DestinationDetail = ({navigation, route}) => {
             paddingHorizontal: SIZES.padding,
           }}>
           <Text style={{...SIZES.body2, fontWeight: '700'}}>
-            Available Seats: {data.capacity - 1}
+            Available Seats: {routeInfo.capacity}
           </Text>
         </View>
 
@@ -328,74 +348,100 @@ const DestinationDetail = ({navigation, route}) => {
                 color: COLORS.gray,
                 ...SIZES.body3,
               }}>
-              {data.description}
+              {routeInfo.description}
             </Text>
           </ScrollView>
         </View>
       </View>
 
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(!modalVisible)}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Rating
+              showRating
+              onFinishRating={value => setUserRating(value)}
+              style={{paddingVertical: 10}}
+            />
+            <View style={{flexDirection: 'row', margin: 10}}>
+              <Button
+                title="Cancel"
+                type="outline"
+                style={{marginRight: 10}}
+                onPress={() => setModalVisible(!modalVisible)}
+              />
+              <Button
+                style={{marginLeft: 10, backgroundColor: COLORS.primary}}
+                iconRight
+                title="Rate"
+                onPress={() => rateUser()}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
       {/* Footer */}
       <View
         style={{
           flex: 0.5,
-          marginLeft: 50,
           alignContent: 'center',
           alignItems: 'center',
-          flexDirection: 'row',
         }}>
-        <TouchableOpacity
-          style={{
-            width: 130,
-            marginBottom: 20,
-            height: '50%',
-            marginHorizontal: SIZES.radius,
-          }}
-          onPress={() => {
-            navigation.navigate('Map', {
-              mapType: 'Car',
-              startLocation: data.startLocation,
-              endLocation: data.endLocation,
-            });
-          }}>
-          <LinearGradient
-            style={[
-              {
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: 10,
-              },
-            ]}
-            colors={['#D1D100', '#757500']}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}>
-            <Text style={{color: COLORS.white, ...SIZES.h2}}>Show Route</Text>
-          </LinearGradient>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            width: 130,
-            marginBottom: 20,
-            height: '50%',
-          }}
-          onPress={() => {
-            createOrder();
-          }}>
-          <LinearGradient
-            style={[
-              {
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: 10,
-              },
-            ]}
-            colors={[COLORS.primary, '#5884ff']}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}>
-            <Text style={{color: COLORS.white, ...SIZES.h2}}>GO</Text>
-          </LinearGradient>
-        </TouchableOpacity>
+        {rating ? (
+          <TouchableOpacity
+            style={{
+              width: 160,
+              height: '70%',
+              marginHorizontal: SIZES.radius,
+            }}
+            onPress={() => setModalVisible(!modalVisible)}>
+            <LinearGradient
+              style={[
+                {
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 10,
+                },
+              ]}
+              colors={['#D1D100', '#757500']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}>
+              <Text style={{color: COLORS.white, ...SIZES.h2}}>Rate User</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        ) : null}
+        {cancelRequest ? (
+          <TouchableOpacity
+            style={{
+              width: 160,
+              marginBottom: 20,
+              height: '70%',
+            }}
+            onPress={() => {
+              cancelledOrder();
+            }}>
+            <LinearGradient
+              style={[
+                {
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 10,
+                },
+              ]}
+              colors={[COLORS.black, 'red']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}>
+              <Text style={{color: COLORS.white, ...SIZES.h2}}>
+                Cancel Request
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        ) : null}
       </View>
     </View>
   );
@@ -417,6 +463,37 @@ const styles = StyleSheet.create({
 
     elevation: 5,
   },
+  modalView: {
+    margin: 20,
+    backgroundColor: COLORS.white,
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    color: 'black',
+    textAlign: 'center',
+  },
 });
 
-export default DestinationDetail;
+export default OrderDetail;

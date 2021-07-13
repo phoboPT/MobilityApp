@@ -24,6 +24,7 @@ import AuthLoadingScreen from './screens/login/AuthLoadingScreen';
 import MyProfile from './screens/MyProfile';
 import MapScreen from './screens/MapScreen';
 import OrdersScreen from './screens/OrdersScreen';
+import OrderDetail from './screens/OrderDetail';
 
 const Drawer = createDrawerNavigator();
 
@@ -58,6 +59,7 @@ const App = () => {
         <AppStack.Screen name="SignUpScreen" component={SignUpScreen} />
         <AppStack.Screen name="CreateVehicle" component={CreateVehicle} />
         <AppStack.Screen name="OrdersScreen" component={OrdersScreen} />
+        <AppStack.Screen name="OrderDetail" component={OrderDetail} />
         <AppStack.Screen name="Map" component={MapScreen} />
         <AppStack.Screen name="Drawer" component={navigationDrawer} />
         <AppStack.Screen name="Onboarding" component={Onboarding} />

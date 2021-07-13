@@ -45,6 +45,15 @@ const OrdersScreen = ({navigation, route}) => {
     }
   }
 
+  async function endRoute() {
+    try {
+      const response = await api.put('/routes/' + data.id);
+      Alert.alert('Route finished. This will no longer be available to users');
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   async function getUserInfo(id) {
     try {
       const response = await api.get('/users/' + id);
@@ -72,7 +81,7 @@ const OrdersScreen = ({navigation, route}) => {
         id: order.id,
       });
       Alert.alert('Order Accepted!');
-      getOrders()
+      getOrders();
     } catch (error) {
       console.log(error);
     }
@@ -84,7 +93,7 @@ const OrdersScreen = ({navigation, route}) => {
         id: order.id,
       });
       Alert.alert('Order Cancelled!');
-      getOrders()
+      getOrders();
     } catch (error) {
       console.log(error);
     }
@@ -125,6 +134,23 @@ const OrdersScreen = ({navigation, route}) => {
             Orders
           </Text>
         </View>
+        <TouchableOpacity
+          onPress={() => endRoute()}
+          style={{
+            width: 50,
+            paddingRight: SIZES.padding * 1,
+            justifyContent: 'center',
+            marginRight: 5,
+          }}>
+          <Image
+            source={icons.finish}
+            resizeMode="contain"
+            style={{
+              width: 30,
+              height: 30,
+            }}
+          />
+        </TouchableOpacity>
       </View>
     );
   }

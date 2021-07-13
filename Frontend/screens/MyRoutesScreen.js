@@ -27,6 +27,7 @@ const MyRoutesScreen = ({navigation}) => {
       setLoading(true);
       try {
         const response = await api.get('/routes/user');
+        console.log(response.data);
         setMyRoutes(response.data);
         getRequestsSent();
       } catch (err) {
@@ -38,7 +39,6 @@ const MyRoutesScreen = ({navigation}) => {
       try {
         const response = await api.get('/orders/userId');
         setSentRequests(response.data);
-        console.log(response.data);
         setLoading(false);
       } catch (err) {
         console.log(err);
@@ -89,32 +89,38 @@ const MyRoutesScreen = ({navigation}) => {
 
   function whatImageToRender(item) {
     if (item.status === 'created') {
-      return <Avatar
-        source={icons.waiting}
-        style={{
-          marginTop: 2,
-          width: 45,
-          height: 45,
-        }}
-      />;
+      return (
+        <Avatar
+          source={icons.waiting}
+          style={{
+            marginTop: 2,
+            width: 45,
+            height: 45,
+          }}
+        />
+      );
     } else if (item.status === 'cancelled') {
-      return <Avatar
-        source={images.decline}
-        style={{
-          marginTop: 2,
-          width: 45,
-          height: 45,
-        }}
-      />;
+      return (
+        <Avatar
+          source={images.decline}
+          style={{
+            marginTop: 2,
+            width: 45,
+            height: 45,
+          }}
+        />
+      );
     } else {
-      return <Avatar
-        source={images.accept}
-        style={{
-          marginTop: 2,
-          width: 45,
-          height: 45,
-        }}
-      />;
+      return (
+        <Avatar
+          source={images.accept}
+          style={{
+            marginTop: 2,
+            width: 45,
+            height: 45,
+          }}
+        />
+      );
     }
   }
 
@@ -122,9 +128,6 @@ const MyRoutesScreen = ({navigation}) => {
     return (
       <SectionGrid
         itemDimension={90}
-        // staticDimension={300}
-        // fixed
-        // spacing={20}
         sections={[
           {
             title: 'Sent',
@@ -136,7 +139,7 @@ const MyRoutesScreen = ({navigation}) => {
         renderItem={({item}) => (
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate('DestinationDetail', {
+              navigation.navigate('OrderDetail', {
                 data: item,
               })
             }>
@@ -152,7 +155,6 @@ const MyRoutesScreen = ({navigation}) => {
         renderSectionHeader={({section}) => (
           <Text
             style={{
-              flex: 1,
               fontSize: 20,
               fontWeight: '600',
               alignContent: 'center',
@@ -173,9 +175,6 @@ const MyRoutesScreen = ({navigation}) => {
     return (
       <SectionGrid
         itemDimension={90}
-        // staticDimension={300}
-        // fixed
-        // spacing={20}
         sections={[
           {
             title: 'Received',
@@ -192,7 +191,7 @@ const MyRoutesScreen = ({navigation}) => {
               })
             }>
             <View style={[styles.itemContainer, {backgroundColor: 'white'}]}>
-              <View>
+              <View style={{alignContent: 'center', alignItems: 'center'}}>
                 <Text style={styles.itemName}>Start: {item.startLocation}</Text>
                 <Text style={styles.itemName}>End: {item.endLocation}</Text>
                 <Text style={styles.itemDate}>
@@ -235,7 +234,10 @@ const MyRoutesScreen = ({navigation}) => {
             style={{flex: 1, justifyContent: 'center', alignContent: 'center'}}
           />
         ) : (
-          (renderRequests(), renderSentRequests())
+          <View style={{flex: 1}}>
+            {renderRequests()}
+            {renderSentRequests()}
+          </View>
         )}
       </SafeAreaView>
     </ImageBackground>
@@ -249,7 +251,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   gridView: {
-    marginTop: 10,
     flex: 1,
   },
   itemContainer: {

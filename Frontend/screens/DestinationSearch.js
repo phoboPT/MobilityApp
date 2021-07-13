@@ -8,28 +8,32 @@ import {
   Alert,
   TouchableOpacity,
   Image,
+  Modal,
   StyleSheet,
   SafeAreaView,
 } from 'react-native';
 import {images, icons, SIZES, COLORS} from '../constants';
 import api from '../services/api';
 import {FlatGrid} from 'react-native-super-grid';
-import {Avatar} from 'react-native-elements';
+import {Avatar, Button} from 'react-native-elements';
 import Moment from 'moment';
 
 const DestinationSearch = ({route, navigation}) => {
   const [loading, setLoading] = useState(true);
-  const {name, endLocation} = route.params;
+  const {name, endLocation, startLocation} = route.params;
   const [routes, setRoutes] = useState(null);
-  const capacity = 2;
+  const [modalVisible, setModalVisible] = useState(false);
+  const [routesList, setRoutesList] = useState([]);
   useEffect(() => {
     // temail@testdefff.com
     async function getRoutes() {
       setLoading(true);
       try {
-        const response = await api.get('/routes/endLocation/' + endLocation);
-        setRoutes(response.data);
-        setLoading(false);
+        const response = await api.get(
+          '/routes/start/' + startLocation + '/end/' + endLocation,
+        );
+        console.log(response.data);
+        filterRoutes(response.data);
       } catch (err) {
         console.log(err);
         Alert.alert('Error! Please try again later!');
@@ -38,6 +42,21 @@ const DestinationSearch = ({route, navigation}) => {
     }
     getRoutes();
   }, []);
+
+  const filterRoutes = routes => {
+    if (routes.length == 0) {
+      setRoutes([]);
+      Alert.alert('No Routes Available');
+    } else {
+      routes.forEach(element => {
+        setRoutesList(oldArray => [...oldArray, element[0]]);
+      });
+    }
+    setLoading(false);
+  };
+  const openFilter = () => {
+    console.log('Open Filters');
+  };
 
   function renderHeader() {
     return (
@@ -74,7 +93,7 @@ const DestinationSearch = ({route, navigation}) => {
           </Text>
         </View>
         <TouchableOpacity
-          onPress={() => console.log('Open Filters')}
+          onPress={() => openFilter()}
           style={{
             marginLeft: 10,
             width: 50,
@@ -98,7 +117,7 @@ const DestinationSearch = ({route, navigation}) => {
     return (
       <FlatGrid
         itemDimension={130}
-        data={routes}
+        data={routesList}
         style={styles.gridView}
         spacing={10}
         renderItem={({item}) => (
