@@ -11,13 +11,11 @@ router.get('/api/routes/start/:start/end/:end', async (req: Request, res: Respon
     const before = Date.now();
     const { start, end } = req.params;
     const allRoutes = await Route.find({});
-    
+
     let allPaths;
     let routeDetails: IVisit = {};
     if (allRoutes) {
-        console.log(allRoutes,start,end)
         allPaths = searchRoute(start, end, allRoutes, []);
-        console.log(allPaths)
         //split the routes to populate later
         allPaths.forEach((path): void => {
             path.split(',').forEach((subpath: any): void => {
@@ -31,7 +29,7 @@ router.get('/api/routes/start/:start/end/:end', async (req: Request, res: Respon
             });
         });
     }
-    const response: RouteDoc[] = [];
+    const unfilteredData: any[] = [];
     //populate the array with the data
     allPaths?.forEach((path): void => {
         let tempArray: any = [];
@@ -41,14 +39,33 @@ router.get('/api/routes/start/:start/end/:end', async (req: Request, res: Respon
             }
         });
         tempArray.push(end);
-        response.push(tempArray);
+        unfilteredData.push(tempArray);
         tempArray = [];
     });
+
+    unfilteredData.forEach((item: any, index): void => {
+        //for ecah item verify if the startDate is greater than the first element startDate
+        const startDate: string = item[0].startDate;
+        let found = 0
+        item.forEach((route: any): void => {
+            if (route.startDate < startDate) {
+                found += 1;
+            }
+        })
+        if (found > 0) {
+            delete unfilteredData[index]
+        }
+
+    })
+    const filteredData = unfilteredData.filter((item: any) => {
+
+        return item
+    })
 
     const after = Date.now();
     console.log('Route performed in ', (after - before) / 1000);
     // console.log(allPaths)
-    res.send(response);
+    res.send(filteredData);
 });
 
 export { router as searchRouteRouter };
