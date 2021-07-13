@@ -28,9 +28,9 @@ router.put('/api/routes/:id', currentUser, requiredAuth, validateRequest, async 
         throw new NotFoundError({ from: 'Route not found, verify the route id' });
     }
 
-    if (route.userId !== req.currentUser!.id) {
-        throw new NotAuthorizedError();
-    }
+    // if (route.userId !== req.currentUser!.id) {
+    //     throw new NotAuthorizedError();
+    // }
     route.set({
         userId: req.currentUser!.id,
         type: type || route.type,
