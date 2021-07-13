@@ -39,6 +39,7 @@ router.get('/api/routes/start/:start/end/:end', async (req: Request, res: Respon
                 tempArray.push(routeDetails[subpath]);
             }
         });
+        
         tempArray.push(end);
         unfilteredData.push(tempArray);
         tempArray = [];
