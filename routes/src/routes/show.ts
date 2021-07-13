@@ -37,7 +37,6 @@ router.get('/api/routes/startLocation/:location', async (req: Request, res: Resp
             final.push(item);
         }
     });
-
     if (!final) {
         throw new NotFoundError({ from: 'show ride' });
     }
