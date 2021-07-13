@@ -11,7 +11,6 @@ router.get('/api/routes/start/:start/end/:end', async (req: Request, res: Respon
     const before = Date.now();
     const { start, end } = req.params;
     const allRoutes = await Route.find({state:"AVAILABLE"});
-
     let allPaths;
     let routeDetails: IVisit = {};
     if (allRoutes) {
@@ -39,7 +38,7 @@ router.get('/api/routes/start/:start/end/:end', async (req: Request, res: Respon
                 tempArray.push(routeDetails[subpath]);
             }
         });
-        
+
         tempArray.push(end);
         unfilteredData.push(tempArray);
         tempArray = [];
