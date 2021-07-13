@@ -29,6 +29,7 @@ router.get('/api/routes/start/:start/end/:end', async (req: Request, res: Respon
             });
         });
     }
+    console.log(allPaths)
     const unfilteredData: any[] = [];
     //populate the array with the data
     allPaths?.forEach((path): void => {
