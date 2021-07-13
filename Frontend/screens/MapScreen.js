@@ -75,6 +75,7 @@ const MapScreen = ({navigation, route}) => {
     )
       .then(response => response.json())
       .then(json => {
+        console.log(json);
         if (json !== null) {
           setGeoJsonBus(json);
           setLoading(false);
