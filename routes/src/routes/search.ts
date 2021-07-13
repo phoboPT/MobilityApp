@@ -1,4 +1,3 @@
-import { NotFoundError } from '@mobileorg/common-lib';
 import express, { Request, Response } from 'express';
 import { Route, RouteDoc } from '../models/route';
 import { searchRoute } from '@mobileorg/common-lib';
@@ -12,11 +11,13 @@ router.get('/api/routes/start/:start/end/:end', async (req: Request, res: Respon
     const before = Date.now();
     const { start, end } = req.params;
     const allRoutes = await Route.find({});
-
+    
     let allPaths;
     let routeDetails: IVisit = {};
     if (allRoutes) {
+        console.log(allRoutes,start,end)
         allPaths = searchRoute(start, end, allRoutes, []);
+        console.log(allPaths)
         //split the routes to populate later
         allPaths.forEach((path): void => {
             path.split(',').forEach((subpath: any): void => {
@@ -30,7 +31,6 @@ router.get('/api/routes/start/:start/end/:end', async (req: Request, res: Respon
             });
         });
     }
-
     const response: RouteDoc[] = [];
     //populate the array with the data
     allPaths?.forEach((path): void => {
