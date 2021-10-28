@@ -12,7 +12,6 @@ interface VehicleDoc extends mongoose.Document {
     type: string;
     carModel: string;
     capacity: number;
-    //
 }
 
 interface VehicleModel extends mongoose.Model<VehicleDoc> {
