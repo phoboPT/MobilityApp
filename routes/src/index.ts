@@ -9,7 +9,6 @@ const start = async () => {
     if (!process.env.MONGO_URI) {
         throw new Error('MONGO_URI not defined');
     }
-
     if (!process.env.NATS_CLIENT_ID) {
         throw new Error('NATS_CLIENT_ID not defined');
     }
