@@ -1,6 +1,6 @@
 import { filterRoutes } from './../lib/filterRoutes';
 import express, { Request, Response } from 'express';
-import { RouteDoc } from '../models/route';
+import { RouteDoc, Route } from '../models/route';
 import { searchRoute } from '../lib/search';
 import { routeAPI } from '../lib/routeAPI';
 const router = express.Router();
@@ -39,21 +39,22 @@ interface IStations extends Array<IStation> {}
 router.get('/api/routes/start/:start/end/:end/:type', async (req: Request, res: Response) => {
     try {
         const before = Date.now();
-        let { start, end, type } = req.params;
+        const { start, end, type } = req.params;
         // const allRoutes = await Route.find({ state: 'AVAILABLE' });
         let allPaths;
-
+        // get CP journeys between 2 citys
         const { begin, stop, cpRoutes, allTargets } = await routeAPI(start, end, type);
         //search for possible paths given a start, end and all the routes
         if (cpRoutes) {
             allPaths = searchRoute(begin.name, stop.name, cpRoutes, allTargets);
         }
-        const routes = filterRoutes(allPaths, cpRoutes);
+        //filter the results
+        const filteredRoutes = filterRoutes(allPaths, cpRoutes);
 
         const after = Date.now();
         console.log('Route performed in ', (after - before) / 1000);
 
-        res.send(routes);
+        res.send(filteredRoutes);
     } catch (error) {
         console.log(`error ${error}`);
     }

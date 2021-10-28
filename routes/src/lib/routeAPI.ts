@@ -48,10 +48,12 @@ export const routeAPI = async (start: string, end: string, type: string): Promis
             });
 
             const geo = await geocoder.batchGeocode([start, end]);
-
+            console.log(geo[0].value);
             initialPlace = geo[0].value[0].city;
             finalPlace = geo[1].value[0].city;
         }
+
+        console.log(initialPlace, finalPlace);
         cpStations.forEach(async (station: IStation): Promise<void> => {
             allTargets.push(station.name);
             if (station.name.includes(initialPlace)) {
