@@ -19,7 +19,6 @@ app.use(
         secure: false,
     })
 );
-
 app.use(currentUser);
 app.use(searchRouteRouter);
 app.use(indexRouteRouter);
