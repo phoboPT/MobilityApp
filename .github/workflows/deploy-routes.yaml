@@ -22,4 +22,3 @@ jobs:
           token: ${{secrets.DIGITALOCEAN_ACCESS_TOKEN}}
       - run: doctl kubernetes cluster kubeconfig save server
       - run: kubectl rollout restart deployment routes-depl
-      
