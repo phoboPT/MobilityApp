@@ -8,11 +8,15 @@ const api = create({
 api.addAsyncRequestTransform(request => async () => {
   const token = await AsyncStorage.getItem('@App:token');
 
-  if (token) request.headers['Authorization'] = `Bearer ${token}`;
+  if (token) {
+    request.headers.Authorization = `Bearer ${token}`;
+  }
 });
 
 api.addResponseTransform(response => {
-  if (!response.ok) throw response;
+  if (!response.ok) {
+    throw response;
+  }
 });
 
 export default api;

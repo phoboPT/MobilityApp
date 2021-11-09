@@ -26,3 +26,7 @@ spec:
             backend:
               serviceName: orders-srv
               servicePort: 3000    
+          - path: /api/activity/?(.*)
+            backend:
+              serviceName: activity-srv
+              servicePort: 3000    
