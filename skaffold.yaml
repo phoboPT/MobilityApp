@@ -41,3 +41,19 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: phobopt/activity
+      context: activity
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: phobopt/report
+      context: report
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .

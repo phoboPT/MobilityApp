@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: report-mongo-depl
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: report-mongo
+  template:
+    metadata:
+      labels:
+        app: report-mongo
+    spec:
+      containers:
+        - name: report-mongo
+          image: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: report-mongo-srv
+spec:
+  selector:
+    app: report-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017
+      

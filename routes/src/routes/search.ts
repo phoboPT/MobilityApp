@@ -1,71 +1,63 @@
+import { filterRoutes } from './../lib/filterRoutes';
 import express, { Request, Response } from 'express';
-import { Route, RouteDoc } from '../models/route';
-import { searchRoute } from '@mobileorg/common-lib';
+import { RouteDoc, Route } from '../models/route';
+import { searchRoute } from '../lib/search';
+import { routeAPI } from '../lib/routeAPI';
+const router = express.Router();
+
 interface IVisit {
     [key: string]: RouteDoc;
 }
+interface ILegDetails {
+    name: string;
+    id: string;
+}
+interface ILeg {
+    origin: ILegDetails;
+    destination: ILegDetails;
+    price: number;
+}
+interface IRoute {
+    startLocation: string;
+    endLocation: string;
+    originId: string;
+    destinationId: string;
+    price: number;
+}
+interface IRoutes extends Array<IRoute> {
+    legs?: [ILeg];
+    price?: number;
+}
 
-const router = express.Router();
+interface IStation {
+    id: string;
+    name: string;
+}
 
-router.get('/api/routes/start/:start/end/:end', async (req: Request, res: Response) => {
-    const before = Date.now();
-    const { start, end } = req.params;
-    const allRoutes = await Route.find({});
+interface IStations extends Array<IStation> {}
 
-    let allPaths;
-    let routeDetails: IVisit = {};
-    if (allRoutes) {
-        allPaths = searchRoute(start, end, allRoutes, []);
-        //split the routes to populate later
-        allPaths.forEach((path): void => {
-            path.split(',').forEach((subpath: any): void => {
-                if (!routeDetails[subpath]) {
-                    allRoutes.forEach((route) => {
-                        if (route.startLocation === subpath) {
-                            routeDetails[route.startLocation] = route;
-                        }
-                    });
-                }
-            });
-        });
-    }
-    const unfilteredData: any[] = [];
-    //populate the array with the data
-    allPaths?.forEach((path): void => {
-        let tempArray: any = [];
-        path.split(',').forEach((subpath: any): void => {
-            if (routeDetails[subpath]) {
-                tempArray.push(routeDetails[subpath]);
-            }
-        });
-        tempArray.push(end);
-        unfilteredData.push(tempArray);
-        tempArray = [];
-    });
-
-    unfilteredData.forEach((item: any, index): void => {
-        //for ecah item verify if the startDate is greater than the first element startDate
-        const startDate: string = item[0].startDate;
-        let found = 0
-        item.forEach((route: any): void => {
-            if (route.startDate < startDate) {
-                found += 1;
-            }
-        })
-        if (found > 0) {
-            delete unfilteredData[index]
+router.get('/api/routes/start/:start/end/:end/:type', async (req: Request, res: Response) => {
+    try {
+        const before = Date.now();
+        const { start, end, type } = req.params;
+        // const allRoutes = await Route.find({ state: 'AVAILABLE' });
+        let allPaths;
+        // get CP journeys between 2 citys
+        const { begin, stop, cpRoutes, allTargets } = await routeAPI(start, end, type);
+        //search for possible paths given a start, end and all the routes
+        if (cpRoutes) {
+            allPaths = searchRoute(begin.name, stop.name, cpRoutes, allTargets);
         }
+        //filter the results
+        const filteredRoutes = filterRoutes(allPaths, cpRoutes);
 
-    })
-    const filteredData = unfilteredData.filter((item: any) => {
+        const after = Date.now();
+        console.log('Route performed in ', (after - before) / 1000);
 
-        return item
-    })
-
-    const after = Date.now();
-    console.log('Route performed in ', (after - before) / 1000);
-    // console.log(allPaths)
-    res.send(filteredData);
+        res.send(filteredRoutes);
+    } catch (error) {
+        console.log(`error ${error}`);
+    }
 });
 
 export { router as searchRouteRouter };

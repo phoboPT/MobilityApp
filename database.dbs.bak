@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="Mobillity" id="Project-1775" database="LogicalDesign" >
+	<schema name="Mobillity" >
+		<table name="User" prior="Entity" >
+			<column name="_id" type="int" jt="4" mandatory="y" />
+			<column name="email" type="varchar" length="100" jt="12" />
+			<column name="password" type="varchar" length="100" jt="12" />
+			<column name="name" type="varchar" length="100" jt="12" />
+			<column name="photoUrl" type="varchar" length="100" jt="12" />
+			<column name="rating" type="int" jt="4" />
+			<column name="biography" type="varchar" length="100" jt="12" />
+			<column name="contact" type="varchar" length="100" jt="12" />
+			<index name="Pk_Entity__id" unique="PRIMARY_KEY" >
+				<column name="_id" />
+			</index>
+		</table>
+		<table name="order" prior="Entity" >
+			<column name="_id" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="userId" type="varchar" length="100" jt="12" />
+			<column name="status" type="varchar" length="100" jt="12" />
+			<column name="expiresAt" type="date" jt="91" />
+			<column name="route" type="int" jt="4" />
+			<column name="routeId" type="varchar" length="100" jt="12" />
+			<index name="Pk_Entity__id_0" unique="PRIMARY_KEY" >
+				<column name="_id" />
+			</index>
+		</table>
+		<table name="route" prior="route&lt;" >
+			<column name="_id" type="varchar" length="100" jt="12" />
+			<column name="userId" type="varchar" length="100" jt="12" />
+			<column name="type" type="varchar" length="100" jt="12" />
+			<column name="startLocation" type="varchar" length="100" jt="12" />
+			<column name="endLocation" type="varchar" length="100" jt="12" />
+			<column name="availableTime" type="varchar" length="100" jt="12" />
+			<column name="vehicleId" type="varchar" length="100" jt="12" />
+			<column name="state" type="varchar" length="100" jt="12" />
+			<column name="description" type="varchar" length="100" jt="12" />
+			<column name="estimatedTime" type="varchar" length="100" jt="12" />
+			<column name="startDate" type="date" jt="91" />
+			<column name="userImage" type="varchar" length="100" jt="12" />
+			<column name="rating" type="int" jt="4" mandatory="y" />
+			<column name="capacity" type="int" jt="4" />
+			<column name="atualCapacity" type="int" jt="4" />
+		</table>
+		<table name="vehicle" prior="Entity" >
+			<column name="_id" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="userId" type="varchar" length="100" jt="12" />
+			<column name="type" type="varchar" length="100" jt="12" />
+			<column name="carModel" type="varchar" length="100" jt="12" />
+			<column name="capacity" type="int" jt="4" />
+			<index name="Pk_vehicle__id" unique="PRIMARY_KEY" >
+				<column name="_id" />
+			</index>
+		</table>
+	</schema>
+	<layout name="Default Layout" id="Layout-117c" show_relation="columns" >
+		<entity schema="Mobillity" name="User" color="C1D8EE" x="48" y="48" />
+		<entity schema="Mobillity" name="order" color="C1D8EE" x="48" y="256" />
+		<entity schema="Mobillity" name="route" color="C1D8EE" x="224" y="208" />
+		<entity schema="Mobillity" name="vehicle" color="C1D8EE" x="384" y="48" />
+	</layout>
+</project>

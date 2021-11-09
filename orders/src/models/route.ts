@@ -5,13 +5,12 @@ import { Order, OrderStatus } from './order';
 interface RouteAttrs {
     id: string;
     capacity: number;
-
 }
 
 export interface RouteDoc extends mongoose.Document {
     version: number;
     capacity: number;
-  
+
     isReserved(): Promise<boolean>;
 }
 
@@ -36,18 +35,16 @@ const routeSchema = new mongoose.Schema(
 routeSchema.set('versionKey', 'version');
 routeSchema.plugin(updateIfCurrentPlugin);
 
-routeSchema.statics.findByEvent = (event: { id: string; version: number,state:string,userId:string }) => {
+routeSchema.statics.findByEvent = (event: { id: string; version: number; state: string; userId: string }) => {
     return Route.findOne({
         _id: event.id,
         version: event.version - 1,
-       
     });
 };
 routeSchema.statics.build = (attrs: RouteAttrs) => {
     return new Route({
         _id: attrs.id,
         capacity: attrs.capacity,
-      
     });
 };
 routeSchema.methods.isReserved = async function () {

@@ -10,7 +10,6 @@ import cookieSession from 'cookie-session';
 import { allUsersRouter } from './routes/allUsers';
 import { User } from './models/user';
 
-
 const app = express();
 app.set('trust proxy', true);
 app.use(json());
@@ -20,7 +19,6 @@ app.use(
         secure: false,
     })
 );
-
 // User.collection.drop();
 app.use(allUsersRouter);
 app.use(signinRouter);

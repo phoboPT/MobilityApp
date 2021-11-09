@@ -31,6 +31,8 @@ spec:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY
+            - name: OPENCAGE_API_KEY
+              value: 46325083734f434c81942f4f8eafeac7
 ---
 apiVersion: v1
 kind: Service
