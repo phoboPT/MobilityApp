@@ -34,8 +34,6 @@ interface IStation {
     name: string;
 }
 
-interface IStations extends Array<IStation> {}
-
 router.get('/api/routes/start/:start/end/:end/:type', async (req: Request, res: Response) => {
     try {
         const before = Date.now();
