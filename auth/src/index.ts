@@ -9,6 +9,7 @@ const start = async () => {
     if (!process.env.MONGO_URI) {
         throw new Error('MONGO_URI not defined');
     }
+
     try {
         await natsWrapper.connect('orders', 'asdasd', 'http://nats-srv:4222');
         natsWrapper.client.on('close', () => {
