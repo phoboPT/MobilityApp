@@ -5,9 +5,9 @@ import { Route } from '../models/route';
 
 const router = express.Router();
 
-router.get('/api/routes', requiredAuth, async (req: Request, res: Response) => {
+router.get('/api/routes', async (req: Request, res: Response) => {
+    console.log('hey');
     const route = await Route.find({});
-
     res.send(route);
 });
 

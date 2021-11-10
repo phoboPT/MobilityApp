@@ -9,15 +9,28 @@ const start = async () => {
     if (!process.env.MONGO_URI) {
         throw new Error('MONGO_URI not defined');
     }
+    if (!process.env.NATS_CLUSTER_ID) {
+        throw new Error('NATS_CLUSTER_ID not defined');
+    }
+    if (!process.env.NATS_CLIENT_ID) {
+        throw new Error('NATS_CLIENT_ID not defined');
+    }
+    if (!process.env.NATS_URL) {
+        throw new Error('NATS_URL not defined');
+    }
 
     try {
-        await natsWrapper.connect('orders', 'asdasd', 'http://nats-srv:4222');
-        natsWrapper.client.on('close', () => {
-            console.log('NATS connection closed');
-            process.exit();
-        });
-        process.on('SIGINT', () => natsWrapper.client.close());
-        process.on('SIGTERM', () => natsWrapper.client.close());
+        // console.log('orders', process.env.NATS_CLIENT_ID, process.env.NATS_URL);
+        // await natsWrapper.connect(process.env.NATS_CLUSTER_ID, process.env.NATS_CLIENT_ID, process.env.NATS_URL);
+        // natsWrapper.client.on('close', () => {
+        //     console.log('NATS connection closed');
+        //     process.exit();
+        // });
+        // natsWrapper.client.on('connect', () => {
+        //     console.log('NATS connection started');
+        // });
+        // process.on('SIGINT', () => natsWrapper.client.close());
+        // process.on('SIGTERM', () => natsWrapper.client.close());
 
         await mongoose.connect(process.env.MONGO_URI, {
             useNewUrlParser: true,
@@ -27,7 +40,7 @@ const start = async () => {
 
         console.log('Connected to mongo DB');
     } catch (err) {
-        console.error(`Error on start ${err}`);
+        console.error(`Error on auth index ${err}`);
     }
     app.listen(3000, () => {
         console.log('Listening port 3000!!!!!!!!');

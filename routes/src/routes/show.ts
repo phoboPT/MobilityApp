@@ -9,14 +9,13 @@ router.get('/api/routes/endLocation/:location', currentUser, async (req: Request
     const route = await Route.find({
         endLocation: req.params.location,
         state: 'AVAILABLE',
-    }).sort({startDate:1});
-    console.log(route)
+    }).sort({ startDate: 1 });
+    console.log(route);
     if (!route) {
         throw new NotFoundError({ from: 'show ride' });
     }
     const final: any = [];
     route.forEach((item) => {
-        
         if (new Date(item.startDate) > new Date() && item.userId !== req.currentUser!.id) {
             final.push(item);
         }
@@ -29,7 +28,7 @@ router.get('/api/routes/startLocation/:location', async (req: Request, res: Resp
     const route = await Route.find({
         startLocation: req.params.location,
         state: 'AVAILABLE',
-    }).sort({startDate:1});
+    }).sort({ startDate: 1 });
     console.log(route, req.params.location);
     const final: any = [];
     route.forEach((item) => {
@@ -40,11 +39,12 @@ router.get('/api/routes/startLocation/:location', async (req: Request, res: Resp
     if (!final) {
         throw new NotFoundError({ from: 'show ride' });
     }
+
     res.send(route);
 });
 
 router.get('/api/routes/user', currentUser, async (req: Request, res: Response) => {
-    const route = await Route.find({userId: req.currentUser!.id});
+    const route = await Route.find({ userId: req.currentUser!.id });
     if (!route) {
         throw new NotFoundError({ from: 'show ride' });
     }
