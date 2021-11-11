@@ -36,6 +36,7 @@ const SignInScreen = ({navigation}) => {
         email: state.email,
         password: state.password,
       });
+      console.log(response);
       saveUser(response.data.id);
 
       setLoading(false);

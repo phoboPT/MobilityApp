@@ -98,26 +98,29 @@ const HomeScreen = ({navigation}) => {
   ]);
 
   function recommendationsNearMe() {
+    console.log(recommendations)
     return (
       <>
-        <Text
+       <Text
           style={{
             marginLeft: 15,
             fontSize: 24,
-            zIndex: -3,
             fontFamily: 'Arial',
             color: 'white',
             position: 'relative',
             fontWeight: '400',
           }}>
-          Recommendations
+          Recomendations
         </Text>
+    
         <FlatGrid
           itemDimension={130}
           data={recommendations}
           style={styles.gridView}
           spacing={15}
-          renderItem={({item}) => (
+          renderItem={({item}) => {
+            console.log("item",item)
+            return (
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('DestinationDetail', {
@@ -140,8 +143,8 @@ const HomeScreen = ({navigation}) => {
                   </Text>
                 </View>
               </View>
-            </TouchableOpacity>
-          )}
+            </TouchableOpacity>)
+      }}
         />
       </>
     );
@@ -172,7 +175,8 @@ const HomeScreen = ({navigation}) => {
       });
     }
   };
-  const findCoordinates = () => {
+  const findCoordinates = async() => {
+ 
     Geolocation.getCurrentPosition(
       position => {
         const lat = JSON.stringify(position.coords.latitude);
@@ -188,10 +192,10 @@ const HomeScreen = ({navigation}) => {
         nearestLocation(myLocation);
       },
       error => {
-        console.log(error);
+        console.log("error: ",error);
         getMyNextTravel();
       },
-      {enableHighAccuracy: true, timeout: 1000, maximumAge: 1000},
+      {enableHighAccuracy: false, timeout: 36000, maximumAge: 1000},
     );
   };
 
@@ -225,7 +229,6 @@ const HomeScreen = ({navigation}) => {
     var startLocation = startLocations.reduce(function (prev, curr) {
       return prev.distance < curr.distance ? prev : curr;
     });
-
     getRecommendations(startLocation.startLocation);
     getMyNextTravel();
   }
@@ -235,7 +238,6 @@ const HomeScreen = ({navigation}) => {
   // o forEach serve unicamente para nao mostrar boleias criadas por nos
   async function getRecommendations(startLocation) {
     const recommendations = [];
-
     try {
       const response = await api.get('/routes/startLocation/' + startLocation);
       if (response.data.length !== 0) {
@@ -513,8 +515,10 @@ const HomeScreen = ({navigation}) => {
   function renderBody() {
     return (
       <View>
+        
         {hasNextRide ? renderMyNextTravel() : renderDestinations()}
         {hasRecommendations ? recommendationsNearMe() : null}
+       
       </View>
     );
   }
@@ -610,7 +614,7 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   gridView: {
-    zIndex: -3,
+    zIndex:0,
     marginTop: 5,
   },
   nextTravelContainer: {
