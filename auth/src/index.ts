@@ -25,6 +25,7 @@ const start = async () => {
         // natsWrapper.client.on('close', () => {
         //     console.log('NATS connection closed');
         //     process.exit();
+
         // });
         // natsWrapper.client.on('connect', () => {
         //     console.log('NATS connection started');
