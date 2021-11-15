@@ -66,6 +66,5 @@ it('disallows duplicate emails', async () => {
 
 it('sets a cookie after a successfull signup', async () => {
     const cookie = await global.signin();
-
     expect(cookie).toBeDefined();
 });
