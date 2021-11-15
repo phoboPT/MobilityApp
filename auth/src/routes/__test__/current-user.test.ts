@@ -5,11 +5,12 @@ it('respondes with details about the current user', async () => {
     const cookie = await global.signin();
 
     const response = await request(app).get('/api/users/currentuser').set('Cookie', cookie).send().expect(200);
+    console.log(response.body);
 
-    expect(response.body.currentUser.email).toEqual('teste@teste.com');
+    expect(response.body.email).toEqual('teste@teste.com');
 });
 
 it('respondes with null if not autehnticated', async () => {
     const response = await request(app).get('/api/users/currentuser').send().expect(200);
-    expect(response.body.currentUser).toEqual(null);
+    expect(response.body.currentUser).toEqual(undefined);
 });

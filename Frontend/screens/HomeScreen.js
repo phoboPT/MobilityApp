@@ -165,7 +165,7 @@ const HomeScreen = ({navigation}) => {
         'Start Location and End Location are the same! Please change!',
       );
     } else {
-      var nameLocation = items.filter(obj => {
+      const nameLocation = items.filter(obj => {
         return obj.value === endLocation;
       });
       navigation.navigate('DestinationSearch', {
@@ -207,8 +207,8 @@ const HomeScreen = ({navigation}) => {
   */
   function nearestLocation(myLocation) {
     const R = 6371e3; // metres
-    var startLocations = [];
-    for (var i = 0; i < items.length; i++) {
+    const startLocations = [];
+    for (let i = 0; i < items.length; i++) {
       const φ1 = (myLocation.position.lat * Math.PI) / 180; // φ, λ in radians
       const φ2 = (items[i].position.long * Math.PI) / 180;
       const Δφ =
@@ -226,7 +226,7 @@ const HomeScreen = ({navigation}) => {
       startLocations.push({distance: d, startLocation: items[i].value});
     }
 
-    var startLocation = startLocations.reduce(function (prev, curr) {
+    const startLocation = startLocations.reduce(function (prev, curr) {
       return prev.distance < curr.distance ? prev : curr;
     });
     getRecommendations(startLocation.startLocation);
@@ -290,7 +290,7 @@ const HomeScreen = ({navigation}) => {
           }}
           items={items}
           onChangeValue={() => {
-            var item = items.filter(obj => {
+            const item = items.filter(obj => {
               return obj.value === value;
             });
             navigation.navigate('DestinationSearch', {

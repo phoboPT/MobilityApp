@@ -4,6 +4,7 @@ import { BadRequestError, validateRequest } from '@mobileorg/common-lib';
 import { User } from '../models/user';
 import jwt from 'jsonwebtoken';
 import { Password } from '../services/password';
+
 const router = express.Router();
 
 router.post(
@@ -36,7 +37,7 @@ router.post(
         );
 
         req.session = { jwt: userJwt };
-        res.send(existingUser);
+        res.status(200).send(existingUser);
     }
 );
 
