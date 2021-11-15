@@ -1,4 +1,3 @@
-/*eslint-disable*/
 import React, {useState, useEffect} from 'react';
 import {
   View,
@@ -10,7 +9,6 @@ import {
   SafeAreaView,
   ImageBackground,
   ActivityIndicator,
-  Animated,
 } from 'react-native';
 import {icons, COLORS, SIZES, images} from '../constants/index';
 import ActionButton from 'react-native-action-button';
@@ -19,10 +17,8 @@ import Geolocation from '@react-native-community/geolocation';
 import {FlatGrid} from 'react-native-super-grid';
 import api from '../services/api';
 import Moment from 'moment';
-import {Button, Icon} from 'react-native-elements';
+import {Button} from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
-
-const SPACING = 20;
 
 const HomeScreen = ({navigation}) => {
   const [hasNextRide, setHasNextRide] = useState(false);
@@ -98,10 +94,10 @@ const HomeScreen = ({navigation}) => {
   ]);
 
   function recommendationsNearMe() {
-    console.log(recommendations)
+    console.log(recommendations);
     return (
       <>
-       <Text
+        <Text
           style={{
             marginLeft: 15,
             fontSize: 24,
@@ -112,39 +108,41 @@ const HomeScreen = ({navigation}) => {
           }}>
           Recomendations
         </Text>
-    
+
         <FlatGrid
           itemDimension={130}
           data={recommendations}
           style={styles.gridView}
           spacing={15}
           renderItem={({item}) => {
-            console.log("item",item)
+            console.log('item', item);
             return (
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('DestinationDetail', {
-                  data: item,
-                  allData: null,
-                  endLocation: item.endLocation,
-                })
-              }>
-              <View style={[styles.itemContainer, {backgroundColor: 'white'}]}>
-                <View>
-                  <Text style={styles.itemName}>
-                    Start: {item.startLocation}
-                  </Text>
-                  <Text style={styles.itemName}>End: {item.endLocation}</Text>
-                  <Text style={styles.itemDate}>
-                    {Moment(item.startDate).format('lll')}
-                  </Text>
-                  <Text style={styles.itemCode}>
-                    Estimated Time: {item.estimatedTime} Minutes
-                  </Text>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('DestinationDetail', {
+                    data: item,
+                    allData: null,
+                    endLocation: item.endLocation,
+                  })
+                }>
+                <View
+                  style={[styles.itemContainer, {backgroundColor: 'white'}]}>
+                  <View>
+                    <Text style={styles.itemName}>
+                      Start: {item.startLocation}
+                    </Text>
+                    <Text style={styles.itemName}>End: {item.endLocation}</Text>
+                    <Text style={styles.itemDate}>
+                      {Moment(item.startDate).format('lll')}
+                    </Text>
+                    <Text style={styles.itemCode}>
+                      Estimated Time: {item.estimatedTime} Minutes
+                    </Text>
+                  </View>
                 </View>
-              </View>
-            </TouchableOpacity>)
-      }}
+              </TouchableOpacity>
+            );
+          }}
         />
       </>
     );
@@ -175,8 +173,7 @@ const HomeScreen = ({navigation}) => {
       });
     }
   };
-  const findCoordinates = async() => {
- 
+  const findCoordinates = async () => {
     Geolocation.getCurrentPosition(
       position => {
         const lat = JSON.stringify(position.coords.latitude);
@@ -192,7 +189,7 @@ const HomeScreen = ({navigation}) => {
         nearestLocation(myLocation);
       },
       error => {
-        console.log("error: ",error);
+        console.log('error: ', error);
         getMyNextTravel();
       },
       {enableHighAccuracy: false, timeout: 36000, maximumAge: 1000},
@@ -201,7 +198,7 @@ const HomeScreen = ({navigation}) => {
 
   // Calculate distance from my location to all the 6 locations and get the nearest
   // It uses haversine formula
-  /* 
+  /*
   φ is latitude, λ is longitude, R is earth’s radius (mean radius = 6,371km);
   note that angles need to be in radians to pass to trig functions!
   */
@@ -515,10 +512,8 @@ const HomeScreen = ({navigation}) => {
   function renderBody() {
     return (
       <View>
-        
         {hasNextRide ? renderMyNextTravel() : renderDestinations()}
         {hasRecommendations ? recommendationsNearMe() : null}
-       
       </View>
     );
   }
@@ -614,7 +609,7 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   gridView: {
-    zIndex:0,
+    zIndex: 0,
     marginTop: 5,
   },
   nextTravelContainer: {

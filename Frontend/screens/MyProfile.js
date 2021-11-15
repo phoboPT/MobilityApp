@@ -284,7 +284,7 @@ const MyProfile = ({navigation}) => {
               />
             </TouchableOpacity>
           </View>
-          <View style={{flex: 1, alignItems: 'flex-end'}}></View>
+          <View style={{flex: 1, alignItems: 'flex-end'}} />
         </View>
       </View>
 
@@ -304,7 +304,9 @@ const MyProfile = ({navigation}) => {
               renderItem={({item}) => (
                 <View style={{flexDirection: 'row'}}>
                   <Text>{item.carModel} </Text>
-                  <Text style={{...SIZES.h2, fontWeight: '600'}}>Car Capacity: </Text>
+                  <Text style={{...SIZES.h2, fontWeight: '600'}}>
+                    Car Capacity:{' '}
+                  </Text>
                   <Text>{item.capacity}</Text>
                 </View>
               )}

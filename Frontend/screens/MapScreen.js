@@ -6,11 +6,10 @@ import {
   ActivityIndicator,
   View,
   ImageBackground,
-  Alert,
 } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
-import MapView, {PROVIDER_GOOGLE, Geojson, Marker} from 'react-native-maps';
-import {images, icons, COLORS, SIZES} from '../constants';
+import MapView, {PROVIDER_GOOGLE, Geojson} from 'react-native-maps';
+import {images, icons} from '../constants';
 
 let lat;
 let lng;
@@ -76,7 +75,7 @@ const MapScreen = ({navigation, route}) => {
       .then(json => {
         if (json !== null) {
           setGeoJsonBus(json);
-          setHaveBus(true)
+          setHaveBus(true);
           setLoading(false);
         }
       })

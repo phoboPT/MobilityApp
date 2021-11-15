@@ -5,6 +5,38 @@ import api from '../../services/api';
 import AsyncStorage from '@react-native-community/async-storage';
 import {StackActions, NavigationActions} from 'react-navigation';
 
+const styles = StyleSheet.create({
+  container: {flex: 1, backgroundColor: 'white'},
+  master: {
+    backgroundColor: 'white',
+    marginVertical: 150,
+    alignContent: 'center',
+    padding: 20,
+    flex: 1,
+    alignItems: 'stretch',
+    justifyContent: 'center',
+  },
+  header: {
+    fontSize: 32,
+    marginBottom: 18,
+    alignSelf: 'center',
+  },
+  subHeader: {
+    fontSize: 20,
+    marginBottom: 18,
+    fontWeight: '300',
+    alignSelf: 'center',
+  },
+  text: {
+    fontSize: 16,
+    marginTop: 16,
+  },
+  link: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+});
+
 const SignInScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const fields = [
@@ -36,7 +68,6 @@ const SignInScreen = ({navigation}) => {
         email: state.email,
         password: state.password,
       });
-      console.log(response);
       saveUser(response.data.id);
 
       setLoading(false);
@@ -71,37 +102,5 @@ const SignInScreen = ({navigation}) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: 'white'},
-  master: {
-    backgroundColor: 'white',
-    marginVertical: 150,
-    alignContent: 'center',
-    padding: 20,
-    flex: 1,
-    alignItems: 'stretch',
-    justifyContent: 'center',
-  },
-  header: {
-    fontSize: 32,
-    marginBottom: 18,
-    alignSelf: 'center',
-  },
-  subHeader: {
-    fontSize: 20,
-    marginBottom: 18,
-    fontWeight: '300',
-    alignSelf: 'center',
-  },
-  text: {
-    fontSize: 16,
-    marginTop: 16,
-  },
-  link: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-});
 
 export default SignInScreen;

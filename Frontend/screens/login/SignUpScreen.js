@@ -2,11 +2,51 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Button} from 'react-native';
 import Form from 'react-native-basic-form';
 import api from '../../services/api';
-import AsyncStorage from '@react-native-community/async-storage';
 import {COLORS} from '../../constants';
 import {Alert} from 'react-native';
 import {Avatar} from 'react-native-elements';
 import {launchImageLibrary} from 'react-native-image-picker';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  master: {
+    marginTop: 40,
+    alignContent: 'center',
+    padding: 20,
+    flex: 1,
+    alignItems: 'stretch',
+    justifyContent: 'center',
+  },
+  subHeader: {
+    fontSize: 20,
+    marginBottom: 18,
+    fontWeight: '300',
+    alignSelf: 'center',
+  },
+  header: {
+    fontSize: 32,
+    marginBottom: 18,
+    alignSelf: 'center',
+  },
+  text: {
+    fontSize: 16,
+    color: COLORS.black,
+    marginTop: 16,
+  },
+  link: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  button: {
+    marginTop: 30,
+    backgroundColor: COLORS.primary,
+    borderRadius: 10,
+  },
+  avatar: {alignSelf: 'center', marginBottom: 12},
+});
 
 const SignUpScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
@@ -127,18 +167,14 @@ const SignUpScreen = ({navigation}) => {
         {photo ? (
           <>
             <Avatar
-              containerStyle={{alignSelf: 'center', marginBottom: 12}}
+              containerStyle={styles.avatar}
               rounded
               source={photo}
               size="xlarge"
             />
             <Button
               onPress={() => removeImage()}
-              buttonStyle={{
-                marginTop: 30,
-                backgroundColor: COLORS.primary,
-                borderRadius: 10,
-              }}
+              buttonStyle={styles.button}
               titleStyle={{color: COLORS.white}}
               title="Remove Image"
             />
@@ -146,11 +182,7 @@ const SignUpScreen = ({navigation}) => {
         ) : (
           <Button
             onPress={() => openPicker()}
-            buttonStyle={{
-              marginTop: 30,
-              backgroundColor: COLORS.primary,
-              borderRadius: 10,
-            }}
+            buttonStyle={styles.button}
             titleStyle={{color: COLORS.white}}
             title="Upload Image"
           />
@@ -168,40 +200,5 @@ const SignUpScreen = ({navigation}) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  master: {
-    marginTop: 40,
-    alignContent: 'center',
-    padding: 20,
-    flex: 1,
-    alignItems: 'stretch',
-    justifyContent: 'center',
-  },
-  subHeader: {
-    fontSize: 20,
-    marginBottom: 18,
-    fontWeight: '300',
-    alignSelf: 'center',
-  },
-  header: {
-    fontSize: 32,
-    marginBottom: 18,
-    alignSelf: 'center',
-  },
-  text: {
-    fontSize: 16,
-    color: COLORS.black,
-    marginTop: 16,
-  },
-  link: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-});
 
 export default SignUpScreen;
