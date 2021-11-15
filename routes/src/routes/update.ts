@@ -9,6 +9,7 @@ const router = express.Router();
 
 router.put('/api/routes/:id', currentUser, requiredAuth, validateRequest, async (req: Request, res: Response) => {
     const route = await Route.findById(req.params.id);
+    console.log(route);
     const {
         startLocation,
         type,

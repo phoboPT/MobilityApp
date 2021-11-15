@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/api/routes', async (req: Request, res: Response) => {
     console.log('hey');
     const route = await Route.find({});
-    res.send(route);
+    res.status(200).send(route);
 });
 
 router.get('/api/routes/user', requiredAuth, async (req: Request, res: Response) => {
@@ -22,6 +22,10 @@ router.get('/api/routes/user/:id', requiredAuth, async (req: Request, res: Respo
     console.log(route);
     res.send(route);
 });
+
+
+
+
 
 export { router as indexRouteRouter };
 
