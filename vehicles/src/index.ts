@@ -20,14 +20,14 @@ const start = async () => {
     }
 
     try {
-        // console.log('orders', process.env.NATS_CLIENT_ID, process.env.NATS_URL);
-        // await natsWrapper.connect('orders', process.env.NATS_CLIENT_ID, process.env.NATS_URL);
-        // natsWrapper.client.on('close', () => {
-        //     console.log('NATS connection closed');
-        //     process.exit();
-        // });
-        // process.on('SIGINT', () => natsWrapper.client.close());
-        // process.on('SIGTERM', () => natsWrapper.client.close());
+        console.log('orders', process.env.NATS_CLIENT_ID, process.env.NATS_URL);
+        await natsWrapper.connect('orders', process.env.NATS_CLIENT_ID, process.env.NATS_URL);
+        natsWrapper.client.on('close', () => {
+            console.log('NATS connection closed');
+            process.exit();
+        });
+        process.on('SIGINT', () => natsWrapper.client.close());
+        process.on('SIGTERM', () => natsWrapper.client.close());
 
         await mongoose.connect(process.env.MONGO_URI, {
             useNewUrlParser: true,

@@ -15,6 +15,7 @@ spec:
       containers:
         - name: auth
           image: phobopt/auth
+          
           env:
             - name: NATS_URL
               value: 'http://nats-srv:4222'
