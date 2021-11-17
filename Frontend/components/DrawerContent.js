@@ -6,12 +6,49 @@ import api from '../services/api';
 
 import {COLORS, icons, images} from '../constants';
 import AsyncStorage from '@react-native-community/async-storage';
-
+const styles = StyleSheet.create({
+  drawerContent: {
+    flex: 1,
+  },
+  userInfoSection: {
+    paddingLeft: 20,
+  },
+  title: {
+    fontSize: 16,
+    marginTop: 3,
+    fontWeight: 'bold',
+  },
+  caption: {
+    fontSize: 12,
+    lineHeight: 14,
+  },
+  row: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  section: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 15,
+  },
+  paragraph: {
+    fontWeight: 'bold',
+    marginRight: 3,
+  },
+  drawerSection: {
+    marginTop: 15,
+  },
+  bottomDrawerSection: {
+    marginBottom: 15,
+    borderTopColor: '#f4f4f4',
+    borderTopWidth: 1,
+  },
+});
 export function DrawerContent(props) {
   const [user, setUser] = useState(null);
   async function signOut() {
     try {
-      const response = await api.get('/users/signout');
+      await api.get('/users/signout');
       await AsyncStorage.removeItem('@App:userID');
     } catch (err) {
       console.log(err);
@@ -170,42 +207,3 @@ export function DrawerContent(props) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  drawerContent: {
-    flex: 1,
-  },
-  userInfoSection: {
-    paddingLeft: 20,
-  },
-  title: {
-    fontSize: 16,
-    marginTop: 3,
-    fontWeight: 'bold',
-  },
-  caption: {
-    fontSize: 12,
-    lineHeight: 14,
-  },
-  row: {
-    marginTop: 20,
-    alignItems: 'center',
-  },
-  section: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: 15,
-  },
-  paragraph: {
-    fontWeight: 'bold',
-    marginRight: 3,
-  },
-  drawerSection: {
-    marginTop: 15,
-  },
-  bottomDrawerSection: {
-    marginBottom: 15,
-    borderTopColor: '#f4f4f4',
-    borderTopWidth: 1,
-  },
-});
