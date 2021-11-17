@@ -7,12 +7,6 @@
     "start": "ts-node-dev --poll src/index.ts",
     "test": "jest --watchAll --no-cache"
   },
-  "eslintConfig": {
-    "extends": "wesbos/typescript.js",
-    "rules": {
-      "@typescript-eslint/no-unsafe-assignment": 0
-    }
-  },
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
