@@ -1,6 +1,6 @@
 const comboios = require('comboios');
 const NodeGeocoder = require('node-geocoder');
-
+import { Route } from '../models/route';
 interface IStation {
     id: string;
     name: string;
@@ -13,20 +13,36 @@ interface ILegDetails {
 interface ILeg {
     origin: ILegDetails;
     destination: ILegDetails;
-    price: number;
+    departure?:string
+    arrival?:string
+    price?: number;
+    tripId?: string;
 }
 interface IRoute {
+    id: string;
     startLocation: string;
     endLocation: string;
     originId: string;
     destinationId: string;
     price: number;
+    type:string
+    availableTime: string
+    state: string
+    description: string
+    estimatedTime: string
+    startDate:string
+    userImage: string
+    rating: number
+    capacity: number
+    actualCapacity: number
+    version: number
+    legs?: [ILeg];
 }
 interface IRoutes extends Array<IRoute> {
-    legs?: [ILeg];
-    price?: number;
+   
+   
 }
-interface IStations extends Array<IStation> {}
+interface IStations extends Array<IStation> { }
 
 export const routeAPI = async (start: string, end: string, type: string): Promise<any> => {
     try {
@@ -34,7 +50,7 @@ export const routeAPI = async (start: string, end: string, type: string): Promis
         const allTargets: string[] = [];
         const cpRoutes: IRoutes = [];
 
-        let journeys;
+        let journeys: any = [];
         const begin = { id: '', name: '' };
         const stop = { id: '', name: '' };
         let initialPlace = start;
@@ -48,12 +64,11 @@ export const routeAPI = async (start: string, end: string, type: string): Promis
             });
 
             const geo = await geocoder.batchGeocode([start, end]);
-            console.log(geo[0].value);
             initialPlace = geo[0].value[0].city;
             finalPlace = geo[1].value[0].city;
         }
 
-        console.log(initialPlace, finalPlace);
+
         cpStations.forEach(async (station: IStation): Promise<void> => {
             allTargets.push(station.name);
             if (station.name.includes(initialPlace)) {
@@ -65,11 +80,56 @@ export const routeAPI = async (start: string, end: string, type: string): Promis
                 stop.name = station.name;
             }
         });
-        console.log(begin, stop);
-        journeys = await comboios.journeys(begin.id, stop.id, { when: new Date('2021-11-14') });
+
+        journeys = await comboios.journeys(begin.id, stop.id, { when: new Date('2021-11-14') }) || [];
+        const allRoutes = await Route.find({ state: 'AVAILABLE' });
+        allRoutes.forEach((route: any) => {
+            const ride:IRoute = {
+                "id": route.id,
+                type: route.type,
+                availableTime: route.availableTime,
+                state: route.state,
+                description: route.description,
+                estimatedTime: route.estimatedTime,
+                startDate: route.startDate,
+                userImage: route.userImage,
+                rating: route.rating,
+                capacity: route.capacity,
+                actualCapacity: route.actualCapacity,
+                version: route.version,
+                "legs": [
+                    {
+                        "tripId": route.id,
+                        "origin": {
+                            "id": route.id,
+                            "name": route.startLocation,
+                        },
+                        "destination": {
+                            "id": route.id,
+                            "name": route.endLocation,
+                        },
+                    }
+                ],
+                startLocation: route.startLocation,
+                endLocation: route.endLocation,
+                originId: route.id,
+                destinationId: route.id,
+                price: 0
+            }
+            allTargets.push(route.startLocation);
+            if (route.startLocation.includes(initialPlace)) {
+                begin.id = route.id;
+                begin.name = route.startLocation;
+            }
+            if (route.endLocation.includes(finalPlace)) {
+                stop.id = route.id;
+                stop.name = route.endLocation;
+            }
+            journeys.push(ride);
+        })
         //filter journeys
         if (journeys) {
-            journeys.map((journey: IRoutes): void => {
+            journeys.map((journey: IRoute): void => {
                 journey.legs?.map((leg: ILeg) => {
                     let found = false;
                     cpRoutes?.forEach((element: IRoute) => {
@@ -79,11 +139,23 @@ export const routeAPI = async (start: string, end: string, type: string): Promis
                     });
                     if (!found) {
                         cpRoutes.push({
-                            startLocation: leg.origin.name,
-                            endLocation: leg.destination.name,
-                            originId: leg.origin.id,
-                            destinationId: leg.destination.id,
+                            id: leg.origin.id||"",
+                            startLocation: leg.origin.name||"",
+                            endLocation: leg.destination.name||"",
+                            originId: leg.origin.id||"",
+                            destinationId: leg.destination.id||"",
                             // leg: leg,
+                            type: "2",
+                            availableTime: leg.departure||"",
+                            state: journey.state||"Active",
+                            description:journey.description|| "Train",
+                            estimatedTime: leg.arrival||"",
+                            startDate: journey.startDate||leg.departure||"",
+                            userImage: journey.userImage||"",
+                            rating: journey.rating||0,
+                            capacity:journey.capacity|| 50,
+                            actualCapacity: journey.actualCapacity|| 50,
+                            version:journey.version|| 0,
                             price: leg.price || 0,
                         });
                     }

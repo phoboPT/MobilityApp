@@ -2,7 +2,7 @@ import request from 'supertest';
 import { app } from '../../app';
 import { Route } from '../../models/route';
 
-it('has a route handles listening to /api/rides post requests', async () => {
+it('has a route handles listening to /api/routes post requests', async () => {
     const response = await request(app).post('/api/routes').send({});
 
     expect(response.status).not.toEqual(404);
@@ -61,14 +61,20 @@ it('creates a ride with valid inputs', async () => {
         .post('/api/routes')
         .set('Cookie', global.signin())
         .send({
-            location: 'dsf2354324',
-            type: 'asdasf',
-            availableTime: 'teste',
-            status: 'available',
+            "startLocation":"ESS",
+            "type":2,
+            "vehicleId":"60ed58dde9bf430019f5482e",
+            "state":"AVAILABLE",
+            "endLocation":"ESTG",
+            "estimatedTime":"20 minutos",
+            "description":"boa",
+            "startDate":"Wed Nov 16 2021 17:05:14 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "capacity":15  
+
         })
         .expect(201);
 
     tickets = await Route.find({});
     expect(tickets.length).toEqual(1);
-    expect(tickets[0].type).toEqual('asdasf');
+    expect(tickets[0].type).toEqual('ESS');
 });
