@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   View,
   Text,
@@ -156,6 +157,13 @@ const HomeScreen = ({navigation}) => {
     handleUserNextScreen();
     findCoordinates();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      findCoordinates();
+    }, [])
+  );
+
 
   const searchRoutes = () => {
     if (startLocation == endLocation) {
@@ -545,22 +553,6 @@ const HomeScreen = ({navigation}) => {
           }}>
           <Text style={{fontSize: 24, fontWeight: '400'}}>Home</Text>
         </View>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Messages')}
-          style={{
-            width: 50,
-            paddingRight: SIZES.padding * 2,
-            justifyContent: 'center',
-          }}>
-          <Image
-            source={icons.send}
-            resizeMode="contain"
-            style={{
-              width: 30,
-              height: 30,
-            }}
-          />
-        </TouchableOpacity>
       </View>
     );
   }

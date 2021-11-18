@@ -1,5 +1,4 @@
 import HomeScreen from './HomeScreen';
-import MessagesScreen from './MessagesScreen';
 import UserProfile from './UserProfile';
 import MyRoutesScreen from './MyRoutesScreen';
 import SettingsScreen from './SettingsScreen';
@@ -8,13 +7,11 @@ import SignUpScreen from './login/SignUpScreen';
 import Onboarding from './Onboarding';
 import DestinationDetail from './DestinationDetail';
 import DestinationSearch from './DestinationSearch';
-import SingleMessage from './SingleMessage';
 import AuthLoading from './login/AuthLoadingScreen';
 import CreateVehicle from './CreateVehicle';
 import MapScreen from './MapScreen';
 export {
   HomeScreen,
-  MessagesScreen,
   UserProfile,
   MyRoutesScreen,
   SettingsScreen,
@@ -23,7 +20,6 @@ export {
   Onboarding,
   SignUpScreen,
   DestinationSearch,
-  SingleMessage,
   AuthLoading,
   CreateVehicle,
   MapScreen,

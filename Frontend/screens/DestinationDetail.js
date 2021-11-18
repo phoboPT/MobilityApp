@@ -120,7 +120,7 @@ const DestinationDetail = ({navigation, route}) => {
     getUserInfo();
   }, []);
 
-  const createOrder = async () => {
+  async function createOrder(){
     try {
       const response = await api.post('/orders', {
         routeId: data.id,
@@ -273,6 +273,7 @@ const DestinationDetail = ({navigation, route}) => {
                 <StarReview rate={user.rating} />
                 <View style={{marginTop: 5}}>
                   <Text style={{color: COLORS.primary}}>{user.email}</Text>
+                  <Text style={{color: COLORS.primary}}>{user.contact}</Text>
                 </View>
               </View>
             </View>
@@ -437,9 +438,7 @@ const DestinationDetail = ({navigation, route}) => {
             marginBottom: 20,
             height: '50%',
           }}
-          onPress={() => {
-            createOrder();
-          }}>
+          onPress={() => createOrder()}>
           <LinearGradient
             style={[
               {

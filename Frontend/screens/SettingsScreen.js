@@ -60,15 +60,6 @@ const SettingsScreen = ({navigation}) => {
         <View style={styles.view_2}>
           <Text style={styles.text_settings}>Settings</Text>
         </View>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Messages')}
-          style={styles.touchable_2}>
-          <Image
-            source={icons.settings}
-            resizeMode="contain"
-            style={styles.image}
-          />
-        </TouchableOpacity>
       </View>
     );
   }

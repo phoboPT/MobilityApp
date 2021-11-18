@@ -6,7 +6,6 @@ import {DrawerContent} from './components/DrawerContent';
 import {
   HomeScreen,
   SettingsScreen,
-  MessagesScreen,
   MyRoutesScreen,
   SignInScreen,
   SignUpScreen,
@@ -14,7 +13,6 @@ import {
   DestinationSearch,
   Onboarding,
   UserProfile,
-  SingleMessage,
   CreateVehicle,
 } from './screens';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -43,7 +41,6 @@ const App = () => {
           options={{headerShown: false}}
         />
         <Drawer.Screen name="Map" component={MapScreen} />
-        <Drawer.Screen name="Messages" component={MessagesScreen} />
         <Drawer.Screen name="My Routes" component={MyRoutesScreen} />
         <Drawer.Screen name="Settings" component={SettingsScreen} />
       </Drawer.Navigator>
@@ -71,7 +68,6 @@ const App = () => {
         />
         <AppStack.Screen name="CreateCarPooling" component={CreateCarPooling} />
         <AppStack.Screen name="UserProfile" component={UserProfile} />
-        <AppStack.Screen name="SingleMessage" component={SingleMessage} />
         <AppStack.Screen
           name="DestinationDetail"
           component={DestinationDetail}

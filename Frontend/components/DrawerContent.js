@@ -147,24 +147,7 @@ export function DrawerContent(props) {
                 props.navigation.navigate('My Routes');
               }}
             />
-            <DrawerItem
-              icon={({color, size}) => (
-                <Image
-                  source={icons.messages}
-                  style={{
-                    tintColor: COLORS.primary,
-                    resizeMode: 'contain',
-                    height: 24,
-                    width: 24,
-                  }}
-                  name="messages"
-                />
-              )}
-              label="Messages"
-              onPress={() => {
-                props.navigation.navigate('Messages');
-              }}
-            />
+            
             <DrawerItem
               icon={({color, size}) => (
                 <Image
