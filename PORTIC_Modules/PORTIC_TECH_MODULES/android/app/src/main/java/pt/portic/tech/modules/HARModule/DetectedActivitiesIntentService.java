@@ -22,8 +22,16 @@ import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+
+import pt.portic.tech.modules.ActivityDB_Module.RealmDataBaseManager;
+import pt.portic.tech.modules.UserProfile.UserProfileManager;
 
 /**
+ * Google API:
+ * https://developers.google.com/android/reference/com/google/android/gms/location/DetectedActivity
+ *
+ * Followed Example:
  * https://www.androidhive.info/2017/12/android-user-activity-recognition-still-walking-running-driving-etc/
  */
 public class DetectedActivitiesIntentService extends IntentService {
@@ -54,8 +62,45 @@ public class DetectedActivitiesIntentService extends IntentService {
         ArrayList<DetectedActivity> detectedActivities = (ArrayList) result.getProbableActivities();
 
         for (DetectedActivity activity : detectedActivities) {
-            Log.e(TAGs, "Detected activity: " + activity.getType() + ", " + activity.getConfidence());
+            Log.e(TAGs, "Detected activity: " + activity.getType() + ": " +
+                    DetectedActivityGetType(activity.getType()) + ", " +
+                    activity.getConfidence() + "%.");
+
+            /**
+             * Save record in database
+             *
+             * private String userID;
+             * private java.sql.Timestamp timestamp;
+             * private int activityType;
+             * private String activityDescription;
+             * private int confidence;
+             */
+            RealmDataBaseManager.getInstance().AddDataToDB(UserProfileManager.getInstance().Get_User_ID(),
+                    (new java.sql.Timestamp(Calendar.getInstance().getTime().getTime())).toString(),
+                    activity.getType(),
+                    DetectedActivityGetType(activity.getType()),
+                    activity.getConfidence());
+
+
+            /**
+             * use this to convert String back to sql.Timestamp
+             * https://stackoverflow.com/questions/7628103/convert-java-string-to-sql-timestamp
+             */
             broadcastActivity(activity);
+        }
+    }
+
+    private String DetectedActivityGetType(int type) {
+        switch (type) {
+            case 0: return "IN_VEHICLE";
+            case 1: return "ON_BICYCLE";
+            case 2: return "ON_FOOT";
+            case 3: return "STILL";
+            case 4: return "UNKNOWN";
+            case 5: return "TILTING";
+            case 7: return "WALKING";
+            case 8: return "RUNNING";
+            default: return "UNKNOWN";
         }
     }
 
