@@ -304,7 +304,7 @@ const DestinationDetail = ({navigation, route}) => {
               />
             </TouchableOpacity>
           </View>
-          <View style={{flex: 1, alignItems: 'flex-end'}}></View>
+          <View style={{flex: 1, alignItems: 'flex-end'}} />
         </View>
       </View>
 
@@ -320,7 +320,9 @@ const DestinationDetail = ({navigation, route}) => {
           <ScrollView horizontal>
             {haveBus ? (
               allData.map((item, index) => {
-                if (index >= 2) return null;
+                if (index >= 2) {
+                  return null;
+                }
                 return (
                   <>
                     <IconLabel

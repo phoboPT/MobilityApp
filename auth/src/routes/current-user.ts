@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/api/users/currentUser', currentUser, async (req, res) => {
     const user = await User.findById(req.currentUser?.id);
 
-    res.send(user);
+    res.status(200).send(user);
 });
 
 router.post('/api/users/edit', currentUser, async (req, res) => {
@@ -25,13 +25,14 @@ router.post('/api/users/edit', currentUser, async (req, res) => {
     });
 
     await user.save();
-    res.send(user);
+
+    res.status(201).send(user);
 });
 
 router.get('/api/users/:id', async (req, res) => {
     const { id } = req.params;
     const user = await User.findById(id);
 
-    res.send(user);
+    res.status(200).send(user);
 });
 export { router as currentUserRouter };

@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   ActivityIndicator,
   ImageBackground,
+  StyleSheet,
 } from 'react-native';
 import {icons, SIZES, COLORS, images} from '../constants';
 import {Button, Input} from 'react-native-elements';
@@ -17,6 +18,10 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import api from '../services/api';
 import NumericInput from 'react-native-numeric-input';
 import AsyncStorage from '@react-native-community/async-storage';
+
+const styles = StyleSheet.create({
+  container: {flexDirection: 'row', height: 50},
+});
 
 const CreateCarPooling = ({navigation}) => {
   const [description, setDescription] = React.useState('');
@@ -56,7 +61,7 @@ const CreateCarPooling = ({navigation}) => {
     async function checkIfUserHasVehicles() {
       try {
         const response = await api.get('/vehicles/me');
-        if (response.data.length == 0) {
+        if (response.data.length === 0) {
           Alert.alert(
             'You need to create a vehicle to introduce a ride',
             null,
@@ -117,7 +122,7 @@ const CreateCarPooling = ({navigation}) => {
 
   const postCarPooling = async () => {
     try {
-      const response = await api.post('/routes', {
+      await api.post('/routes', {
         type: '2',
         startLocation: startLocation,
         endLocation: endLocation,
@@ -164,7 +169,7 @@ const CreateCarPooling = ({navigation}) => {
   };
   function renderHeader() {
     return (
-      <View style={{flexDirection: 'row', height: 50}}>
+      <View style={styles.container}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={{

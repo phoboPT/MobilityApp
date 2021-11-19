@@ -43,7 +43,7 @@ const DestinationSearch = ({route, navigation}) => {
   }, []);
 
   const getRouteDetails = route => {
-    const allData = route
+    const allData = route;
     navigation.navigate('DestinationDetail', {
       data: route[0],
       allData: allData,

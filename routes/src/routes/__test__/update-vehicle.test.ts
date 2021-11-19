@@ -5,13 +5,20 @@ import mongoose from 'mongoose';
 it('returns a 404 if the provided id does not exist', async () => {
     const id = new mongoose.Types.ObjectId().toHexString();
     await request(app)
-        .put(`/api/rides/${id}`)
+        .put(`/api/routes/${id}`)
         .set('Cookie', global.signin())
         .send({
             location: 'aslkdfj',
             type: 'dsad',
             availableTime: 'teste',
-            status: 'available',
+            state: 'available',
+            startLocation: '123',
+            vehicleId: 'asdasfga',
+            endLocation: 'asdasd',
+            estimatedTime: '15',
+            userImage: '',
+            description: 'sda',
+            startDate: 'Wed Nov 24 2021 17:05:14 GMT+0100 (Hora de verão da Europa Ocidental)',
         })
         .expect(404);
 });
@@ -19,7 +26,7 @@ it('returns a 404 if the provided id does not exist', async () => {
 it('returns a 401 if the user is not authenticated', async () => {
     const id = new mongoose.Types.ObjectId().toHexString();
     await request(app)
-        .put(`/api/rides/${id}`)
+        .put(`/api/routes/${id}`)
         .send({
             location: 'aslkdfj',
             type: 'dsad',
@@ -30,7 +37,7 @@ it('returns a 401 if the user is not authenticated', async () => {
 });
 
 it('returns a 401 if the user does not own the rides', async () => {
-    const response = await request(app).post('/api/rides').set('Cookie', global.signin()).send({
+    const response = await request(app).post('/api/routes').set('Cookie', global.signin()).send({
         location: 'aslkdfj',
         type: 'dsad',
         availableTime: 'teste',
@@ -38,7 +45,7 @@ it('returns a 401 if the user does not own the rides', async () => {
     });
 
     await request(app)
-        .put(`/api/rides/${response.body.id}`)
+        .put(`/api/routes/${response.body.id}`)
         .set('Cookie', global.signin())
         .send({
             location: 'aslfdsfsdfkdfj',
@@ -51,7 +58,7 @@ it('returns a 401 if the user does not own the rides', async () => {
 it('returns a 400 if the user provides an invalid userId or type', async () => {
     const cookie = global.signin();
 
-    const response = await request(app).post('/api/rides').set('Cookie', cookie).send({
+    const response = await request(app).post('/api/routes').set('Cookie', cookie).send({
         location: 'asldkfj',
         type: '20',
         availableTime: 'teste',
@@ -59,7 +66,7 @@ it('returns a 400 if the user provides an invalid userId or type', async () => {
     });
 
     await request(app)
-        .put(`/api/rides/${response.body.id}`)
+        .put(`/api/routes/${response.body.id}`)
         .set('Cookie', cookie)
         .send({
             location: '',
@@ -70,7 +77,7 @@ it('returns a 400 if the user provides an invalid userId or type', async () => {
         .expect(400);
 
     await request(app)
-        .put(`/api/rides/${response.body.id}`)
+        .put(`/api/routes/${response.body.id}`)
         .set('Cookie', cookie)
         .send({
             location: 'alskdfjj',
@@ -84,7 +91,7 @@ it('returns a 400 if the user provides an invalid userId or type', async () => {
 it('updates the ticket provided valid inputs', async () => {
     const cookie = global.signin();
 
-    const response = await request(app).post('/api/rides').set('Cookie', cookie).send({
+    const response = await request(app).post('/api/routes').set('Cookie', cookie).send({
         location: 'asldkfj',
         type: '20',
         availableTime: 'teste',
@@ -92,7 +99,7 @@ it('updates the ticket provided valid inputs', async () => {
     });
 
     await request(app)
-        .put(`/api/rides/${response.body.id}`)
+        .put(`/api/routes/${response.body.id}`)
         .set('Cookie', cookie)
         .send({
             location: 'new title',
@@ -102,7 +109,7 @@ it('updates the ticket provided valid inputs', async () => {
         })
         .expect(200);
 
-    const rideResponse = await request(app).get(`/api/rides/${response.body.id}`).send();
+    const rideResponse = await request(app).get(`/api/routes/${response.body.id}`).send();
 
     expect(rideResponse.body.location).toEqual('new title');
     expect(rideResponse.body.type).toEqual('100');

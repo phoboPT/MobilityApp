@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 /* eslint-disable prettier/prettier */
 import React, {Component} from 'react';
 import {NativeModules} from 'react-native';
@@ -8,9 +9,7 @@ import {
   TextInput,
   StyleSheet,
 } from 'react-native';
-
 const {UserProfileModule} = NativeModules;
-
 
 class Inputs extends Component {
   state = {
@@ -40,7 +39,14 @@ class Inputs extends Component {
   handleUserWeight = text => {
     this.setState({UserWeight: text});
   };
-  submitALLProperties = (UserID, UserName, UserBirthDate, UserGender, UserHeight, UserWeight) => {
+  submitALLProperties = (
+    UserID,
+    UserName,
+    UserBirthDate,
+    UserGender,
+    UserHeight,
+    UserWeight,
+  ) => {
     //alert('ID: ' + UserID + ' Name: ' + UserName);
 
     UserProfileModule.Set_User_ID(UserID);
@@ -50,159 +56,185 @@ class Inputs extends Component {
     UserProfileModule.Set_User_Height(UserHeight);
     UserProfileModule.Set_User_Weight(UserWeight);
 
-    alert('Submitted ID: ' + UserID + ' Name: ' + UserName + ' BirthDate: ' +
-    UserBirthDate + ' User Gender: ' + UserGender + ' User Height: ' + UserHeight + ' User Weight: ' + 
-    UserWeight);
+    alert(
+      'Submitted ID: ' +
+        UserID +
+        ' Name: ' +
+        UserName +
+        ' BirthDate: ' +
+        UserBirthDate +
+        ' User Gender: ' +
+        UserGender +
+        ' User Height: ' +
+        UserHeight +
+        ' User Weight: ' +
+        UserWeight,
+    );
   };
-  submitUserID = (UserID) => {
+  submitUserID = UserID => {
     UserProfileModule.Set_User_ID(UserID);
     alert('Submitted ID: ' + UserID);
   };
-  submitUserName = (UserName) => {
+  submitUserName = UserName => {
     UserProfileModule.Set_User_Name(UserName);
     alert('Submitted Name: ' + UserName);
   };
-  submitUserBirthDate = (UserBirthDate) => {
+  submitUserBirthDate = UserBirthDate => {
     UserProfileModule.Set_User_BirthDate(UserBirthDate);
     alert('Submitted BirthDate: ' + UserBirthDate);
   };
-  submitUserGender = (UserGender) => {
+  submitUserGender = UserGender => {
     UserProfileModule.Set_User_Gender(UserGender);
     alert('Submitted Gender: ' + UserGender);
   };
-  submitUserHeight = (UserHeight) => {
+  submitUserHeight = UserHeight => {
     UserProfileModule.Set_User_Height(UserHeight);
     alert('Submitted Height: ' + UserHeight);
   };
-  submitUserWeight = (UserWeight) => {
+  submitUserWeight = UserWeight => {
     UserProfileModule.Set_User_Weight(UserWeight);
     alert('Submitted Weight: ' + UserWeight);
   };
 
   render() {
+    const {open, value, items} = this.state;
+
     return (
       <View style={styles.container}>
-
-        <View style={{flexDirection:"row"}}>
-            <View style={{flex:1}}>
-                <TextInput
-                    style={styles.input}
-                    underlineColorAndroid="transparent"
-                    placeholder="User Identification"
-                    placeholderTextColor="#9a73ef"
-                    autoCapitalize="none"
-                    onChangeText={this.handleUserID}/>
-            </View>
-            <View style={{flex:1}}>
-                <TouchableOpacity
-                        style={styles.submitButton}
-                        onPress={() => this.submitUserID(this.state.UserID)}>
-                        <Text style={styles.submitButtonText}> Submit </Text>
-                </TouchableOpacity>
-            </View>
+        <View style={{flexDirection: 'row'}}>
+          <View style={{flex: 1}}>
+            <TextInput
+              style={styles.input}
+              underlineColorAndroid="transparent"
+              placeholder="User Identification"
+              placeholderTextColor="#9a73ef"
+              autoCapitalize="none"
+              onChangeText={this.handleUserID}
+            />
+          </View>
+          <View style={styles.flex}>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={() => this.submitUserID(this.state.UserID)}>
+              <Text style={styles.submitButtonText}> Submit </Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
-        <View style={{flexDirection:"row"}}>
-            <View style={{flex:1}}>
-                <TextInput
-                    style={styles.input}
-                    underlineColorAndroid="transparent"
-                    placeholder="User Name"
-                    placeholderTextColor="#9a73ef"
-                    autoCapitalize="none"
-                    onChangeText={this.handleUserName}
-                />
-            </View>
-            <View style={{flex:1}}>
-                <TouchableOpacity
-                    style={styles.submitButton}
-                    onPress={() => this.submitUserName(this.state.UserName)}>
-                    <Text style={styles.submitButtonText}> Submit </Text>
-                </TouchableOpacity>
-            </View>
+        <View style={{flexDirection: 'row'}}>
+          <View style={{flex: 1}}>
+            <TextInput
+              style={styles.input}
+              underlineColorAndroid="transparent"
+              placeholder="User Name"
+              placeholderTextColor="#9a73ef"
+              autoCapitalize="none"
+              onChangeText={this.handleUserName}
+            />
+          </View>
+          <View style={styles.flex}>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={() => this.submitUserName(this.state.UserName)}>
+              <Text style={styles.submitButtonText}> Submit </Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
-        <View style={{flexDirection:"row"}}>
-            <View style={{flex:1}}>
-                <TextInput
-                    style={styles.input}
-                    underlineColorAndroid="transparent"
-                    placeholder="User Birth Date"
-                    placeholderTextColor="#9a73ef"
-                    autoCapitalize="none"
-                    onChangeText={this.handleUserBirthDate}/>
-            </View>
-            <View style={{flex:1}}>
-                <TouchableOpacity
-                        style={styles.submitButton}
-                        onPress={() => this.submitUserBirthDate(this.state.UserBirthDate)}>
-                        <Text style={styles.submitButtonText}> Submit </Text>
-                </TouchableOpacity>
-            </View>
+        <View style={{flexDirection: 'row'}}>
+          <View style={{flex: 1}}>
+            <TextInput
+              style={styles.input}
+              underlineColorAndroid="transparent"
+              placeholder="User Birth Date"
+              placeholderTextColor="#9a73ef"
+              autoCapitalize="none"
+              onChangeText={this.handleUserBirthDate}
+            />
+          </View>
+          <View style={styles.flex}>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={() =>
+                this.submitUserBirthDate(this.state.UserBirthDate)
+              }>
+              <Text style={styles.submitButtonText}> Submit </Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
-        <View style={{flexDirection:"row"}}>
-            <View style={{flex:1}}>
-                <TextInput
-                    style={styles.input}
-                    underlineColorAndroid="transparent"
-                    placeholder="User Gender"
-                    placeholderTextColor="#9a73ef"
-                    autoCapitalize="none"
-                    onChangeText={this.handleUserGender}/>
-            </View>
-            <View style={{flex:1}}>
-                <TouchableOpacity
-                        style={styles.submitButton}
-                        onPress={() => this.submitUserGender(this.state.UserGender)}>
-                        <Text style={styles.submitButtonText}> Submit </Text>
-                </TouchableOpacity>
-            </View>
+        <View style={{flexDirection: 'row'}}>
+          <View style={{flex: 1}}>
+            <TextInput
+              style={styles.input}
+              underlineColorAndroid="transparent"
+              placeholder="User Gender"
+              placeholderTextColor="#9a73ef"
+              autoCapitalize="none"
+              onChangeText={this.handleUserGender}
+            />
+          </View>
+          <View style={styles.flex}>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={() => this.submitUserGender(this.state.UserGender)}>
+              <Text style={styles.submitButtonText}> Submit </Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
-        <View style={{flexDirection:"row"}}>
-            <View style={{flex:1}}>
-                <TextInput
-                    style={styles.input}
-                    underlineColorAndroid="transparent"
-                    placeholder="User Height"
-                    placeholderTextColor="#9a73ef"
-                    autoCapitalize="none"
-                    onChangeText={this.handleUserHeight}/>
-            </View>
-            <View style={{flex:1}}>
-                <TouchableOpacity
-                        style={styles.submitButton}
-                        onPress={() => this.submitUserHeight(this.state.UserHeight)}>
-                        <Text style={styles.submitButtonText}> Submit </Text>
-                </TouchableOpacity>
-            </View>
+        <View style={{flexDirection: 'row'}}>
+          <View style={{flex: 1}}>
+            <TextInput
+              style={styles.input}
+              underlineColorAndroid="transparent"
+              placeholder="User Height"
+              placeholderTextColor="#9a73ef"
+              autoCapitalize="none"
+              onChangeText={this.handleUserHeight}
+            />
+          </View>
+          <View style={styles.flex}>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={() => this.submitUserHeight(this.state.UserHeight)}>
+              <Text style={styles.submitButtonText}> Submit </Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
-        <View style={{flexDirection:"row"}}>
-            <View style={{flex:1}}>
-                <TextInput
-                    style={styles.input}
-                    underlineColorAndroid="transparent"
-                    placeholder="User Weight"
-                    placeholderTextColor="#9a73ef"
-                    autoCapitalize="none"
-                    onChangeText={this.handleUserWeight}/>
-            </View>
-            <View style={{flex:1}}>
-                <TouchableOpacity
-                        style={styles.submitButton}
-                        onPress={() => this.submitUserWeight(this.state.UserWeight)}>
-                        <Text style={styles.submitButtonText}> Submit </Text>
-                </TouchableOpacity>
-            </View>
+        <View style={styles.direction}>
+          <View style={styles.flex}>
+            <TextInput
+              style={styles.input}
+              underlineColorAndroid="transparent"
+              placeholder="User Weight"
+              placeholderTextColor="#9a73ef"
+              autoCapitalize="none"
+              onChangeText={this.handleUserWeight}
+            />
+          </View>
+          <View style={styles.flex}>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={() => this.submitUserWeight(this.state.UserWeight)}>
+              <Text style={styles.submitButtonText}> Submit </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-
 
         <TouchableOpacity
           style={styles.submitButtonBig}
-          onPress={() => this.submitALLProperties(this.state.UserID, this.state.UserName, 
-                this.state.UserBirthDate, this.state.UserGender, this.state.UserHeight, this.state.UserWeight)}>
+          onPress={() =>
+            this.submitALLProperties(
+              this.state.UserID,
+              this.state.UserName,
+              this.state.UserBirthDate,
+              this.state.UserGender,
+              this.state.UserHeight,
+              this.state.UserWeight,
+            )
+          }>
           <Text style={styles.submitButtonText}> Submit All fields </Text>
         </TouchableOpacity>
       </View>
@@ -239,4 +271,8 @@ const styles = StyleSheet.create({
   submitButtonText: {
     color: 'white',
   },
+  direction: {
+    flexDirection: 'row',
+  },
+  flex: {flex: 1},
 });

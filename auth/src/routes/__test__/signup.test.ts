@@ -7,6 +7,7 @@ it('returns a 201 on successfull signup', async () =>
         .send({
             email: 'teste@teste.com',
             password: 'asdf',
+            name: 'teste',
         })
         .expect(201));
 
@@ -50,6 +51,7 @@ it('disallows duplicate emails', async () => {
         .send({
             email: 'teste@teste12.com',
             password: 'asdf',
+            name: 'teste',
         })
         .expect(201);
     await request(app)
@@ -57,17 +59,12 @@ it('disallows duplicate emails', async () => {
         .send({
             email: 'teste@teste12.com',
             password: 'asdf',
+            name: 'teste',
         })
         .expect(400);
 });
 
 it('sets a cookie after a successfull signup', async () => {
-    const response = await request(app)
-        .post('/api/users/signup')
-        .send({
-            email: 'teste@teste.com',
-            password: 'asdf',
-        })
-        .expect(201);
-    expect(response.get('Set-Cookie')).toBeDefined();
+    const cookie = await global.signin();
+    expect(cookie).toBeDefined();
 });

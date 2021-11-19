@@ -293,7 +293,7 @@ const OrderDetail = ({navigation, route}) => {
               />
             </TouchableOpacity>
           </View>
-          <View style={{flex: 1, alignItems: 'flex-end'}}></View>
+          <View style={{flex: 1, alignItems: 'flex-end'}} />
         </View>
       </View>
 

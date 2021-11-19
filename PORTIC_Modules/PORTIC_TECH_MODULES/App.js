@@ -7,10 +7,11 @@
  */
 
 import React from 'react';
+import {useState} from 'react';
 import type {Node} from 'react';
 import {NativeModules} from 'react-native';
 import Inputs from './UserInputs.js';
-
+import DropDownPicker from 'react-native-dropdown-picker';
 const {HAR_Module} = NativeModules;
 
 import {
@@ -67,26 +68,31 @@ const App: () => Node = () => {
   };
 
   const onPress_HAR_Begin_Service = () => {
-    //console.log('We will invoke the native module here!');
-    //  CalendarModule.createCalendarEvent('testName', 'testLocation');
+    //We will invoke the native module here!
+
     HAR_Module.HAR_Begin_Service();
   };
 
   const onPress_HAR_Stop_Service = () => {
-    //console.log('We will invoke the native module here!');
-    //  CalendarModule.createCalendarEvent('testName', 'testLocation');
+    //We will invoke the native module here!
+
     HAR_Module.HAR_Stop_Service();
   };
 
-  const [text, onChangeText] = React.useState('Useless Text');
-
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    {label: 'Apple', value: 'apple'},
+    {label: 'Banana', value: 'banana'},
+    ,
+  ]);
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
-        <Header />
+        {/* <Header /> */}
         <View
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
@@ -108,17 +114,16 @@ const App: () => Node = () => {
               onPress={onPress_HAR_Stop_Service}
             />
           </Section>
-
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+        </View>
+        <View>
+          <DropDownPicker
+            open={open}
+            value={value}
+            items={items}
+            setOpen={setOpen}
+            setValue={setValue}
+            setItems={setItems}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
