@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 
+import pt.portic.tech.modules.ActivityDB_Module.RealmDataBaseManager;
 import pt.portic.tech.modules.Public_API_HAR_Module;
 import pt.portic.tech.modules.UserProfile.UserProfileManager;
 
@@ -63,6 +64,11 @@ public class HARModuleManager extends ReactContextBaseJavaModule implements Publ
         if (harModuleServiceIntent == null) {
             harModuleServiceIntent = new Intent(mainActivityObj,
                     BackgroundDetectedActivitiesService.class);
+
+            // start Detected Activities DB to store the activities
+            RealmDataBaseManager.getInstance().CreateDB(mainActivityObj);
+
+
             mainActivityObj.startService(harModuleServiceIntent);
 
             Log.d("HAR_Module", "Human Activity Recognition background service has begun.");
@@ -88,6 +94,8 @@ public class HARModuleManager extends ReactContextBaseJavaModule implements Publ
             Log.d("HAR_Module", "Human Activity Recognition background service has stopped.");
             harModuleServiceIntent = null;
         }
+
+//        RealmDataBaseManager.getInstance().ReadAllDataFromDB();
 
         return true;
     }

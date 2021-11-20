@@ -18,6 +18,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.portic_tech_modules.R;
 import com.portic_tech_modules.databinding.ActivityMainBinding;
 
+import pt.portic.tech.modules.ActivityDB_Module.RealmDataBaseManager;
 import pt.portic.tech.modules.HARModule.HARModuleManager;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,7 +30,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        /**
+         * Place used to initiate background services needed by the application.
+         * Responsibility: PORTIC/IPP
+         */
         HARModuleManager.mainActivityObj = this;
+
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
