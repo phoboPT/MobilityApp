@@ -107,7 +107,7 @@ const HomeScreen = ({navigation}) => {
             position: 'relative',
             fontWeight: '400',
           }}>
-          Recomendations
+          Recomendations:
         </Text>
 
         <FlatGrid
@@ -137,7 +137,7 @@ const HomeScreen = ({navigation}) => {
                       {Moment(item.startDate).format('lll')}
                     </Text>
                     <Text style={styles.itemCode}>
-                      Estimated Time: {item.estimatedTime} Minutes
+                      Estimated Time: {item.estimatedTime}Minutes
                     </Text>
                   </View>
                 </View>

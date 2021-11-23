@@ -342,7 +342,7 @@ const DestinationDetail = ({navigation, route}) => {
                 />
                 <IconLabel
                   icon={icons.frontCar}
-                  label={`${data.estimatedTime} Minutes`}
+                  label={`${data.estimatedTime}Minutes`}
                 />
               </>
             )}
