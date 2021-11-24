@@ -105,3 +105,7 @@ dist
 
 common
 
+Frontend/services/firebaseConfig.js
+Frontend/android/app/build
+Frontend/android/.*
+Frontend/android/build
