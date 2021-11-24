@@ -10,6 +10,7 @@ package com.portic_tech_modules;
 
 import com.facebook.react.ReactActivity;
 
+import pt.portic.tech.modules.ActivityDB_Module.RealmDataBaseManager;
 import pt.portic.tech.modules.HARModule.HARModuleManager;
 
 // when to integrate with React Native, uncomment this Main Activity
@@ -20,6 +21,11 @@ public class MainActivity extends ReactActivity {
   //rendering of the component.
 
   public MainActivity() {
+    /**
+     * Place used to initiate background services needed by the application.
+     * Responsibility: PORTIC/IPP
+     */
+
     HARModuleManager.mainActivityObj = this;
   }
 

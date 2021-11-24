@@ -52,6 +52,7 @@ router.get('/api/routes/user', currentUser, async (req: Request, res: Response) 
 });
 
 router.get('/api/routes/:id', async (req: Request, res: Response) => {
+    console.log(req.params.id);
     const route = await Route.findById(req.params.id);
 
     if (!route) {

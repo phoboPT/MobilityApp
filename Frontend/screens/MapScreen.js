@@ -86,7 +86,7 @@ const MapScreen = ({navigation, route}) => {
 
   const getCarRoute = (start, end) => {
     return fetch(
-      'https://raw.githubusercontent.com/phoboPT/MobilityApp/development/mobility-one-routes/' +
+      'https://raw.githubusercontent.com/phoboPT/MobilityApp/main/mobility-one-routes/' +
         start +
         '/' +
         end +
@@ -122,7 +122,7 @@ const MapScreen = ({navigation, route}) => {
     if (mapType == 'Bus') {
       getBusRoute();
     } else if (mapType == 'Car') {
-      getCarRoute();
+      getCarRoute(startLocation, endLocation);
     } else if (mapType == 'Mixed') {
       getCarRoute(startLocation, middleLocation);
       getBusRoute(middleLocation, endLocation);

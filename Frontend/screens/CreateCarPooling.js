@@ -68,7 +68,7 @@ const CreateCarPooling = ({navigation}) => {
             [
               {
                 text: 'Cancel',
-                onPress: () => navigation.navigate('Drawer'),
+                onPress: () => navigation.navigate('Home'),
                 style: 'cancel',
               },
               {
@@ -135,7 +135,7 @@ const CreateCarPooling = ({navigation}) => {
         capacity: capacity,
       });
       Alert.alert('Ride created with success!');
-      navigation.navigate('Drawer');
+      navigation.navigate('Home');
     } catch (err) {
       Alert.alert('Error on creating new ride. Please try Again!');
     }

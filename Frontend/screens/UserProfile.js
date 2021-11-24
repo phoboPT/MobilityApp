@@ -123,6 +123,7 @@ const UserProfile = ({navigation, route}) => {
               <Text style={{...SIZES.h3}}>{user.name}</Text>
               <StarReview rate={user.rating} />
               <View style={{marginTop: 5}}>
+                <Text style={{color: COLORS.primary}}>{user.email}</Text>
                 <Text style={{color: COLORS.primary}}>{user.contact}</Text>
               </View>
             </View>
@@ -178,55 +179,7 @@ const UserProfile = ({navigation, route}) => {
         </View>
       </View>
       {/* Footer */}
-      <View
-        style={{
-          flex: 1,
-          alignContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'column',
-        }}>
-        <TouchableOpacity
-          style={{
-            width: 200,
-            marginBottom: 20,
-            height: '30%',
-          }}
-          onPress={() =>
-            navigation.navigate('SingleMessage', {
-              user: user,
-              name: user.name,
-            })
-          }>
-          <LinearGradient
-            style={[
-              {
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: 10,
-              },
-            ]}
-            colors={[COLORS.primary, '#5884ff']}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}>
-            <View style={{flexDirection: 'row'}}>
-              <Text
-                style={{
-                  marginTop: 3,
-                  marginRight: 15,
-                  color: COLORS.white,
-                  ...SIZES.h2,
-                }}>
-                Send Message
-              </Text>
-              <Image
-                style={{width: 25, height: 25, tintColor: COLORS.white}}
-                source={icons.send}
-              />
-            </View>
-          </LinearGradient>
-        </TouchableOpacity>
-      </View>
+      
     </View>
   );
 };

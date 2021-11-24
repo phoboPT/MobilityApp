@@ -1,4 +1,6 @@
 import React, {useEffect, useState} from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+
 import {
   StyleSheet,
   View,
@@ -51,7 +53,7 @@ const MyProfile = ({navigation}) => {
       const response = await api.post('/users/edit', {
         biography: biography,
         photoUrl:
-          'https://barcelosnahora.pt/wp-content/uploads/2020/12/helder.png',
+          'https://www.pavilionweb.com/wp-content/uploads/2017/03/man.png',
         contact: contact,
       });
       getMyInfo();
@@ -60,6 +62,12 @@ const MyProfile = ({navigation}) => {
       Alert.alert('Error updating your Details!');
     }
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getMyInfo();
+    }, [])
+  );
 
   async function getMyInfo() {
     try {

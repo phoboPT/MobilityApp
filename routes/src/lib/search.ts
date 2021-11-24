@@ -15,30 +15,29 @@ export const searchRoute = (src: string, dst: string, routes: IRoutes, allTarget
     // The graph
     try {
         const adjacencyList = new Map();
-
         // Add node
         function addNode(node: string) {
             adjacencyList.set(node, []);
         }
-
+        
         // Add edge, undirected
         function addEdge(origin: string, destination: string) {
             adjacencyList.get(origin).push(destination);
         }
-
         // Create the Graph
         allTargets.forEach(addNode);
         routes.forEach((route: IRoute) => addEdge(route.startLocation, route.endLocation));
+        
         let visit: IVisit = { start: false };
-
+        
         const paths: string[] = [];
-
+        
         adjacencyList.forEach((item: [string], key: number) => {
             if (item.length > 0) {
                 adjacencyList.set(key, uniq_fast(item));
             }
         });
-
+        
         const searchAllPaths = (
             graph: Map<string, string>,
             start: string,
