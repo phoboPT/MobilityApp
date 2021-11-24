@@ -24,11 +24,10 @@ export const searchRoute = (src: string, dst: string, routes: IRoutes, allTarget
         function addEdge(origin: string, destination: string) {
             adjacencyList.get(origin).push(destination);
         }
-        
         // Create the Graph
         allTargets.forEach(addNode);
         routes.forEach((route: IRoute) => addEdge(route.startLocation, route.endLocation));
-     
+        
         let visit: IVisit = { start: false };
         
         const paths: string[] = [];

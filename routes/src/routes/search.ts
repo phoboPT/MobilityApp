@@ -1,6 +1,5 @@
 import { filterRoutes } from './../lib/filterRoutes';
 import express, { Request, Response } from 'express';
-import { RouteDoc, Route } from '../models/route';
 import { searchRoute } from '../lib/search';
 import { routeAPI } from '../lib/routeAPI';
 const router = express.Router();
@@ -12,7 +11,6 @@ router.get('/api/routes/start/:start/end/:end/:type', async (req: Request, res: 
     try {
         const before = Date.now();
         const { start, end, type } = req.params;
-     
         let allPaths;
         // get CP journeys between 2 citys
         const { begin, stop, cpRoutes, allTargets } = await routeAPI(start, end, type);
