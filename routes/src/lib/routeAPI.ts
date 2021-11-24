@@ -1,6 +1,7 @@
 const comboios = require('comboios');
 const NodeGeocoder = require('node-geocoder');
 import { Route } from '../models/route';
+const busRoutes: IBusRoutes = require('../bus/bus.json')
 interface IStation {
     id: string;
     name: string;
@@ -13,8 +14,8 @@ interface ILegDetails {
 interface ILeg {
     origin: ILegDetails;
     destination: ILegDetails;
-    departure?:string
-    arrival?:string
+    departure?: string
+    arrival?: string
     price?: number;
     tripId?: string;
 }
@@ -25,12 +26,12 @@ interface IRoute {
     originId: string;
     destinationId: string;
     price: number;
-    type:string
+    type: string
     availableTime: string
     state: string
     description: string
     estimatedTime: string
-    startDate:string
+    startDate: string
     userImage: string
     rating: number
     capacity: number
@@ -38,19 +39,30 @@ interface IRoute {
     version: number
     legs?: [ILeg];
 }
-interface IRoutes extends Array<IRoute> {
-   
-   
+
+interface IPrice {
+    class: number
+    ammount: number
+    currency: string
 }
-interface IStations extends Array<IStation> { }
+interface ICPRoute {
+    type: string
+    id: string
+    legs: [ILeg]
+    price: IPrice
+}
+interface IBusRoutes {
+    data: [ICPRoute]
+}
+interface ICPRoutes extends Array<ICPRoute> { }
+interface IRoutes extends Array<IRoute> { }
+interface ICPStations extends Array<IStation> { }
 
 export const routeAPI = async (start: string, end: string, type: string): Promise<any> => {
     try {
-        const cpStations: IStations = await comboios.stations();
+        const cpStations: ICPStations = await comboios.stations();
         const allTargets: string[] = [];
         const cpRoutes: IRoutes = [];
-
-        let journeys: any = [];
         const begin = { id: '', name: '' };
         const stop = { id: '', name: '' };
         let initialPlace = start;
@@ -80,12 +92,15 @@ export const routeAPI = async (start: string, end: string, type: string): Promis
                 stop.name = station.name;
             }
         });
+        const date: Date = new Date();
+        // console.log(date.getDate(),date.getMonth(),date.getFullYear(),date.getHours(),date.getMinutes(),date.getSeconds());
 
-        journeys = await comboios.journeys(begin.id, stop.id, { when: new Date('2021-11-14') }) || [];
-        const allRoutes = await Route.find({ state: 'AVAILABLE' });
-        allRoutes.forEach((route: any) => {
-            const ride:IRoute = {
-                "id": route.id,
+        const cpJourneys = await comboios.journeys(begin.id, stop.id, { when: new Date(`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`) }) || [];
+        const bdRides = await Route.find({ state: 'AVAILABLE', startDate:{$gte:date.toDateString()} });
+      //  console.log(bdRides)
+        bdRides.forEach((route: any) => {
+            const ride: IRoute = {
+                id: route.id,
                 type: route.type,
                 availableTime: route.availableTime,
                 state: route.state,
@@ -97,16 +112,16 @@ export const routeAPI = async (start: string, end: string, type: string): Promis
                 capacity: route.capacity,
                 actualCapacity: route.actualCapacity,
                 version: route.version,
-                "legs": [
+                legs: [
                     {
-                        "tripId": route.id,
-                        "origin": {
-                            "id": route.id,
-                            "name": route.startLocation,
+                        tripId: route.id,
+                        origin: {
+                            id: route.id,
+                            name: route.startLocation,
                         },
-                        "destination": {
-                            "id": route.id,
-                            "name": route.endLocation,
+                        destination: {
+                            id: route.id,
+                            name: route.endLocation,
                         },
                     }
                 ],
@@ -116,6 +131,7 @@ export const routeAPI = async (start: string, end: string, type: string): Promis
                 destinationId: route.id,
                 price: 0
             }
+
             allTargets.push(route.startLocation);
             if (route.startLocation.includes(initialPlace)) {
                 begin.id = route.id;
@@ -125,11 +141,60 @@ export const routeAPI = async (start: string, end: string, type: string): Promis
                 stop.id = route.id;
                 stop.name = route.endLocation;
             }
-            journeys.push(ride);
+            cpJourneys.push(ride);
         })
+
+        // busRoutes.data.forEach((route: any) => {
+        //     const routeDate = new Date(route.date);
+        //      if (routeDate.getHours() !== date.getHours()) return
+
+        //     const ride: IRoute = {
+        //         id: route.id,
+        //         type: route.type,
+        //         availableTime: route.availableTime,
+        //         state: route.state,
+        //         description: route.description,
+        //         estimatedTime: route.estimatedTime,
+        //         startDate: route.startDate,
+        //         userImage: route.userImage,
+        //         rating: route.rating,
+        //         capacity: route.capacity,
+        //         actualCapacity: route.actualCapacity,
+        //         version: route.version,
+        //         legs: [
+        //             {
+        //                 tripId: route.id,
+        //                 origin: {
+        //                     id: route.id,
+        //                     name: route.startLocation,
+        //                 },
+        //                 destination: {
+        //                     id: route.id,
+        //                     name: route.endLocation,
+        //                 },
+        //             }
+        //         ],
+        //         startLocation: route.startLocation,
+        //         endLocation: route.endLocation,
+        //         originId: route.id,
+        //         destinationId: route.id,
+        //         price: 0
+        //     }
+
+        //     allTargets.push(route.startLocation);
+        //     if (route.startLocation.includes(initialPlace)) {
+        //         begin.id = route.id;
+        //         begin.name = route.startLocation;
+        //     }
+        //     if (route.endLocation.includes(finalPlace)) {
+        //         stop.id = route.id;
+        //         stop.name = route.endLocation;
+        //     }
+        //     cpJourneys.push(ride);
+        // })
         //filter journeys
-        if (journeys) {
-            journeys.map((journey: IRoute): void => {
+        if (cpJourneys) {
+            cpJourneys.map((journey: IRoute): void => {
                 journey.legs?.map((leg: ILeg) => {
                     let found = false;
                     cpRoutes?.forEach((element: IRoute) => {
@@ -139,23 +204,23 @@ export const routeAPI = async (start: string, end: string, type: string): Promis
                     });
                     if (!found) {
                         cpRoutes.push({
-                            id: leg.origin.id||"",
-                            startLocation: leg.origin.name||"",
-                            endLocation: leg.destination.name||"",
-                            originId: leg.origin.id||"",
-                            destinationId: leg.destination.id||"",
+                            id: leg.origin.id || "",
+                            startLocation: leg.origin.name || "",
+                            endLocation: leg.destination.name || "",
+                            originId: leg.origin.id || "",
+                            destinationId: leg.destination.id || "",
                             // leg: leg,
-                            type: "2",
-                            availableTime: leg.departure||"",
-                            state: journey.state||"Active",
-                            description:journey.description|| "Train",
-                            estimatedTime: leg.arrival||"",
-                            startDate: journey.startDate||leg.departure||"",
-                            userImage: journey.userImage||"",
-                            rating: journey.rating||0,
-                            capacity:journey.capacity|| 50,
-                            actualCapacity: journey.actualCapacity|| 50,
-                            version:journey.version|| 0,
+                            type: journey.type || "comboio",
+                            availableTime: leg.departure || "",
+                            state: journey.state || "Active",
+                            description: journey.description || "Viagem de comboio",
+                            estimatedTime: leg.arrival || "",
+                            startDate: journey.startDate || leg.departure || "",
+                            userImage: journey.userImage || "",
+                            rating: journey.rating || 0,
+                            capacity: journey.capacity || 50,
+                            actualCapacity: journey.actualCapacity || 50,
+                            version: journey.version || 0,
                             price: leg.price || 0,
                         });
                     }
