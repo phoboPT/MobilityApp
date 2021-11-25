@@ -1,4 +1,6 @@
 import React, {useState, useEffect} from 'react';
+
+import StarRating from 'react-native-star-rating';
 import {
   StyleSheet,
   View,
@@ -12,70 +14,18 @@ import LinearGradient from 'react-native-linear-gradient';
 import {images, icons, COLORS, SIZES} from '../constants';
 import {ScrollView} from 'react-native';
 
-const StarReview = ({rate}) => {
-  var starComponents = [];
-  var fullStar = Math.floor(rate);
-  var noStar = Math.floor(5 - rate);
-  var halfStar = 5 - fullStar - noStar;
 
-  // Full Star
-  for (var i = 0; i < fullStar; i++) {
-    starComponents.push(
-      <Image
-        key={`full-${i}`}
-        source={icons.starFull}
-        resizeMode="cover"
-        style={{
-          width: 20,
-          height: 20,
-        }}
-      />,
-    );
-  }
-
-  // Half Star
-  for (var i = 0; i < halfStar; i++) {
-    starComponents.push(
-      <Image
-        key={`half-${i}`}
-        source={icons.starHalf}
-        resizeMode="cover"
-        style={{
-          width: 20,
-          height: 20,
-        }}
-      />,
-    );
-  }
-
-  // No Star
-  for (var i = 0; i < noStar; i++) {
-    starComponents.push(
-      <Image
-        key={`empty-${i}`}
-        source={icons.starEmpty}
-        resizeMode="cover"
-        style={{
-          width: 20,
-          height: 20,
-        }}
-      />,
-    );
-  }
-
-  return (
-    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-      {starComponents}
-      <Text
-        style={{marginLeft: SIZES.base, color: COLORS.gray, ...SIZES.body3}}>
-        {rate}
-      </Text>
-    </View>
-  );
-};
 
 const UserProfile = ({navigation, route}) => {
   const {user} = route.params;
+  const [rating, setRating] = useState(null);
+
+  const onStarRatingPress=(score)=>{
+    console.log(score);
+    setRating(score);
+    console.log(rating);
+  }
+
 
   return (
     <View style={styles.container}>
@@ -121,7 +71,12 @@ const UserProfile = ({navigation, route}) => {
                 justifyContent: 'space-around',
               }}>
               <Text style={{...SIZES.h3}}>{user.name}</Text>
-              <StarReview rate={user.rating} />
+             <StarRating
+                disabled={false}
+                maxStars={5}
+                rating={rating}
+                selectedStar={(score) =>onStarRatingPress(score)}
+                />
               <View style={{marginTop: 5}}>
                 <Text style={{color: COLORS.primary}}>{user.email}</Text>
                 <Text style={{color: COLORS.primary}}>{user.contact}</Text>

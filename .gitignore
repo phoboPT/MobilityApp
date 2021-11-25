@@ -117,3 +117,5 @@ Frontend/package-lock.json
 PORTIC_MODULES/PORTIC_TECH_MODULES/package-lock.json
 *.lock
 
+
+Frontend/ios/Pods/
