@@ -1,0 +1,1284 @@
+{
+    "data": [
+        {
+            "id": "ESTG-CentralVC",
+            "type": "bus1",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "ESTG até à central de Viana do Castelo",
+            "estimatedTime": "5 minutos",
+            "startDate": "Wed Nov 16 2021 07:00:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "ESTG-CentralVC",
+                    "origin": {
+                        "id": "ESTG",
+                        "name": "ESTG"
+                    },
+                    "destination": {
+                        "id": "CentralVC",
+                        "name": "Central Viana do Castelo"
+                    }
+                }
+            ],
+            "startLocation": "ESTG",
+            "endLocation": "Central Viana do Castelo",
+            "originId": "ESTG",
+            "destinationId": "CentralVC",
+            "price": 0
+        },
+        {
+            "id": "CentralVC-ESE",
+            "type": "bus1",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "5 minutos",
+            "startDate": "Wed Nov 16 2021 07:05:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "CentralVC-ESE",
+                    "origin": {
+                        "id": "CentralVC",
+                        "name": "Central Viana do Castelo"
+                    },
+                    "destination": {
+                        "id": "ESE",
+                        "name": "ESE"
+                    }
+                }
+            ],
+            "startLocation": "Central Viana do Castelo",
+            "endLocation": "ESE",
+            "originId": "CentralVC",
+            "destinationId": "ESE",
+            "price": 0
+        },
+        {
+            "id": "ESE-CentralPL",
+            "type": "bus1",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "25 minutos",
+            "startDate": "Wed Nov 16 2021 07:10:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "ESE-CentralPL",
+                    "origin": {
+                        "id": "ESE",
+                        "name": "ESE"
+                    },
+                    "destination": {
+                        "id": "CentralPL",
+                        "name": "Central Ponte Lima"
+                    }
+                }
+            ],
+            "startLocation": "ESE",
+            "endLocation": "Central Ponte Lima",
+            "originId": "ESE",
+            "destinationId": "CentralPL",
+            "price": 0
+        },
+        {
+            "id": "CentralPL-ESA",
+            "type": "bus1",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "10 minutos",
+            "startDate": "Wed Nov 16 2021 07:35:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "CentralPL-ESA",
+                    "origin": {
+                        "id": "CentralPL",
+                        "name": "Central Ponte Lima"
+                    },
+                    "destination": {
+                        "id": "ESA",
+                        "name": "ESA"
+                    }
+                }
+            ],
+            "startLocation": "Central Ponte Lima",
+            "endLocation": "ESA",
+            "originId": "CentralPL",
+            "destinationId": "ESA",
+            "price": 0
+        },
+        {
+            "id": "ESA-CentralPL",
+            "type": "bus1",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "10 minutos",
+            "startDate": "Wed Nov 16 2021 07:45:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "ESA-CentralPL",
+                    "origin": {
+                        "id": "ESA",
+                        "name": "ESA"
+                    },
+                    "destination": {
+                        "id": "CentralPL",
+                        "name": "Central Ponte Lima"
+                    }
+                }
+            ],
+            "startLocation": "ESA",
+            "endLocation": "Central Ponte Lima",
+            "originId": "ESA",
+            "destinationId": "CentralPL",
+            "price": 0
+        },
+        {
+            "id": "CentralPL-ESE",
+            "type": "bus1",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "25 minutos",
+            "startDate": "Wed Nov 16 2021 07:55:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "CentralPL-ESE",
+                    "origin": {
+                        "id": "CentralPL",
+                        "name": "Central Ponte Lima"
+                    },
+                    "destination": {
+                        "id": "ESE",
+                        "name": "ESE"
+                    }
+                }
+            ],
+            "startLocation": "Central Ponte Lima",
+            "endLocation": "ESE",
+            "originId": "CentralPL",
+            "destinationId": "ESE",
+            "price": 0
+        },
+        {
+            "id": "ESE-CentalVC",
+            "type": "bus1",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "5 minutos",
+            "startDate": "Wed Nov 16 2021 08:20:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "ESE-CentralVC",
+                    "origin": {
+                        "id": "ESE",
+                        "name": "ESE"
+                    },
+                    "destination": {
+                        "id": "CentralVC",
+                        "name": "Central Viana Castelo"
+                    }
+                }
+            ],
+            "startLocation": "ESE",
+            "endLocation": "Central Viana Castelo",
+            "originId": "ESE",
+            "destinationId": "CentralVC",
+            "price": 0
+        },
+        {
+            "id": "CentralVC-ESTG",
+            "type": "bus1",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "5 minutos",
+            "startDate": "Wed Nov 16 2021 08:25:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "CentralVC-ESTG",
+                    "origin": {
+                        "id": "CentralVC",
+                        "name": "Central Viana Castelo"
+                    },
+                    "destination": {
+                        "id": "ESTG",
+                        "name": "ESTG"
+                    }
+                }
+            ],
+            "startLocation": "Central Viana Castelo",
+            "endLocation": "ESTG",
+            "originId": "CentralVC",
+            "destinationId": "ESTG",
+            "price": 0
+        },
+        {
+            "id": "CentralAV-PB",
+            "type": "bus2",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "10 minutos",
+            "startDate": "Wed Nov 16 2021 07:00:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "CentralAV-PB",
+                    "origin": {
+                        "id": "CentralAV",
+                        "name": "Central Arcos Valdevez"
+                    },
+                    "destination": {
+                        "id": "PB",
+                        "name": "Ponte da Barca"
+                    }
+                }
+            ],
+            "startLocation": "Central Arcos Valdevez",
+            "endLocation": "ESTG",
+            "originId": "CentralVC",
+            "destinationId": "ESTG",
+            "price": 0
+        },
+        {
+            "id": "PB-ESA",
+            "type": "bus2",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "15 minutos",
+            "startDate": "Wed Nov 16 2021 07:10:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "PB-ESA",
+                    "origin": {
+                        "id": "PB",
+                        "name": "Ponte da Barca"
+                    },
+                    "destination": {
+                        "id": "ESA",
+                        "name": "ESA"
+                    }
+                }
+            ],
+            "startLocation": "Ponta da Barca",
+            "endLocation": "ESA",
+            "originId": "PB",
+            "destinationId": "ESA",
+            "price": 0
+        },
+        {
+            "id": "ESA-CentralPL",
+            "type": "bus2",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "10 minutos",
+            "startDate": "Wed Nov 16 2021 07:25:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "ESA-CentralPL",
+                    "origin": {
+                        "id": "ESA",
+                        "name": "ESA"
+                    },
+                    "destination": {
+                        "id": "CentralPL",
+                        "name": "Central Ponte Lima"
+                    }
+                }
+            ],
+            "startLocation": "ESA",
+            "endLocation": "Central Ponte Lima",
+            "originId": "ESA",
+            "destinationId": "CentralPL",
+            "price": 0
+        },
+        {
+            "id": "CentralPL-CafeStop",
+            "type": "bus2",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "25 minutos",
+            "startDate": "Wed Nov 16 2021 07:35:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "CentralPL-CafeStop",
+                    "origin": {
+                        "id": "CentralPL",
+                        "name": "Central Ponte Lima"
+                    },
+                    "destination": {
+                        "id": "CafeStop",
+                        "name": "Cafe STOP"
+                    }
+                }
+            ],
+            "startLocation": "Central Ponte Lima",
+            "endLocation": "Cafe Stop",
+            "originId": "CentralPL",
+            "destinationId": "CafeStop",
+            "price": 0
+        },
+        {
+            "id": "CafeStop-ESCE",
+            "type": "bus2",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "5 minutos",
+            "startDate": "Wed Nov 16 2021 08:00:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "CafeStop-ESCE",
+                    "origin": {
+                        "id": "CafeStop",
+                        "name": "Cafe Stop"
+                    },
+                    "destination": {
+                        "id": "ESCE",
+                        "name": "ESCE"
+                    }
+                }
+            ],
+            "startLocation": "Cafe Stop",
+            "endLocation": "ESCE",
+            "originId": "CafeStop",
+            "destinationId": "ESCE",
+            "price": 0
+        },
+        {
+            "id": "ESCE-CentralM",
+            "type": "bus2",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "20 minutos",
+            "startDate": "Wed Nov 16 2021 08:05:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "ESCE-CentralM",
+                    "origin": {
+                        "id": "ESCE",
+                        "name": "ESCE"
+                    },
+                    "destination": {
+                        "id": "CentalM",
+                        "name": "Central Monção"
+                    }
+                }
+            ],
+            "startLocation": "ESCE",
+            "endLocation": "Central Monção",
+            "originId": "ESCE",
+            "destinationId": "CentralM",
+            "price": 0
+        },
+        {
+            "id": "CentralM-ESDL",
+            "type": "bus2",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "20 minutos",
+            "startDate": "Wed Nov 16 2021 07:00:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "CentralM-ESDL",
+                    "origin": {
+                        "id": "CentralM",
+                        "name": "Central Monção"
+                    },
+                    "destination": {
+                        "id": "ESDL",
+                        "name": "ESDL"
+                    }
+                }
+            ],
+            "startLocation": "Central Monção",
+            "endLocation": "ESDL",
+            "originId": "CentralM",
+            "destinationId": "ESDL",
+            "price": 0
+        },
+        {
+            "id": "ESDL-CentralMG",
+            "type": "bus2",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "5 minutos",
+            "startDate": "Wed Nov 16 2021 08:45:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "ESDL-CentralMG",
+                    "origin": {
+                        "id": "CentralAV",
+                        "name": "Central Arcos Valdevez"
+                    },
+                    "destination": {
+                        "id": "PB",
+                        "name": "Ponte da Barca"
+                    }
+                }
+            ],
+            "startLocation": "Central ",
+            "endLocation": "ESTG",
+            "originId": "CentralVC",
+            "destinationId": "ESTG",
+            "price": 0
+        },
+        {
+            "id": "ESDL-CentralMG",
+            "type": "bus2",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "5 minutos",
+            "startDate": "Wed Nov 16 2021 08:45:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "ESDL-CentralMG",
+                    "origin": {
+                        "id": "ESDL",
+                        "name": "ESDL"
+                    },
+                    "destination": {
+                        "id": "CentralMG",
+                        "name": "Central Melgaço"
+                    }
+                }
+            ],
+            "startLocation": "ESDL",
+            "endLocation": "Central Melgaço",
+            "originId": "ESDL",
+            "destinationId": "CentralMG",
+            "price": 0
+        },
+        {
+            "id": "CentralMG-CentralM",
+            "type": "bus3",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "20 minutos",
+            "startDate": "Wed Nov 16 2021 07:00:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "CentralMG-CentralM",
+                    "origin": {
+                        "id": "CentralMG",
+                        "name": "Central Melgaço"
+                    },
+                    "destination": {
+                        "id": "CentralM",
+                        "name": "Central Monção"
+                    }
+                }
+            ],
+            "startLocation": "Central Melgaço",
+            "endLocation": "Central Monção",
+            "originId": "CentralMG",
+            "destinationId": "CentralM",
+            "price": 0
+        },
+        {
+            "id": "CentralM-ESCE",
+            "type": "bus3",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "20 minutos",
+            "startDate": "Wed Nov 16 2021 07:20:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "CentralM-ESCE",
+                    "origin": {
+                        "id": "CentralM",
+                        "name": "Central Monção"
+                    },
+                    "destination": {
+                        "id": "ESCE",
+                        "name": "ESCE"
+                    }
+                }
+            ],
+            "startLocation": "Central Monção",
+            "endLocation": "ESCE",
+            "originId": "CentralM",
+            "destinationId": "ESCE",
+            "price": 0
+        },
+        {
+            "id": "ESCE-CafeStop",
+            "type": "bus3",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "5 minutos",
+            "startDate": "Wed Nov 16 2021 07:40:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "ESCE-CafeStop",
+                    "origin": {
+                        "id": "ESCE",
+                        "name": "ESCE"
+                    },
+                    "destination": {
+                        "id": "CafeStop",
+                        "name": "Cafe Stop"
+                    }
+                }
+            ],
+            "startLocation": "ESCE",
+            "endLocation": "Cafe Stop",
+            "originId": "ESCE",
+            "destinationId": "Cafe Stop",
+            "price": 0
+        },
+        {
+            "id": "CafeStop-CentralVNC",
+            "type": "bus3",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "10 minutos",
+            "startDate": "Wed Nov 16 2021 07:45:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "CafeStop-CentralVCN",
+                    "origin": {
+                        "id": "CafeStop",
+                        "name": "Cafe Stop"
+                    },
+                    "destination": {
+                        "id": "CentralVNC",
+                        "name": "Central Vila Nova Cerveira"
+                    }
+                }
+            ],
+            "startLocation": "Cafe Stop",
+            "endLocation": "Central Vila Nova Cerveira",
+            "originId": "CafeStop",
+            "destinationId": "CentralVNC",
+            "price": 0
+        },
+        {
+            "id": "CentralVNC-ESE",
+            "type": "bus3",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "10 minutos",
+            "startDate": "Wed Nov 16 2021 08:00:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "CentralVNC-ESE",
+                    "origin": {
+                        "id": "CentralVNC",
+                        "name": "Central Vila Nova Cerveira"
+                    },
+                    "destination": {
+                        "id": "ESE",
+                        "name": "ESE"
+                    }
+                }
+            ],
+            "startLocation": "Central Vila Nova Cerveira",
+            "endLocation": "ESE",
+            "originId": "CentralVNC",
+            "destinationId": "ESE",
+            "price": 0
+        },
+        {
+            "id": "ESE-CentralVC",
+            "type": "bus3",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "5 minutos",
+            "startDate": "Wed Nov 16 2021 08:20:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "ESE-CentralVC",
+                    "origin": {
+                        "id": "ESE",
+                        "name": "ESE"
+                    },
+                    "destination": {
+                        "id": "CentralVC",
+                        "name": "Central Viana Castelo"
+                    }
+                }
+            ],
+            "startLocation": "ESE",
+            "endLocation": "Central Viana Castelo",
+            "originId": "ESE",
+            "destinationId": "CentralVC",
+            "price": 0
+        },
+        {
+            "id": "CentralVC-ESTG",
+            "type": "bus3",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "5 minutos",
+            "startDate": "Wed Nov 16 2021 08:25:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "CentralVC-ESTG",
+                    "origin": {
+                        "id": "CentralVC",
+                        "name": "Central Viana Castelo"
+                    },
+                    "destination": {
+                        "id": "ESTG",
+                        "name": "ESTG"
+                    }
+                }
+            ],
+            "startLocation": "Central Viana Castelo",
+            "endLocation": "ESTG",
+            "originId": "CentralVC",
+            "destinationId": "ESTG",
+            "price": 0
+        },
+        {
+            "id": "CentralC-CentralVPA",
+            "type": "intermunicipal",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "10 minutos",
+            "startDate": "Wed Nov 16 2021 08:25:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "CentralC-CentralVPA",
+                    "origin": {
+                        "id": "CentralC",
+                        "name": "Central Caminha"
+                    },
+                    "destination": {
+                        "id": "CentralVPA",
+                        "name": "Central Vila Praia Âncora"
+                    }
+                }
+            ],
+            "startLocation": "Central Caminha",
+            "endLocation": "Central Vila Praia Âncora",
+            "originId": "CentralC",
+            "destinationId": "CentralVPA",
+            "price": 0
+        },
+        {
+            "id": "CentralPC-CafeStop",
+            "type": "intermunicipal",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "30 minutos",
+            "startDate": "Wed Nov 16 2021 07:15:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "CentralPC-CafeStop",
+                    "origin": {
+                        "id": "CentralPC",
+                        "name": "Central Paredes Coura"
+                    },
+                    "destination": {
+                        "id": "CafeStop",
+                        "name": "Cafe Stop"
+                    }
+                }
+            ],
+            "startLocation": "Central Paredes Coura",
+            "endLocation": "Cafe Stop",
+            "originId": "CentralPC",
+            "destinationId": "CafeStop",
+            "price": 0
+        },
+        {
+            "id": "ESTG-CentralVC",
+            "type": "bus1",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "5 minutos",
+            "startDate": "Wed Nov 16 2021 18:30:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "ESTG-CentralVC",
+                    "origin": {
+                        "id": "ESTG",
+                        "name": "ESTG"
+                    },
+                    "destination": {
+                        "id": "CentralVC",
+                        "name": "Central Viana Castelo"
+                    }
+                }
+            ],
+            "startLocation": "ESTG",
+            "endLocation": "Central Viana Castelo",
+            "originId": "ESTG",
+            "destinationId": "CentralVC",
+            "price": 0
+        },
+        {
+            "id": "CentralVC-ESE",
+            "type": "bus1",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "5 minutos",
+            "startDate": "Wed Nov 16 2021 18:35:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "CentralVC-ESE",
+                    "origin": {
+                        "id": "CentralVC",
+                        "name": "Central Viana Castelo"
+                    },
+                    "destination": {
+                        "id": "ESE",
+                        "name": "ESE"
+                    }
+                }
+            ],
+            "startLocation": "Central Viana Castelo",
+            "endLocation": "ESE",
+            "originId": "CentralVC",
+            "destinationId": "ESE",
+            "price": 0
+        },
+        {
+            "id": "ESA-ESA",
+            "type": "bus1",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "15 minutos",
+            "startDate": "Wed Nov 16 2021 18:40:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "ESE-ESA",
+                    "origin": {
+                        "id": "ESE",
+                        "name": "ESE"
+                    },
+                    "destination": {
+                        "id": "ESA",
+                        "name": "ESA"
+                    }
+                }
+            ],
+            "startLocation": "ESE",
+            "endLocation": "ESA",
+            "originId": "ESE",
+            "destinationId": "ESA",
+            "price": 0
+        },
+        {
+            "id": "ESA-CentralPL",
+            "type": "bus1",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "15 minutos",
+            "startDate": "Wed Nov 16 2021 18:55:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "ESA-CentralPL",
+                    "origin": {
+                        "id": "ESA",
+                        "name": "ESA"
+                    },
+                    "destination": {
+                        "id": "CentralPL",
+                        "name": "Central Ponte Lima"
+                    }
+                }
+            ],
+            "startLocation": "ESA",
+            "endLocation": "Central Ponte Lima",
+            "originId": "ESA",
+            "destinationId": "CentralPL",
+            "price": 0
+        },
+        {
+            "id": "CentralPL-ESE",
+            "type": "bus1",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "25 minutos",
+            "startDate": "Wed Nov 16 2021 19:10:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "CentralPL-ESE",
+                    "origin": {
+                        "id": "CentralPL",
+                        "name": "Central Ponte Lima"
+                    },
+                    "destination": {
+                        "id": "ESE",
+                        "name": "ESE"
+                    }
+                }
+            ],
+            "startLocation": "Central Ponte Lima",
+            "endLocation": "ESE",
+            "originId": "CentralPL",
+            "destinationId": "ESE",
+            "price": 0
+        },
+        {
+            "id": "ESE-CentralVC",
+            "type": "bus1",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "5 minutos",
+            "startDate": "Wed Nov 16 2021 19:35:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "ESE-CentralVC",
+                    "origin": {
+                        "id": "ESE",
+                        "name": "ESE"
+                    },
+                    "destination": {
+                        "id": "CentralVC",
+                        "name": "Central Viana Castelo"
+                    }
+                }
+            ],
+            "startLocation": "ESE",
+            "endLocation": "Central Viana Castelo",
+            "originId": "ESE",
+            "destinationId": "CentralVC",
+            "price": 0
+        },
+        {
+            "id": "CentralMG-ESDL",
+            "type": "bus2",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "5 minutos",
+            "startDate": "Wed Nov 16 2021 17:55:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "CentralMG-ESDL",
+                    "origin": {
+                        "id": "CentralMG",
+                        "name": "Central Melgaço"
+                    },
+                    "destination": {
+                        "id": "ESDL",
+                        "name": "ESDL"
+                    }
+                }
+            ],
+            "startLocation": "Central Melgaço",
+            "endLocation": "ESDL",
+            "originId": "CentralMG",
+            "destinationId": "ESDL",
+            "price": 0
+        },
+        {
+            "id": "ESDL-CentralM",
+            "type": "bus2",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "20 minutos",
+            "startDate": "Wed Nov 16 2021 18:00:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "ESDL-CentralM",
+                    "origin": {
+                        "id": "ESDL",
+                        "name": "ESDL"
+                    },
+                    "destination": {
+                        "id": "CentralM",
+                        "name": "Central Monção"
+                    }
+                }
+            ],
+            "startLocation": "ESDL",
+            "endLocation": "Central Monção",
+            "originId": "ESDL",
+            "destinationId": "CentralM",
+            "price": 0
+        },
+        {
+            "id": "CentralM-ESCE",
+            "type": "bus2",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "20 minutos",
+            "startDate": "Wed Nov 16 2021 18:20:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "CentralM-ESCE",
+                    "origin": {
+                        "id": "CentralM",
+                        "name": "Central Monção"
+                    },
+                    "destination": {
+                        "id": "ESCE",
+                        "name": "ESCE"
+                    }
+                }
+            ],
+            "startLocation": "Central Monção",
+            "endLocation": "ESCE",
+            "originId": "CentralM",
+            "destinationId": "ESCE",
+            "price": 0
+        },
+        {
+            "id": "ESCE-CafeStop",
+            "type": "bus2",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "5 minutos",
+            "startDate": "Wed Nov 16 2021 18:40:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "ESCE-CafeStop",
+                    "origin": {
+                        "id": "ESCE",
+                        "name": "ESCE"
+                    },
+                    "destination": {
+                        "id": "CafeStop",
+                        "name": "Cafe Stop"
+                    }
+                }
+            ],
+            "startLocation": "ESCE",
+            "endLocation": "Cafe Stop",
+            "originId": "ESCE",
+            "destinationId": "Cafe Stop",
+            "price": 0
+        },
+        {
+            "id": "CafeStop-CentralPL",
+            "type": "bus2",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "25 minutos",
+            "startDate": "Wed Nov 16 2021 18:45:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "ESA-CentralPL",
+                    "origin": {
+                        "id": "ESA",
+                        "name": "ESA"
+                    },
+                    "destination": {
+                        "id": "CentralPL",
+                        "name": "Central Ponte Lima"
+                    }
+                }
+            ],
+            "startLocation": "ESA",
+            "endLocation": "Central Ponte Lima",
+            "originId": "ESA",
+            "destinationId": "CentralPL",
+            "price": 0
+        },
+        {
+            "id": "CentralPL-ESA",
+            "type": "bus2",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "10 minutos",
+            "startDate": "Wed Nov 16 2021 19:10:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "CentralPL-ESA",
+                    "origin": {
+                        "id": "CentralPL",
+                        "name": "Central Ponte Lima"
+                    },
+                    "destination": {
+                        "id": "ESA",
+                        "name": "ESA"
+                    }
+                }
+            ],
+            "startLocation": "Central Ponte Lima",
+            "endLocation": "ESA",
+            "originId": "CentralPL",
+            "destinationId": "ESA",
+            "price": 0
+        },
+        {
+            "id": "ESA-PB",
+            "type": "bus2",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "10 minutos",
+            "startDate": "Wed Nov 16 2021 19:20:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "ESA-PB",
+                    "origin": {
+                        "id": "ESA",
+                        "name": "ESA"
+                    },
+                    "destination": {
+                        "id": "PB",
+                        "name": "Ponte da Barca"
+                    }
+                }
+            ],
+            "startLocation": "ESA",
+            "endLocation": "Ponte da Barca",
+            "originId": "ESA",
+            "destinationId": "PB",
+            "price": 0
+        },
+        {
+            "id": "PB-CentralAV",
+            "type": "bus2",
+            "availableTime": "teste",
+            "state": "AVAILABLE",
+            "description": "Central de Viana do Castelo até à ESE",
+            "estimatedTime": "15 minutos",
+            "startDate": "Wed Nov 16 2021 19:30:00 GMT+0100 (Hora de verão da Europa Ocidental)",
+            "userImage": "",
+            "rating": 0,
+            "capacity": 50,
+            "actualCapacity": 50,
+            "version": 1,
+            "legs": [
+                {
+                    "tripId": "PB-CentralAV",
+                    "origin": {
+                        "id": "PB",
+                        "name": "Ponte da Barca"
+                    },
+                    "destination": {
+                        "id": "CentralAV",
+                        "name": "Central Arcos de Valdevez"
+                    }
+                }
+            ],
+            "startLocation": "Ponte da Barca",
+            "endLocation": "Central Arcos Valdevez",
+            "originId": "PB",
+            "destinationId": "CentralAV",
+            "price": 0
+        }
+    ]
+}
