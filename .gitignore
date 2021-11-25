@@ -109,3 +109,11 @@ Frontend/services/firebaseConfig.js
 Frontend/android/app/build
 Frontend/android/.*
 Frontend/android/build
+Frontend/services/firebaseConfig.js
+PORTIC_MODULES/PORTIC_TECH_MODULES/android/app/build
+PORTIC_MODULES/PORTIC_TECH_MODULES/android/.*
+PORTIC_MODULES/PORTIC_TECH_MODULES/android/build
+Frontend/package-lock.json
+PORTIC_MODULES/PORTIC_TECH_MODULES/package-lock.json
+*.lock
+

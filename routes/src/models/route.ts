@@ -108,6 +108,7 @@ const routeSchema = new mongoose.Schema(
         },
     }
 );
+
 routeSchema.set('versionKey', 'version');
 routeSchema.plugin(updateIfCurrentPlugin);
 
