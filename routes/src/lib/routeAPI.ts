@@ -1,6 +1,5 @@
 const comboios = require('comboios');
 const NodeGeocoder = require('node-geocoder');
-import { Route } from '../models/route';
 const busRoutes: IBusRoutes = require('../bus/bus.json');
 import { distance } from '../lib/utils';
 import { ILatLong, ICPStations, IRoutes, IBusRoutes } from '../interfaces/interfaces';
