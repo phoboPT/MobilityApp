@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import {
   View,
   Text,
@@ -10,6 +10,8 @@ import {
   SafeAreaView,
   ImageBackground,
   ActivityIndicator,
+  Dimensions,
+  FlatList,
 } from 'react-native';
 import {icons, COLORS, SIZES, images} from '../constants/index';
 import ActionButton from 'react-native-action-button';
@@ -18,8 +20,10 @@ import Geolocation from '@react-native-community/geolocation';
 import {FlatGrid} from 'react-native-super-grid';
 import api from '../services/api';
 import Moment from 'moment';
-import {Button} from 'react-native-elements';
+import {Button, withTheme} from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
+
+import Card from '../components/RecomCard';
 
 const HomeScreen = ({navigation}) => {
   const [hasNextRide, setHasNextRide] = useState(false);
@@ -100,7 +104,7 @@ const HomeScreen = ({navigation}) => {
       <>
         <Text
           style={{
-            marginLeft: 15,
+            marginLeft: 100,
             fontSize: 24,
             fontFamily: 'Arial',
             color: 'white',
@@ -109,7 +113,6 @@ const HomeScreen = ({navigation}) => {
           }}>
           Recomendations:
         </Text>
-
         <FlatGrid
           itemDimension={130}
           data={recommendations}
@@ -161,9 +164,8 @@ const HomeScreen = ({navigation}) => {
   useFocusEffect(
     React.useCallback(() => {
       findCoordinates();
-    }, [])
+    }, []),
   );
-
 
   const searchRoutes = () => {
     if (startLocation == endLocation) {
@@ -517,11 +519,70 @@ const HomeScreen = ({navigation}) => {
       </View>
     );
   }
+
+  const RecomCard = () => {
+    return (
+      <>
+        <Text
+          style={{
+            marginLeft: 100,
+            fontSize: 24,
+            fontFamily: 'Arial',
+            color: 'white',
+            position: 'relative',
+            fontWeight: '400',
+          }}>
+          Recomendations:
+        </Text>
+        <FlatList
+          data={recommendations}
+          renderItem={({item}) => {
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'column',
+                margin: 1,
+              }}></View>;
+            console.log('item', item);
+            return (
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('DestinationDetail', {
+                    data: item,
+                    allData: null,
+                    endLocation: item.endLocation,
+                  })
+                }>
+                <View style={styles.cardContainer}>
+                  <Image
+                    style={styles.imageStyle}
+                    source={require('../assets/images/ipvc.jpeg')}
+                  />
+                  <Text style={styles.itemName}>
+                    Start: {item.startLocation}
+                  </Text>
+                  <Text style={styles.itemName}>End: {item.endLocation}</Text>
+                  <Text style={styles.itemDate}>
+                    {Moment(item.startDate).format('lll')}
+                  </Text>
+                  <Text style={styles.itemCode}>
+                    Estimated Time: {item.estimatedTime}Minutes
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            );
+          }}
+        />
+      </>
+    );
+  };
+
   function renderBody() {
     return (
       <View>
         {hasNextRide ? renderMyNextTravel() : renderDestinations()}
-        {hasRecommendations ? recommendationsNearMe() : null}
+        <RecomCard />
+        {hasRecommendations ? RecomCard : null}
       </View>
     );
   }
@@ -550,6 +611,7 @@ const HomeScreen = ({navigation}) => {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
+            marginRight: 40,
           }}>
           <Text style={{fontSize: 24, fontWeight: '400'}}>Home</Text>
         </View>
@@ -599,10 +661,38 @@ const HomeScreen = ({navigation}) => {
 
 export default HomeScreen;
 
+const deviceWidth = Math.round(Dimensions.get('window').width);
+const radius = 20;
+
 const styles = StyleSheet.create({
-  gridView: {
-    zIndex: 0,
+  cardContainer: {
+    flex: 1,
+    width: deviceWidth - 25,
+    backgroundColor: 'white',
+    height: 200,
+    borderRadius: radius,
+    alignItems: 'center',
+    marginLeft: 10,
+    marginBottom: 10,
+
+    shadowColor: '#000',
+    shadowOffset: {
+      height: 4,
+      width: 4,
+    },
+    shadowOpacity: 0.7,
+    shadowRadius: 5,
+    elevation: 10,
+  },
+  imageStyle: {
+    height: 120,
+    width: deviceWidth - 30,
+    borderTopLeftRadius: radius,
+    borderTopRightRadius: radius,
+  },
+  listView: {
     marginTop: 5,
+    marginBottom: 5,
   },
   nextTravelContainer: {
     justifyContent: 'flex-start',
