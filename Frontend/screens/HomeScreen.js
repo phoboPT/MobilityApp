@@ -23,8 +23,6 @@ import Moment from 'moment';
 import {Button, withTheme} from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
 
-import Card from '../components/RecomCard';
-
 const HomeScreen = ({navigation}) => {
   const [hasNextRide, setHasNextRide] = useState(false);
   const [hasRecommendations, setHasRecommendations] = useState(false);
@@ -38,6 +36,7 @@ const HomeScreen = ({navigation}) => {
   const [nextTravel, setNextTravel] = useState(null);
   const [value, setValue] = useState(null);
   const [value1, setValue1] = useState(null);
+  const [endLocationImage, setEndLocationImage] = useState(null);
 
   const [items, setItems] = useState([
     {
@@ -97,60 +96,6 @@ const HomeScreen = ({navigation}) => {
       },
     },
   ]);
-
-  function recommendationsNearMe() {
-    console.log(recommendations);
-    return (
-      <>
-        <Text
-          style={{
-            marginLeft: 100,
-            fontSize: 24,
-            fontFamily: 'Arial',
-            color: 'white',
-            position: 'relative',
-            fontWeight: '400',
-          }}>
-          Recomendations:
-        </Text>
-        <FlatGrid
-          itemDimension={130}
-          data={recommendations}
-          style={styles.gridView}
-          spacing={15}
-          renderItem={({item}) => {
-            console.log('item', item);
-            return (
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('DestinationDetail', {
-                    data: item,
-                    allData: null,
-                    endLocation: item.endLocation,
-                  })
-                }>
-                <View
-                  style={[styles.itemContainer, {backgroundColor: 'white'}]}>
-                  <View>
-                    <Text style={styles.itemName}>
-                      Start: {item.startLocation}
-                    </Text>
-                    <Text style={styles.itemName}>End: {item.endLocation}</Text>
-                    <Text style={styles.itemDate}>
-                      {Moment(item.startDate).format('lll')}
-                    </Text>
-                    <Text style={styles.itemCode}>
-                      Estimated Time: {item.estimatedTime}Minutes
-                    </Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            );
-          }}
-        />
-      </>
-    );
-  }
 
   useEffect(() => {
     async function handleUserNextScreen() {
@@ -556,7 +501,7 @@ const HomeScreen = ({navigation}) => {
                 <View style={styles.cardContainer}>
                   <Image
                     style={styles.imageStyle}
-                    source={require('../assets/images/ipvc.jpeg')}
+                    source={{uri: item.userImage}}
                   />
                   <Text style={styles.itemName}>
                     Start: {item.startLocation}
