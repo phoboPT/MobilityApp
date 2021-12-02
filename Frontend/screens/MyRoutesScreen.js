@@ -234,7 +234,7 @@ const MyRoutesScreen = ({navigation}) => {
             style={{flex: 1, justifyContent: 'center', alignContent: 'center'}}
           />
         ) : (
-          <View style={{flex: 1}}>
+          <View style={styles}>
             {renderRequests()}
             {renderSentRequests()}
           </View>
