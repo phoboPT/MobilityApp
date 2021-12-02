@@ -5,33 +5,33 @@ import routeAPI from '../lib/routeAPI';
 const router = express.Router();
 import { ILatLong } from '../interfaces/interfaces';
 router.get('/api/routes/start/:start/end/:end/:type', async (req: Request, res: Response) => {
-    try {
-        const before = Date.now();
-        const { type } = req.params;
-        const splitStart = req.params.start.split(',');
-        const splitEnd = req.params.end.split(',');
-        const start = { lat: parseFloat(splitStart[0]), long: parseFloat(splitStart[1]) };
-        const end: ILatLong = { lat: parseFloat(splitEnd[0]), long: parseFloat(splitEnd[1]) };
-        console.log(start, end);
-        let allPaths;
-        // get CP journeys between 2 citys
-        const { begin, stop, cpRoutes, allTargets } = await routeAPI(start, end, type);
-        //search for possible paths given a start, end and all the routes
-        allTargets.push(start);
-        allTargets.push(end);
-        if (cpRoutes) {
-            allPaths = searchRoute(begin.name, stop.name, cpRoutes, allTargets);
-        }
-        //filter the results
-        const filteredRoutes = filterRoutes(allPaths, cpRoutes);
-
-        const after = Date.now();
-        console.log('Route performed in ', (after - before) / 1000);
-
-        res.send(filteredRoutes);
-    } catch (error) {
-        console.log(`error ${error}`);
+  try {
+    const before = Date.now();
+    const { type } = req.params;
+    const splitStart = req.params.start.split(',');
+    const splitEnd = req.params.end.split(',');
+    const start = { lat: parseFloat(splitStart[0]), long: parseFloat(splitStart[1]) };
+    const end: ILatLong = { lat: parseFloat(splitEnd[0]), long: parseFloat(splitEnd[1]) };
+    console.log(start, end);
+    let allPaths;
+    // get CP journeys between 2 citys
+    const { begin, stop, cpRoutes, allTargets } = await routeAPI(start, end, type);
+    //search for possible paths given a start, end and all the routes
+    allTargets.push(start);
+    allTargets.push(end);
+    if (cpRoutes) {
+      allPaths = searchRoute(begin.name, stop.name, cpRoutes, allTargets);
     }
+    //filter the results
+    const filteredRoutes = filterRoutes(allPaths, cpRoutes);
+
+    const after = Date.now();
+    console.log('Route performed in ', (after - before) / 1000);
+
+    res.send(filteredRoutes);
+  } catch (error) {
+    console.log(`error ${error}`);
+  }
 });
 
 export { router as searchRouteRouter };
