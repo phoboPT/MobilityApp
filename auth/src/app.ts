@@ -8,18 +8,17 @@ import { signupRouter } from './routes/signup';
 import { errorHandler, NotFoundError } from '@mobileorg/common-lib';
 import cookieSession from 'cookie-session';
 import { allUsersRouter } from './routes/allUsers';
-import { User } from './models/user';
 
 const app = express();
 app.set('trust proxy', true);
 app.use(json());
 app.use(
-    cookieSession({
-        signed: false,
-        secure: false,
-    })
+  cookieSession({
+    signed: false,
+    secure: false,
+  })
 );
-// User.collection.drop();
+
 app.use(allUsersRouter);
 app.use(signinRouter);
 app.use(signoutRouter);
@@ -27,9 +26,9 @@ app.use(signupRouter);
 app.use(currentUserRouter);
 
 app.all('*', async () => {
-    console.log('Auth');
+  console.log('Auth');
 
-    throw new NotFoundError({ from: "Index, /BAD_URL, route don't exist Auth" });
+  throw new NotFoundError({ from: "Index, /BAD_URL, route don't exist Auth" });
 });
 
 app.use(errorHandler);
