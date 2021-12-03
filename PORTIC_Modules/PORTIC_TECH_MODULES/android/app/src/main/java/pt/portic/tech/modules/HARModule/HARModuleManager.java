@@ -12,6 +12,8 @@
 
 package pt.portic.tech.modules.HARModule;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
@@ -35,8 +37,36 @@ public class HARModuleManager extends ReactContextBaseJavaModule implements Publ
     private Intent harModuleServiceIntent = null;
 
     public static final String BROADCAST_DETECTED_ACTIVITY = "activity_intent";
-    public static final long DETECTION_INTERVAL_IN_MILLISECONDS = 5 * 1000; // 5 seg.
+    public static final long DETECTION_INTERVAL_IN_MILLISECONDS = 1000; // 1 seg.
     public static final int CONFIDENCE = 75;
+
+    private static HARModuleManager harModuleManagerSingleton =new HARModuleManager();
+    public HARModuleManager() {    }
+    public HARModuleManager(AppCompatActivity activityObj) {
+        mainActivityObj = activityObj;
+    }
+    public static HARModuleManager getInstance(){
+        if (harModuleManagerSingleton == null){
+            synchronized(HARModuleManager.class){
+                if (harModuleManagerSingleton == null){
+                    harModuleManagerSingleton = new HARModuleManager();//instance will be created at request time
+                }
+            }
+        }
+
+        return harModuleManagerSingleton;
+    }
+    public static HARModuleManager getInstance(AppCompatActivity activityObj){
+        if (harModuleManagerSingleton == null){
+            synchronized(HARModuleManager.class){
+                if (harModuleManagerSingleton == null){
+                    harModuleManagerSingleton = new HARModuleManager(activityObj);//instance will be created at request time
+                }
+            }
+        }
+
+        return harModuleManagerSingleton;
+    }
 
 
     // All Java native modules in Android need to implement the getName() method. This method
@@ -69,12 +99,27 @@ public class HARModuleManager extends ReactContextBaseJavaModule implements Publ
             RealmDataBaseManager.getInstance().CreateDB(mainActivityObj);
 
 
-            mainActivityObj.startService(harModuleServiceIntent);
-
-            Log.d("HAR_Module", "Human Activity Recognition background service has begun.");
+            if (!isMyServiceRunning(BackgroundDetectedActivitiesService.class)) {
+                mainActivityObj.startService(harModuleServiceIntent);
+                Log.d("HAR_Module", "Human Activity Recognition background service has begun.");
+            }
         }
 
         return true;
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager)
+                mainActivityObj.getSystemService(Context.ACTIVITY_SERVICE);
+
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                Log.d ("HARModuleManager", "AMaaS Service status Running");
+                return true;
+            }
+        }
+        Log.d ("HARModuleManager", "AMaaS Service status Not running");
+        return false;
     }
 
     /**

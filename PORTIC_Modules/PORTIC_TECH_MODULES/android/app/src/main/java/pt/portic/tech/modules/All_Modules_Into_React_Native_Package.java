@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import pt.portic.tech.modules.ActivityDB_Module.RealmDataBaseManager;
 import pt.portic.tech.modules.HARModule.HARModuleManager;
 import pt.portic.tech.modules.UserProfile.UserProfileManager;
 
@@ -44,9 +45,10 @@ public class All_Modules_Into_React_Native_Package implements ReactPackage {
             ReactApplicationContext reactContext) {
 
         List<NativeModule> modules = new ArrayList<>();
-        // Register the encryption module
+        // Register all the modules to be exposed to React Native
         modules.add(new HARModuleManager());
         modules.add(new UserProfileManager());
+        modules.add(new RealmDataBaseManager());
 
         return modules;
     }

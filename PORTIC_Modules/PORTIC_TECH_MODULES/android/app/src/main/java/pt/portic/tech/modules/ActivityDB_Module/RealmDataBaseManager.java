@@ -16,11 +16,27 @@ package pt.portic.tech.modules.ActivityDB_Module;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.ReactContextBaseJavaModule;
+import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableNativeMap;
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.Sort;
 import pt.portic.tech.modules.HARModule.HARModuleManager;
 import pt.portic.tech.modules.Public_API_ActivityDB_Module;
 
@@ -33,7 +49,7 @@ import pt.portic.tech.modules.Public_API_ActivityDB_Module;
  * This module is called by the HAR Module. It's that module passing the
  * Context of the application to be used by this module.
  */
-public class RealmDataBaseManager implements Public_API_ActivityDB_Module {
+public class RealmDataBaseManager extends ReactContextBaseJavaModule implements Public_API_ActivityDB_Module {
 
     /*
      *   Singleton Pattern
@@ -64,7 +80,14 @@ public class RealmDataBaseManager implements Public_API_ActivityDB_Module {
         // getting the context of the main application, to access the application preferences
         // on below line we are
         // initializing our realm database.
-        Realm.init(context);
+        //Realm.init(context);
+        if (context == null)
+        {
+            Realm.init(Realm.getApplicationContext());
+        }
+        else {
+            Realm.init(context);
+        }
 
         // on below line we are setting realm configuration
         RealmConfiguration config =
@@ -87,6 +110,7 @@ public class RealmDataBaseManager implements Public_API_ActivityDB_Module {
         Log.d("RealmDatabaseManModule", "Detected Activities DB created.");
     }
 
+    @ReactMethod
     @Override
     public void AddDataToDB(String userID, String timeStamp, int activityType, String activityDescription, int confidence) {
         // guarantee the database has already been created; if not, get app context stored in HAR module
@@ -133,10 +157,14 @@ public class RealmDataBaseManager implements Public_API_ActivityDB_Module {
                 realm.copyToRealm(modal);
             }
         });
+
+        realm.close();
     }
 
+    //@ReactMethod
     @Override
     public List<ActivitiesDataModal> ReadAllDataFromDB() {
+        Log.d("RealmDatabaseManModule", "Called ReadAllDataFromDB");
         // guarantee the database has already been created; if not, get app context stored in HAR module
         if (!databaseInitiated)  { CreateDB(HARModuleManager.mainActivityObj); }
 
@@ -145,14 +173,75 @@ public class RealmDataBaseManager implements Public_API_ActivityDB_Module {
 
         // on below line we are getting data from realm database in our list.
         modals = realm.where(ActivitiesDataModal.class).findAll();
+        /*
         for (ActivitiesDataModal m : modals) {
             Log.d("RealmDatabaseManModule", "Read from DB -> " + m.getId() + " : " + m.getUserId() +
                     " : " + m.getActivityType() + " : " + m.getActivityDescription() + " : " +
                     m.getTimestamp() + " : " + m.getConfidence());
-        }
+        }*/
+
+        realm.close();
 
         return modals;
     }
+
+    @ReactMethod
+    @Override
+    public ActivitiesDataModal ReadLastRecordFromDB() {
+        Log.d("RealmDatabaseManModule", "Called ReadLastRecordFromDB");
+        // guarantee the database has already been created; if not, get app context stored in HAR module
+        if (!databaseInitiated)  { CreateDB(HARModuleManager.mainActivityObj); }
+
+        Realm realm = Realm.getDefaultInstance();
+        ActivitiesDataModal m = realm.where(ActivitiesDataModal.class)
+                .sort("timestamp", Sort.DESCENDING)
+                .findFirst();
+
+        realm.close();
+        if(m != null){
+            return m;
+        }
+        else {
+            return null;
+        }
+
+    }
+
+
+    @ReactMethod
+    public void ReadAllDataFromDBIntoReactNative(Callback successCallback) throws JSONException {
+
+        // guarantee the database has already been created; if not, get app context stored in HAR module
+        if (!databaseInitiated)  { CreateDB(HARModuleManager.mainActivityObj); }
+
+        Realm realm = Realm.getDefaultInstance();
+        List<ActivitiesDataModal> modals = ReadAllDataFromDB();
+        WritableArray array = new WritableNativeArray();
+        JsonObject jsonObject = null;
+        Log.d("RealmDatabaseManModule", "Called Got DB list into List of items");
+
+        for (ActivitiesDataModal m : modals) {
+
+            jsonObject = new JsonObject();
+            jsonObject.addProperty("id", m.getId());
+            jsonObject.addProperty("userID", m.getUserId());
+            jsonObject.addProperty("timestamp", m.getTimestamp());
+            jsonObject.addProperty("activityType", m.getActivityType());
+            jsonObject.addProperty("activityDescription", m.getActivityDescription());
+            jsonObject.addProperty("confidence", m.getConfidence());
+
+            JSONObject j = new JSONObject(String.valueOf(jsonObject));
+
+            WritableMap wm = convertJsonToMap(j);
+            array.pushMap(wm);
+        }
+
+        realm.close();
+
+        successCallback.invoke(array);
+    }
+
+
 
     /**
      * Given the position of the record you want to change, give the new data. Example:
@@ -165,6 +254,7 @@ public class RealmDataBaseManager implements Public_API_ActivityDB_Module {
      * @param activityDescription
      * @param confidence
      */
+    @ReactMethod
     @Override
     public void UpdateDataInDB(int position, String userID, String timeStamp, int activityType, String activityDescription, int confidence) {
         // guarantee the database has already been created; if not, get app context stored in HAR module
@@ -196,6 +286,8 @@ public class RealmDataBaseManager implements Public_API_ActivityDB_Module {
             Log.d("RealmDatabaseManModule", "Update position" + position + " outside possible index.");
             Log.e("RealmDatabaseManModule", "Update position" + position + " outside possible index.");
         }
+
+        realm.close();
     }
 
     /**
@@ -204,6 +296,7 @@ public class RealmDataBaseManager implements Public_API_ActivityDB_Module {
      *
      * @param position
      */
+    @ReactMethod
     @Override
     public void DeleteRecordFromDB(int position) {
         // guarantee the database has already been created; if not, get app context stored in HAR module
@@ -233,12 +326,15 @@ public class RealmDataBaseManager implements Public_API_ActivityDB_Module {
             Log.d("RealmDatabaseManModule", "Delete position requested" + position + " outside possible index.");
             Log.e("RealmDatabaseManModule", "Delete position requested" + position + " outside possible index.");
         }
+
+        realm.close();
     }
 
     /**
      * Clean all the records from the database to initiate another cycle of recording. For example,
      * Cleaning the last 24H of recordings.
      */
+    @ReactMethod
     @Override
     public void DeleteAllRecordsFromDB() {
         // guarantee the database has already been created; if not, get app context stored in HAR module
@@ -257,5 +353,37 @@ public class RealmDataBaseManager implements Public_API_ActivityDB_Module {
                 }
             });
         }
+
+        realm.close();
+    }
+
+    @NonNull
+    @Override
+    public String getName() {
+        return "ActivitiesDatabaseModule";
+    }
+
+    private static WritableMap convertJsonToMap(JSONObject jsonObject) throws JSONException {
+        WritableMap map = new WritableNativeMap();
+
+        Iterator<String> iterator = jsonObject.keys();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            Object value = jsonObject.get(key);
+            if (value instanceof JSONObject) {
+                map.putMap(key, convertJsonToMap((JSONObject) value));
+            } else if (value instanceof Boolean) {
+                map.putBoolean(key, (Boolean) value);
+            } else if (value instanceof Integer) {
+                map.putInt(key, (Integer) value);
+            } else if (value instanceof Double) {
+                map.putDouble(key, (Double) value);
+            } else if (value instanceof String) {
+                map.putString(key, (String) value);
+            } else {
+                map.putString(key, value.toString());
+            }
+        }
+        return map;
     }
 }

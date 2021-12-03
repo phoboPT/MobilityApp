@@ -211,7 +211,10 @@ dependencies {
     // ********************************************************************
     // Dependencies added by Xavier Fonseca (PORTIC)
     // ********************************************************************
-    implementation 'com.google.android.gms:play-services-location:18.0.0' //HAR API
+    implementation 'com.google.android.gms:play-services-location:18.0.0' //HAR
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:+'
+    implementation 'com.facebook.android:facebook-android-sdk:+'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'

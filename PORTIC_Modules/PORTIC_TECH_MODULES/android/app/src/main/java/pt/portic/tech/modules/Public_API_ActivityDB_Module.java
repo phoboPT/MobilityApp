@@ -23,6 +23,7 @@ public interface Public_API_ActivityDB_Module {
     public void CreateDB (Context context);
     public void AddDataToDB(String userID, String timeStamp, int activityType, String activityDescription, int confidence);
     public List<ActivitiesDataModal> ReadAllDataFromDB();
+    public ActivitiesDataModal ReadLastRecordFromDB();
     /**
      * Given the position of the record you want to change, give the new data. Example:
      * UpdateDataInDB(5, "98765", "2021-11-19 18:29:07.018",3,"STILL", 100);
@@ -35,6 +36,7 @@ public interface Public_API_ActivityDB_Module {
      * @param confidence
      */
     public void UpdateDataInDB(int position, String userID, String timeStamp, int activityType, String activityDescription, int confidence);
+
 
     /**
      * Given the position index of the record to delete, this method deletes it from the DB. Example:
