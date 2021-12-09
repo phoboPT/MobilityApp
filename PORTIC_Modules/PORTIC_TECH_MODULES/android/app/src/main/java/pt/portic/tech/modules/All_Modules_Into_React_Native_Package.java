@@ -23,6 +23,7 @@ import java.util.List;
 
 import pt.portic.tech.modules.ActivityDB_Module.RealmDataBaseManager;
 import pt.portic.tech.modules.HARModule.HARModuleManager;
+import pt.portic.tech.modules.ReportHandlerModule.ReportModuleManager;
 import pt.portic.tech.modules.UserProfile.UserProfileManager;
 
 
@@ -49,6 +50,7 @@ public class All_Modules_Into_React_Native_Package implements ReactPackage {
         modules.add(new HARModuleManager());
         modules.add(new UserProfileManager());
         modules.add(new RealmDataBaseManager());
+        modules.add(new ReportModuleManager());
 
         return modules;
     }

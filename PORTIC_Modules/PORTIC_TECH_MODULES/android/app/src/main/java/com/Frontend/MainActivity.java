@@ -26,13 +26,15 @@ import com.google.android.material.snackbar.Snackbar;
 import com.portic_tech_modules.R;
 import com.portic_tech_modules.databinding.ActivityMainBinding;
 
-import pt.portic.tech.modules.HARModule.AMaaSServiceRestarter;
+import pt.portic.tech.modules.HARModule.BackgroundServicesRestarter;
 import pt.portic.tech.modules.HARModule.HARModuleManager;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+
+    public static AppCompatActivity context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +64,8 @@ public class MainActivity extends AppCompatActivity {
          * Place used to initiate background services needed by the application.
          * Responsibility: PORTIC/IPP
          */
-        HARModuleManager.getInstance(this).HAR_Begin_Service();
-        //HARModuleManager.mainActivityObj = this;
+        context = this;
+        HARModuleManager.getInstance(context);
     }
 
     @Override
@@ -78,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         //stopService(mServiceIntent);
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction("Restart_AMaaS_Service");
-        broadcastIntent.setClass(this, AMaaSServiceRestarter.class);
+        broadcastIntent.setClass(this, BackgroundServicesRestarter.class);
         this.sendBroadcast(broadcastIntent);
         super.onDestroy();
     }

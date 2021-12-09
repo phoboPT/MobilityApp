@@ -21,7 +21,7 @@ import pt.portic.tech.modules.ActivityDB_Module.ActivitiesDataModal;
 public interface Public_API_ActivityDB_Module {
 
     public void CreateDB (Context context);
-    public void AddDataToDB(String userID, String timeStamp, int activityType, String activityDescription, int confidence);
+    public void AddDataToDB(String userID, String timeStamp, int activityType, String activityDescription, int confidence, double lat, double lon);
     public List<ActivitiesDataModal> ReadAllDataFromDB();
     public ActivitiesDataModal ReadLastRecordFromDB();
     /**
@@ -35,7 +35,7 @@ public interface Public_API_ActivityDB_Module {
      * @param activityDescription
      * @param confidence
      */
-    public void UpdateDataInDB(int position, String userID, String timeStamp, int activityType, String activityDescription, int confidence);
+    public void UpdateDataInDB(int position, String userID, String timeStamp, int activityType, String activityDescription, int confidence, double lat, double lon);
 
 
     /**

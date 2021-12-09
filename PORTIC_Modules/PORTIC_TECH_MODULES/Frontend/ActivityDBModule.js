@@ -95,7 +95,7 @@ FlatListItemSeparator = () => {
                               style={{marginTop: 0, width: '100%', justifyContent: 'center', alignItems: 'center'}}  >
                                 <View style={{paddingTop: 10,paddingBottom:0, flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
                                     <View style={{backgroundColor: '#000000', paddingHorizontal: 20, borderRadius: 10, elevation: 1, shadowColor: "#0000002B", shadowRadius: 3, shadowOffset: { width: 0, height: 0 }, shadowOpacity: 1.0}}>
-                                        <Text style={{fontSize: 12, fontFamily: 'BebasKai', color: '#FFFFFF', textAlign: 'left', paddingHorizontal: 20, paddingVertical: 4}}>{item.id} -> {item.activityType}: {item.activityDescription} - {item.confidence}%. {item.timestamp}</Text>
+                                        <Text style={{fontSize: 8, fontFamily: 'BebasKai', color: '#FFFFFF', textAlign: 'left', paddingHorizontal: 20, paddingVertical: 4}}>{item.id} -> {item.activityType}: {item.activityDescription} - {item.confidence}%. {item.timestamp}. [{item.latitude};{item.longitude}]</Text>
                                     </View>
 
                                 </View>

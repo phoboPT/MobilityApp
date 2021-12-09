@@ -112,7 +112,7 @@ public class RealmDataBaseManager extends ReactContextBaseJavaModule implements 
 
     @ReactMethod
     @Override
-    public void AddDataToDB(String userID, String timeStamp, int activityType, String activityDescription, int confidence) {
+    public void AddDataToDB(String userID, String timeStamp, int activityType, String activityDescription, int confidence, double lat, double lon) {
         // guarantee the database has already been created; if not, get app context stored in HAR module
         if (!databaseInitiated)  { CreateDB(HARModuleManager.mainActivityObj); }
 
@@ -147,6 +147,8 @@ public class RealmDataBaseManager extends ReactContextBaseJavaModule implements 
         modal.setActivityType(activityType);
         modal.setActivityDescription(activityDescription);
         modal.setConfidence(confidence);
+        modal.setLatitude(lat);
+        modal.setLongitude(lon);
 
         // on below line we are calling a method to execute a transaction.
         realm.executeTransaction(new Realm.Transaction() {
@@ -229,6 +231,8 @@ public class RealmDataBaseManager extends ReactContextBaseJavaModule implements 
             jsonObject.addProperty("activityType", m.getActivityType());
             jsonObject.addProperty("activityDescription", m.getActivityDescription());
             jsonObject.addProperty("confidence", m.getConfidence());
+            jsonObject.addProperty("latitude", m.getLatitude());
+            jsonObject.addProperty("longitude", m.getLongitude());
 
             JSONObject j = new JSONObject(String.valueOf(jsonObject));
 
@@ -256,7 +260,7 @@ public class RealmDataBaseManager extends ReactContextBaseJavaModule implements 
      */
     @ReactMethod
     @Override
-    public void UpdateDataInDB(int position, String userID, String timeStamp, int activityType, String activityDescription, int confidence) {
+    public void UpdateDataInDB(int position, String userID, String timeStamp, int activityType, String activityDescription, int confidence, double lat, double lon) {
         // guarantee the database has already been created; if not, get app context stored in HAR module
         if (!databaseInitiated)  { CreateDB(HARModuleManager.mainActivityObj); }
         Realm realm = Realm.getDefaultInstance();
@@ -276,6 +280,8 @@ public class RealmDataBaseManager extends ReactContextBaseJavaModule implements 
                     modal.setActivityType(activityType);
                     modal.setActivityDescription(activityDescription);
                     modal.setConfidence(confidence);
+                    modal.setLatitude(lat);
+                    modal.setLongitude(lon);
 
                     realm.copyToRealmOrUpdate(modal);
                 }

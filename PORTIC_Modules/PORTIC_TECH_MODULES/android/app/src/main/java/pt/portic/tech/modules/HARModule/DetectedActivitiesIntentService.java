@@ -12,14 +12,33 @@
 
 package pt.portic.tech.modules.HARModule;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.IntentService;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,10 +53,18 @@ import pt.portic.tech.modules.UserProfile.UserProfileManager;
  * Followed Example:
  * https://www.androidhive.info/2017/12/android-user-activity-recognition-still-walking-running-driving-etc/
  */
-public class DetectedActivitiesIntentService extends IntentService {
+public class DetectedActivitiesIntentService extends IntentService implements LocationListener, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     //protected final String TAGs = DetectedActivitiesIntentService.class.getSimpleName();
     protected String TAGs;
+    final String TAG = "DetectedActivModule";
+    private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
+    private long FASTEST_INTERVAL = 2000; /* 2 sec */
+    static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    public static double latitude, longitude = 0.0;
+    GoogleApiClient gac;
+    LocationRequest locationRequest;
 
     public DetectedActivitiesIntentService() {
         // Use the TAG to name the worker thread.
@@ -49,63 +76,45 @@ public class DetectedActivitiesIntentService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
+        isGooglePlayServicesAvailable();
+
+        if (!isLocationEnabled())
+            showAlert();
+
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(UPDATE_INTERVAL);
+        locationRequest.setFastestInterval(FASTEST_INTERVAL);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        gac = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+
+        gac.connect();
     }
-
-    /*
-    @SuppressWarnings("unchecked")
-    @Override
-    protected void onHandleIntent(Intent intent) {
-        if (ActivityTransitionResult.hasResult(intent)) {
-            ActivityTransitionResult result = ActivityTransitionResult.extractResult(intent);
-
-            // pode ser null. faz o check disto
-            ActivitiesDataModal m = RealmDataBaseManager.getInstance().ReadLastRecordFromDB();
-
-            for (ActivityTransitionEvent event : result.getTransitionEvents()) {
-                // chronological sequence of events....
-                Log.e(TAGs, "Detected activity: " + event.getActivityType() + ": " +
-                        DetectedActivityGetType(event.getActivityType()) + ", type: " +
-                        event.getTransitionType());
-
-                Toast.makeText(getApplicationContext(),
-                        "Detected activity: " + event.getActivityType() + ": " +
-                                DetectedActivityGetType(event.getActivityType()) + ", type: " +
-                                event.getTransitionType(),
-                        Toast.LENGTH_SHORT)
-                        .show();
-
-
-                if (m != null)
-                {
-                    if ((m.getActivityType() == event.getActivityType()) && (m.getConfidence() == event.getTransitionType())) {
-                        // ignore, I don't want a damn crowded database everytime this fires up.
-                    }
-                    else
-                    {
-                        java.sql.Timestamp timestamp = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
-                        RealmDataBaseManager.getInstance().AddDataToDB(UserProfileManager.getInstance().Get_User_ID(),
-                                (timestamp).toString(),
-                                event.getActivityType(),
-                                DetectedActivityGetType(event.getActivityType()),
-                                event.getTransitionType());
-                    }
-                }
-                else
-                {
-                    java.sql.Timestamp timestamp = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
-                    RealmDataBaseManager.getInstance().AddDataToDB(UserProfileManager.getInstance().Get_User_ID(),
-                            (timestamp).toString(),
-                            event.getActivityType(),
-                            DetectedActivityGetType(event.getActivityType()),
-                            event.getTransitionType());
-                }
-            }
-        }
-    }*/
 
 
     protected void onHandleIntent(Intent intent) {
         ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        if (!gac.isConnected())
+        {
+            gac.connect();
+        }
+
+        Location ll = LocationServices.FusedLocationApi.getLastLocation(gac);
+        Log.d(TAG, "LastLocation: " + (ll == null ? "NO LastLocation" : ll.toString()));
 
         // Get the list of the probable activities associated with the current state of the
         // device. Each activity is associated with a confidence level, which is an int between
@@ -124,27 +133,48 @@ public class DetectedActivitiesIntentService extends IntentService {
                             (timestamp).toString(),
                             activity.getType(),
                             DetectedActivityGetType(activity.getType()),
-                            activity.getConfidence());
+                            activity.getConfidence(),
+                            this.latitude,
+                            this.longitude);
                 }
 
 
             }
-        }catch(java.lang.NullPointerException e){
+        } catch (java.lang.NullPointerException e) {
             Log.e("DetectedActIntentServ", "Erro: " + e.toString());
         }
+
+        // request location update
+        try {
+            LocationServices.FusedLocationApi.requestLocationUpdates(gac, locationRequest, this);
+        }catch (java.lang.IllegalStateException e)
+        {
+            Log.e("DetectedActIntentServ", "Erro: " + e.toString());
+        }
+        //gac.connect();
+
     }
 
     private String DetectedActivityGetType(int type) {
         switch (type) {
-            case 0: return "IN_VEHICLE";
-            case 1: return "ON_BICYCLE";
-            case 2: return "ON_FOOT";
-            case 3: return "STILL";
-            case 4: return "UNKNOWN";
-            case 5: return "TILTING";
-            case 7: return "WALKING";
-            case 8: return "RUNNING";
-            default: return "UNKNOWN";
+            case 0:
+                return "IN_VEHICLE";
+            case 1:
+                return "ON_BICYCLE";
+            case 2:
+                return "ON_FOOT";
+            case 3:
+                return "STILL";
+            case 4:
+                return "UNKNOWN";
+            case 5:
+                return "TILTING";
+            case 7:
+                return "WALKING";
+            case 8:
+                return "RUNNING";
+            default:
+                return "UNKNOWN";
         }
     }
 
@@ -155,8 +185,24 @@ public class DetectedActivitiesIntentService extends IntentService {
         intent.putExtra("userID", UserProfileManager.getInstance().Get_User_ID());
         intent.putExtra("type", activity.getType());
         intent.putExtra("description", DetectedActivityGetType(activity.getType()));
-        intent.putExtra("confidence", activity.getConfidence());
         intent.putExtra("timestamp", timestamp);
+        intent.putExtra("confidence", activity.getConfidence());
+        intent.putExtra("latitude", this.latitude);
+        intent.putExtra("longitude", this.longitude);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        LocationServices.FusedLocationApi.requestLocationUpdates(
+                gac, locationRequest, this);
+
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
@@ -167,10 +213,133 @@ public class DetectedActivitiesIntentService extends IntentService {
 
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction("Restart_AMaaS_Service");
-        broadcastIntent.setClass(this, AMaaSServiceRestarter.class);
+        broadcastIntent.setClass(this, BackgroundServicesRestarter.class);
         //broadcastIntent.setClass(this, DetectedActivitiesIntentService.class);
         this.sendBroadcast(broadcastIntent);
 
+        gac.disconnect();
+
         super.onDestroy();
+    }
+
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(HARModuleManager.mainActivityObj, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(HARModuleManager.mainActivityObj,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+
+            return;
+        }
+        Log.d(TAG, "onConnected");
+
+        Location ll = LocationServices.FusedLocationApi.getLastLocation(gac);
+        Log.d(TAG, "LastLocation: " + (ll == null ? "NO LastLocation" : ll.toString()));
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(gac, locationRequest, this);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Toast.makeText(HARModuleManager.mainActivityObj, "onConnectionFailed: \n" + connectionResult.toString(),
+                Toast.LENGTH_LONG).show();
+        Log.d(TAG, connectionResult.toString());
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        if (location != null) {
+            //updateUI(location);
+            this.latitude = location.getLatitude();
+            this.longitude = location.getLongitude();
+            Log.d(TAG, "On Location changed: [" + latitude + ";"+longitude+"].");
+        }
+    }
+
+    /*
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(HARModuleManager.mainActivityObj, "Permission was granted!", Toast.LENGTH_LONG).show();
+
+                    try{
+                        LocationServices.FusedLocationApi.requestLocationUpdates(
+                                gac, locationRequest, this);
+                    } catch (SecurityException e) {
+                        Toast.makeText(HARModuleManager.mainActivityObj, "SecurityException:\n" + e.toString(),
+                                Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(HARModuleManager.mainActivityObj, "Permission denied!", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+        }
+    }*/
+
+    private boolean isLocationEnabled() {
+        LocationManager locationManager =
+                (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+    private boolean isGooglePlayServicesAvailable() {
+        final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(HARModuleManager.mainActivityObj, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.d(TAG, "This device is not supported.");
+                HARModuleManager.mainActivityObj.finish();
+            }
+            return false;
+        }
+        Log.d(TAG, "This device is supported.");
+        return true;
+    }
+
+    private void showAlert() {
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("Enable Location")
+                .setMessage("Your Locations Settings is set to 'Off'.\nPlease Enable Location to " +
+                        "use this app")
+                .setPositiveButton("Location Settings", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+
+                        Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(myIntent);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                        HARModuleManager.getInstance().HAR_Stop_Service();
+                        Toast.makeText(HARModuleManager.mainActivityObj,
+                                "Location services are off. The recognition of the amount of physical activity you perform cannot be assessed.",
+                                Toast.LENGTH_LONG)
+                                .show();
+                    }
+                });
+        dialog.show();
     }
 }

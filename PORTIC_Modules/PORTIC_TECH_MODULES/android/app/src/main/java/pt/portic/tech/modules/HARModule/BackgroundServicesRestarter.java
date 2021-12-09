@@ -19,7 +19,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 
-public class AMaaSServiceRestarter extends BroadcastReceiver {
+public class BackgroundServicesRestarter extends BroadcastReceiver {
 
     /**
      * This method is called when the BroadcastReceiver is receiving an Intent

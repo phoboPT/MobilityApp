@@ -56,8 +56,8 @@ public class BackgroundDetectedActivitiesService extends Service {
 
     private final String TAG = BackgroundDetectedActivitiesService.class.getSimpleName();
 
-    private Intent mIntentService;
-    private PendingIntent mPendingIntent;
+    private Intent mIntentService_DetectedActivities;//, mIntentService_LocationActivities;
+    private PendingIntent mPendingIntent_DetectedActivities;//, mPendingIntent_LocationActivities;
     private ActivityRecognitionClient mActivityRecognitionClient;
 
     IBinder mBinder = new BackgroundDetectedActivitiesService.LocalBinder();
@@ -81,10 +81,10 @@ public class BackgroundDetectedActivitiesService extends Service {
     public void onCreate() {
         super.onCreate();
         mActivityRecognitionClient = new ActivityRecognitionClient(this);
-        mIntentService = new Intent(this, DetectedActivitiesIntentService.class);
-        mPendingIntent = PendingIntent.getService(this,
-                0, mIntentService,
-                PendingIntent.FLAG_UPDATE_CURRENT); // last 0 was:   PendingIntent.FLAG_UPDATE_CURRENT
+        mIntentService_DetectedActivities = new Intent(this, DetectedActivitiesIntentService.class);
+        mPendingIntent_DetectedActivities = PendingIntent.getService(this,
+                0, mIntentService_DetectedActivities,
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
         String channel = "AMaaS";
         NotificationChannel chan = null;
@@ -105,12 +105,12 @@ public class BackgroundDetectedActivitiesService extends Service {
         }
 
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channel);
-        builder.setContentIntent(mPendingIntent)
+        NotificationCompat.Builder builderServiceAMaaS = new NotificationCompat.Builder(this, channel);
+        builderServiceAMaaS.setContentIntent(mPendingIntent_DetectedActivities)
                 .setAutoCancel(false)
                 .setOngoing(true)
-                .setContentTitle(getText(R.string.notification_title))
-                .setContentText(getText(R.string.notification_message))
+                .setContentTitle(getText(R.string.notification_titleAMaaS))
+                .setContentText(getText(R.string.notification_messageAMaaS))
                 .setSmallIcon(R.drawable.com_facebook_button_like_background)
                 .setPriority(NotificationManager.IMPORTANCE_LOW)
                 .setCategory(Notification.CATEGORY_SERVICE)
@@ -118,11 +118,26 @@ public class BackgroundDetectedActivitiesService extends Service {
                 //.setTicker(getText(R.string.ticker_text))
                 .setChannelId("AMaaS");
 
+        //NotificationCompat.Builder builderServiceLocation = new NotificationCompat.Builder(this, channel);
+        //builderServiceLocation.setContentIntent(mPendingIntent_LocationActivities)
+        //      .setAutoCancel(false)
+        //      .setOngoing(true)
+        //      .setContentTitle(getText(R.string.notification_titleLocation))
+        //      .setContentText(getText(R.string.notification_messageLocation))
+        //      .setSmallIcon(R.drawable.com_facebook_button_like_background)
+        //      .setPriority(NotificationManager.IMPORTANCE_LOW)
+        //      .setCategory(Notification.CATEGORY_SERVICE)
+        //      .setColor(Color.BLUE)
+                //.setTicker(getText(R.string.ticker_text))
+        //      .setChannelId("Location");
 
-        Notification notification = builder.build();
-        notificationManager.notify(1, notification);
-        startForeground(1, notification);
 
+        Notification notificationAMaaS = builderServiceAMaaS.build();
+        //Notification notificationLocation = builderServiceLocation.build();
+        notificationManager.notify(1, notificationAMaaS);
+        //notificationManager.notify(2, notificationLocation);
+        startForeground(1, notificationAMaaS);
+        //startForeground(2, notificationLocation);
     }
 
     @TargetApi(24)
@@ -241,11 +256,15 @@ public class BackgroundDetectedActivitiesService extends Service {
 
     public void requestActivityUpdatesButtonHandler() {
         //Log.d("BackgroundDetecASModule","requestActivityUpdatesButtonHandler started.");
-        Task<Void> task = mActivityRecognitionClient.requestActivityUpdates(
+        Task<Void> taskAMaaS = mActivityRecognitionClient.requestActivityUpdates(
                 HARModuleManager.DETECTION_INTERVAL_IN_MILLISECONDS,
-                mPendingIntent);
+                mPendingIntent_DetectedActivities);
 
-        task.addOnSuccessListener(new OnSuccessListener<Void>() {
+        //Task<Void> taskLocation = mActivityRecognitionClient.requestActivityUpdates(
+        //      HARModuleManager.DETECTION_INTERVAL_IN_MILLISECONDS,
+        //      mPendingIntent_LocationActivities);
+
+        taskAMaaS.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void result) {
                 Log.d("BackgroundDetecASModule","Successfully requested activity updates");
@@ -255,8 +274,19 @@ public class BackgroundDetectedActivitiesService extends Service {
                         .show();
             }
         });
+        /*
+        taskLocation.addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                Log.d("BackgroundDetecASModule","Successfully requested Location updates");
+                Toast.makeText(getApplicationContext(),
+                        "Location is ON.",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });*/
 
-        task.addOnFailureListener(new OnFailureListener() {
+        taskAMaaS.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.d("BackgroundDetecASModule","Requesting activity updates failed to start");
@@ -266,25 +296,47 @@ public class BackgroundDetectedActivitiesService extends Service {
                         .show();
             }
         });
+        /*taskLocation.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("BackgroundDetecASModule","Requesting location updates failed to start");
+                Toast.makeText(getApplicationContext(),
+                        "Location awareness failed to start.",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });*/
     }
 
     public void removeActivityUpdatesButtonHandler() {
-        Task<Void> task = ActivityRecognition.getClient(this)
-                .removeActivityTransitionUpdates(mPendingIntent);
+        Task<Void> taskAMaaS = ActivityRecognition.getClient(this)
+                .removeActivityTransitionUpdates(mPendingIntent_DetectedActivities);
+        //Task<Void> taskLocation = ActivityRecognition.getClient(this)
+        //        .removeActivityTransitionUpdates(mPendingIntent_LocationActivities);
 
 
-        task.addOnSuccessListener(new OnSuccessListener<Void>() {
+        taskAMaaS.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void result) {
                 Toast.makeText(getApplicationContext(),
                         "AMaaS activity sensing is OFF.",
                         Toast.LENGTH_SHORT)
                         .show();
-                mPendingIntent.cancel();
+                mPendingIntent_DetectedActivities.cancel();
             }
         });
+        /*taskLocation.addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                Toast.makeText(getApplicationContext(),
+                        "Location awareness is OFF.",
+                        Toast.LENGTH_SHORT)
+                        .show();
+                mPendingIntent_LocationActivities.cancel();
+            }
+        });*/
 
-        task.addOnFailureListener(new OnFailureListener() {
+        taskAMaaS.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(getApplicationContext(), "Failed to remove activity updates!",
@@ -292,30 +344,15 @@ public class BackgroundDetectedActivitiesService extends Service {
                 Log.e("MYCOMPONENT", e.getMessage());
             }
         });
-    }
-
-    /*
-    public void removeActivityUpdatesButtonHandler() {
-        Task<Void> task = mActivityRecognitionClient.removeActivityUpdates(
-                mPendingIntent);
-        task.addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void result) {
-                Toast.makeText(getApplicationContext(),
-                        "AMaaS activity sensing is OFF.",
-                        Toast.LENGTH_SHORT)
-                        .show();
-            }
-        });
-
-        task.addOnFailureListener(new OnFailureListener() {
+        /*taskLocation.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(getApplicationContext(), "Failed to remove activity updates!",
                         Toast.LENGTH_SHORT).show();
+                Log.e("MYCOMPONENT", e.getMessage());
             }
-        });
-    }*/
+        });*/
+    }
 
 
     @Override
@@ -327,7 +364,7 @@ public class BackgroundDetectedActivitiesService extends Service {
 
         /*Intent broadcastIntent = new Intent();
         broadcastIntent.setAction("Restart_AMaaS_Service");
-        broadcastIntent.setClass(this, AMaaSServiceRestarter.class);
+        broadcastIntent.setClass(this, BackgroundServicesRestarter.class);
         //broadcastIntent.setClass(this, DetectedActivitiesIntentService.class);
         this.sendBroadcast(broadcastIntent); */
 
