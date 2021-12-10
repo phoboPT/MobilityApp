@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:name=".MainApplication"
@@ -55,7 +56,6 @@
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -66,6 +66,15 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="Restart_AMaaS_Service" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="pt.portic.tech.modules.ReportHandlerModule.ReportAlarm"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action
+                    android:name="Report_Handler_Alarm"/>
             </intent-filter>
         </receiver>
 

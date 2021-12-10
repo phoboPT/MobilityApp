@@ -118,26 +118,10 @@ public class BackgroundDetectedActivitiesService extends Service {
                 //.setTicker(getText(R.string.ticker_text))
                 .setChannelId("AMaaS");
 
-        //NotificationCompat.Builder builderServiceLocation = new NotificationCompat.Builder(this, channel);
-        //builderServiceLocation.setContentIntent(mPendingIntent_LocationActivities)
-        //      .setAutoCancel(false)
-        //      .setOngoing(true)
-        //      .setContentTitle(getText(R.string.notification_titleLocation))
-        //      .setContentText(getText(R.string.notification_messageLocation))
-        //      .setSmallIcon(R.drawable.com_facebook_button_like_background)
-        //      .setPriority(NotificationManager.IMPORTANCE_LOW)
-        //      .setCategory(Notification.CATEGORY_SERVICE)
-        //      .setColor(Color.BLUE)
-                //.setTicker(getText(R.string.ticker_text))
-        //      .setChannelId("Location");
-
-
         Notification notificationAMaaS = builderServiceAMaaS.build();
-        //Notification notificationLocation = builderServiceLocation.build();
         notificationManager.notify(1, notificationAMaaS);
-        //notificationManager.notify(2, notificationLocation);
         startForeground(1, notificationAMaaS);
-        //startForeground(2, notificationLocation);
+
     }
 
     @TargetApi(24)
@@ -166,103 +150,12 @@ public class BackgroundDetectedActivitiesService extends Service {
         return START_STICKY;
     }
 
-    /*
-    public void requestActivityUpdatesButtonHandler() {
-        List<ActivityTransition> transitions = new ArrayList<>();
-
-        transitions.add(
-                new ActivityTransition.Builder()
-                        .setActivityType(DetectedActivity.IN_VEHICLE)
-                        .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER)
-                        .build());
-        transitions.add(
-                new ActivityTransition.Builder()
-                        .setActivityType(DetectedActivity.IN_VEHICLE)
-                        .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT)
-                        .build());
-        transitions.add(
-                new ActivityTransition.Builder()
-                        .setActivityType(DetectedActivity.WALKING)
-                        .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER)
-                        .build());
-        transitions.add(
-                new ActivityTransition.Builder()
-                        .setActivityType(DetectedActivity.WALKING)
-                        .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT)
-                        .build());
-        transitions.add(
-                new ActivityTransition.Builder()
-                        .setActivityType(DetectedActivity.ON_BICYCLE)
-                        .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER)
-                        .build());
-        transitions.add(
-                new ActivityTransition.Builder()
-                        .setActivityType(DetectedActivity.ON_BICYCLE)
-                        .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT)
-                        .build());
-        transitions.add(
-                new ActivityTransition.Builder()
-                        .setActivityType(DetectedActivity.RUNNING)
-                        .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER)
-                        .build());
-        transitions.add(
-                new ActivityTransition.Builder()
-                        .setActivityType(DetectedActivity.RUNNING)
-                        .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT)
-                        .build());
-        transitions.add(
-                new ActivityTransition.Builder()
-                        .setActivityType(DetectedActivity.STILL)
-                        .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER)
-                        .build());
-        transitions.add(
-                new ActivityTransition.Builder()
-                        .setActivityType(DetectedActivity.STILL)
-                        .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT)
-                        .build());
-
-
-        ActivityTransitionRequest request = new ActivityTransitionRequest(transitions);
-        Task<Void> task = ActivityRecognition.getClient(this)
-                .requestActivityTransitionUpdates(request, mPendingIntent);
-
-        task.addOnSuccessListener(
-                new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void result) {
-                        Log.d("BackgroundDetecASModule","Successfully requested activity updates");
-                        Toast.makeText(getApplicationContext(),
-                                "AMaaS activity sensing is ON.",
-                                Toast.LENGTH_SHORT)
-                                .show();
-                    }
-                }
-        );
-
-        task.addOnFailureListener(
-                new OnFailureListener() {
-                    @Override
-                    public void onFailure(Exception e) {
-                        Log.d("BackgroundDetecASModule","Requesting activity updates failed to start because: " + e.toString());
-                        Toast.makeText(getApplicationContext(),
-                                "AMaaS activity sensing failed to start.",
-                                Toast.LENGTH_SHORT)
-                                .show();
-                    }
-                }
-        );
-    }*/
-
 
     public void requestActivityUpdatesButtonHandler() {
-        //Log.d("BackgroundDetecASModule","requestActivityUpdatesButtonHandler started.");
         Task<Void> taskAMaaS = mActivityRecognitionClient.requestActivityUpdates(
                 HARModuleManager.DETECTION_INTERVAL_IN_MILLISECONDS,
                 mPendingIntent_DetectedActivities);
 
-        //Task<Void> taskLocation = mActivityRecognitionClient.requestActivityUpdates(
-        //      HARModuleManager.DETECTION_INTERVAL_IN_MILLISECONDS,
-        //      mPendingIntent_LocationActivities);
 
         taskAMaaS.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -274,17 +167,6 @@ public class BackgroundDetectedActivitiesService extends Service {
                         .show();
             }
         });
-        /*
-        taskLocation.addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void result) {
-                Log.d("BackgroundDetecASModule","Successfully requested Location updates");
-                Toast.makeText(getApplicationContext(),
-                        "Location is ON.",
-                        Toast.LENGTH_SHORT)
-                        .show();
-            }
-        });*/
 
         taskAMaaS.addOnFailureListener(new OnFailureListener() {
             @Override
@@ -296,24 +178,11 @@ public class BackgroundDetectedActivitiesService extends Service {
                         .show();
             }
         });
-        /*taskLocation.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("BackgroundDetecASModule","Requesting location updates failed to start");
-                Toast.makeText(getApplicationContext(),
-                        "Location awareness failed to start.",
-                        Toast.LENGTH_SHORT)
-                        .show();
-            }
-        });*/
     }
 
     public void removeActivityUpdatesButtonHandler() {
         Task<Void> taskAMaaS = ActivityRecognition.getClient(this)
                 .removeActivityTransitionUpdates(mPendingIntent_DetectedActivities);
-        //Task<Void> taskLocation = ActivityRecognition.getClient(this)
-        //        .removeActivityTransitionUpdates(mPendingIntent_LocationActivities);
-
 
         taskAMaaS.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -325,16 +194,6 @@ public class BackgroundDetectedActivitiesService extends Service {
                 mPendingIntent_DetectedActivities.cancel();
             }
         });
-        /*taskLocation.addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void result) {
-                Toast.makeText(getApplicationContext(),
-                        "Location awareness is OFF.",
-                        Toast.LENGTH_SHORT)
-                        .show();
-                mPendingIntent_LocationActivities.cancel();
-            }
-        });*/
 
         taskAMaaS.addOnFailureListener(new OnFailureListener() {
             @Override
@@ -344,14 +203,6 @@ public class BackgroundDetectedActivitiesService extends Service {
                 Log.e("MYCOMPONENT", e.getMessage());
             }
         });
-        /*taskLocation.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Failed to remove activity updates!",
-                        Toast.LENGTH_SHORT).show();
-                Log.e("MYCOMPONENT", e.getMessage());
-            }
-        });*/
     }
 
 

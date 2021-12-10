@@ -29,6 +29,7 @@ import com.portic_tech_modules.MainActivity;
 
 import pt.portic.tech.modules.ActivityDB_Module.RealmDataBaseManager;
 import pt.portic.tech.modules.Public_API_HAR_Module;
+import pt.portic.tech.modules.ReportHandlerModule.ReportModuleManager;
 import pt.portic.tech.modules.UserProfile.UserProfileManager;
 
 public class HARModuleManager extends ReactContextBaseJavaModule  implements Public_API_HAR_Module {
@@ -137,17 +138,9 @@ public class HARModuleManager extends ReactContextBaseJavaModule  implements Pub
                 mainActivityObj.startService(harModuleServiceIntent);
                 Log.d("HARModuleManager", "Human Activity Recognition background service has begun.");
             }
-
-
-            /*}
-            else {
-                Log.d("HARModuleManager", "Human Activity Recognition background service could not be started because it is not possible to get the location.");
-                Toast.makeText(mainActivityObj,
-                        "Human Activity Recognition background service could not be started becauuse it is not possible to get the location.",
-                        Toast.LENGTH_LONG)
-                        .show();
-            }*/
         }
+
+        ReportModuleManager.getInstance().Begin_Report_Handler_Module();
 
         return true;
     }
@@ -189,6 +182,7 @@ public class HARModuleManager extends ReactContextBaseJavaModule  implements Pub
         //if (locationManager != null) {
         //    locationManager.removeUpdates(this);
         //}
+        ReportModuleManager.getInstance().Stop_Report_Handler_Module();
 
         return true;
     }

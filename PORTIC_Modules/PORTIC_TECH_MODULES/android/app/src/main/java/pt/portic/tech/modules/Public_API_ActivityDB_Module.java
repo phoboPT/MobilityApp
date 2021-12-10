@@ -21,9 +21,13 @@ import pt.portic.tech.modules.ActivityDB_Module.ActivitiesDataModal;
 public interface Public_API_ActivityDB_Module {
 
     public void CreateDB (Context context);
+
     public void AddDataToDB(String userID, String timeStamp, int activityType, String activityDescription, int confidence, double lat, double lon);
+
     public List<ActivitiesDataModal> ReadAllDataFromDB();
+
     public ActivitiesDataModal ReadLastRecordFromDB();
+
     /**
      * Given the position of the record you want to change, give the new data. Example:
      * UpdateDataInDB(5, "98765", "2021-11-19 18:29:07.018",3,"STILL", 100);
