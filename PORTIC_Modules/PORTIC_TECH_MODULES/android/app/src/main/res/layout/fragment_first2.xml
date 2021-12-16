@@ -15,19 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Pilas para ti" />
-
-    <Button
-        android:id="@+id/idBtnReadData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/read_db"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_first"
-        app:layout_constraintVertical_bias="0.354" />
+        tools:text="Fragment first 2 putas e vinho verde" />
 
     <Button
         android:id="@+id/button_first"

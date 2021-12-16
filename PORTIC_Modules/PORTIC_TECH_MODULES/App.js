@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable no-unused-vars */
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -7,12 +9,14 @@
  */
 
 import React from 'react';
-import {useState} from 'react';
 import type {Node} from 'react';
 import {NativeModules} from 'react-native';
-import Inputs from './UserInputs.js';
-import DropDownPicker from 'react-native-dropdown-picker';
+import Inputs from './Frontend/UserInputs.js';
+import ActivityDBModule from './Frontend/ActivityDBModule.js';
+
+
 const {HAR_Module} = NativeModules;
+
 
 import {
   SafeAreaView,
@@ -68,31 +72,27 @@ const App: () => Node = () => {
   };
 
   const onPress_HAR_Begin_Service = () => {
-    //We will invoke the native module here!
-
+    //console.log('We will invoke the native module here!');
+    //  CalendarModule.createCalendarEvent('testName', 'testLocation');
     HAR_Module.HAR_Begin_Service();
   };
 
   const onPress_HAR_Stop_Service = () => {
-    //We will invoke the native module here!
-
+    //console.log('We will invoke the native module here!');
+    //  CalendarModule.createCalendarEvent('testName', 'testLocation');
     HAR_Module.HAR_Stop_Service();
   };
 
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    {label: 'Apple', value: 'apple'},
-    {label: 'Banana', value: 'banana'},
-    ,
-  ]);
+  const [text, onChangeText] = React.useState('Useless Text');
+
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
+        keyboardShouldPersistTaps='always'
         style={backgroundStyle}>
-        {/* <Header /> */}
+        <Header />
         <View
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
@@ -114,16 +114,10 @@ const App: () => Node = () => {
               onPress={onPress_HAR_Stop_Service}
             />
           </Section>
-        </View>
-        <View>
-          <DropDownPicker
-            open={open}
-            value={value}
-            items={items}
-            setOpen={setOpen}
-            setValue={setValue}
-            setItems={setItems}
-          />
+
+          <Section title="Activities Database">
+            <ActivityDBModule />
+          </Section>
         </View>
       </ScrollView>
     </SafeAreaView>

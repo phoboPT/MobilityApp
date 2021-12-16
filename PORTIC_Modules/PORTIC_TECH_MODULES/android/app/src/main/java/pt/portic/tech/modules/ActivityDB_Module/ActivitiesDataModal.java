@@ -24,6 +24,8 @@ public class ActivitiesDataModal extends RealmObject {
     private int activityType;
     private String activityDescription;
     private int confidence;
+    private double latitude;
+    private double longitude;
 
 
 
@@ -68,4 +70,8 @@ public class ActivitiesDataModal extends RealmObject {
     public void setConfidence(int confidence) {
         this.confidence = confidence;
     }
+    public double getLatitude() {return latitude;}
+    public void setLatitude(double lat) {this.latitude = lat;}
+    public double getLongitude() {return longitude;}
+    public void setLongitude(double lon) {this.longitude = lon;}
 }

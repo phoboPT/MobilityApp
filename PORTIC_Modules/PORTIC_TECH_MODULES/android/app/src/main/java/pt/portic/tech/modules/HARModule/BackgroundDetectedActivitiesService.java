@@ -12,20 +12,37 @@
 
 package pt.portic.tech.modules.HARModule;
 
+import android.annotation.TargetApi;
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
+import android.os.SystemClock;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
 
+import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.location.ActivityRecognitionClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.portic_tech_modules.R;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -39,8 +56,8 @@ public class BackgroundDetectedActivitiesService extends Service {
 
     private final String TAG = BackgroundDetectedActivitiesService.class.getSimpleName();
 
-    private Intent mIntentService;
-    private PendingIntent mPendingIntent;
+    private Intent mIntentService_DetectedActivities;//, mIntentService_LocationActivities;
+    private PendingIntent mPendingIntent_DetectedActivities;//, mPendingIntent_LocationActivities;
     private ActivityRecognitionClient mActivityRecognitionClient;
 
     IBinder mBinder = new BackgroundDetectedActivitiesService.LocalBinder();
@@ -56,14 +73,66 @@ public class BackgroundDetectedActivitiesService extends Service {
 
     }
 
+    private static Set<String> channels = new HashSet<>();
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate() {
         super.onCreate();
         mActivityRecognitionClient = new ActivityRecognitionClient(this);
-        mIntentService = new Intent(this, DetectedActivitiesIntentService.class);
-        mPendingIntent = PendingIntent.getService(this, 1, mIntentService, PendingIntent.FLAG_UPDATE_CURRENT);
-        requestActivityUpdatesButtonHandler();
+        mIntentService_DetectedActivities = new Intent(this, DetectedActivitiesIntentService.class);
+        mPendingIntent_DetectedActivities = PendingIntent.getService(this,
+                0, mIntentService_DetectedActivities,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        String channel = "AMaaS";
+        NotificationChannel chan = null;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createChannelIfNeeded(channel);
+
+            chan = new NotificationChannel(channel, channel, NotificationManager.IMPORTANCE_LOW);
+            chan.setLightColor(Color.BLUE);
+            chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        }
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(this.NOTIFICATION_SERVICE);
+        assert notificationManager != null;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationManager.createNotificationChannel(chan);
+        }
+
+
+        NotificationCompat.Builder builderServiceAMaaS = new NotificationCompat.Builder(this, channel);
+        builderServiceAMaaS.setContentIntent(mPendingIntent_DetectedActivities)
+                .setAutoCancel(false)
+                .setOngoing(true)
+                .setContentTitle(getText(R.string.notification_titleAMaaS))
+                .setContentText(getText(R.string.notification_messageAMaaS))
+                .setSmallIcon(R.drawable.com_facebook_button_like_background)
+                .setPriority(NotificationManager.IMPORTANCE_LOW)
+                .setCategory(Notification.CATEGORY_SERVICE)
+                .setColor(Color.BLUE)
+                //.setTicker(getText(R.string.ticker_text))
+                .setChannelId("AMaaS");
+
+        Notification notificationAMaaS = builderServiceAMaaS.build();
+        notificationManager.notify(1, notificationAMaaS);
+        startForeground(1, notificationAMaaS);
+
     }
+
+    @TargetApi(24)
+    private static void createChannelIfNeeded(String identifier) {
+        if (channels.contains(identifier))
+            return;
+        channels.add(identifier);
+
+    }
+
+
 
     @Nullable
     @Override
@@ -74,30 +143,37 @@ public class BackgroundDetectedActivitiesService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
+
+        // start my service
+        requestActivityUpdatesButtonHandler();
+
         return START_STICKY;
     }
 
-    public void requestActivityUpdatesButtonHandler() {
-        Task<Void> task = mActivityRecognitionClient.requestActivityUpdates(
-                HARModuleManager.DETECTION_INTERVAL_IN_MILLISECONDS,
-                mPendingIntent);
 
-        task.addOnSuccessListener(new OnSuccessListener<Void>() {
+    public void requestActivityUpdatesButtonHandler() {
+        Task<Void> taskAMaaS = mActivityRecognitionClient.requestActivityUpdates(
+                HARModuleManager.DETECTION_INTERVAL_IN_MILLISECONDS,
+                mPendingIntent_DetectedActivities);
+
+
+        taskAMaaS.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void result) {
+                Log.d("BackgroundDetecASModule","Successfully requested activity updates");
                 Toast.makeText(getApplicationContext(),
-                        "Successfully requested activity updates",
+                        "AMaaS activity sensing is ON.",
                         Toast.LENGTH_SHORT)
                         .show();
-
             }
         });
 
-        task.addOnFailureListener(new OnFailureListener() {
+        taskAMaaS.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                Log.d("BackgroundDetecASModule","Requesting activity updates failed to start");
                 Toast.makeText(getApplicationContext(),
-                        "Requesting activity updates failed to start"+e.getMessage(),
+                        "AMaaS activity sensing failed to start.",
                         Toast.LENGTH_SHORT)
                         .show();
             }
@@ -105,23 +181,26 @@ public class BackgroundDetectedActivitiesService extends Service {
     }
 
     public void removeActivityUpdatesButtonHandler() {
-        Task<Void> task = mActivityRecognitionClient.removeActivityUpdates(
-                mPendingIntent);
-        task.addOnSuccessListener(new OnSuccessListener<Void>() {
+        Task<Void> taskAMaaS = ActivityRecognition.getClient(this)
+                .removeActivityTransitionUpdates(mPendingIntent_DetectedActivities);
+
+        taskAMaaS.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void result) {
                 Toast.makeText(getApplicationContext(),
-                        "Removed activity updates successfully! ",
+                        "AMaaS activity sensing is OFF.",
                         Toast.LENGTH_SHORT)
                         .show();
+                mPendingIntent_DetectedActivities.cancel();
             }
         });
 
-        task.addOnFailureListener(new OnFailureListener() {
+        taskAMaaS.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Failed to remove activity updates! "+e.getMessage(),
+                Toast.makeText(getApplicationContext(), "Failed to remove activity updates!",
                         Toast.LENGTH_SHORT).show();
+                Log.e("MYCOMPONENT", e.getMessage());
             }
         });
     }
@@ -129,7 +208,36 @@ public class BackgroundDetectedActivitiesService extends Service {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
+        //super.onDestroy();
+        Log.d("BackgroundDetecASModule", "onDestroy()");
+
         removeActivityUpdatesButtonHandler();
+
+        /*Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction("Restart_AMaaS_Service");
+        broadcastIntent.setClass(this, BackgroundServicesRestarter.class);
+        //broadcastIntent.setClass(this, DetectedActivitiesIntentService.class);
+        this.sendBroadcast(broadcastIntent); */
+
+        super.onDestroy();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void onTaskRemoved(Intent rootIntent){
+        Log.d("BackgroundDetecASModule", "onTaskRemoved()");
+
+        Intent restartServiceIntent = new Intent(this, BackgroundDetectedActivitiesService.class);
+        restartServiceIntent.setPackage(getPackageName());
+// ActivityManager manager = (ActivityManager)
+//                mainActivityObj.getSystemService(Context.ACTIVITY_SERVICE);
+        PendingIntent restartServicePendingIntent = PendingIntent.getService(getApplicationContext(), 1, restartServiceIntent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
+        AlarmManager alarmService = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        alarmService.set(
+                AlarmManager.ELAPSED_REALTIME,
+                SystemClock.elapsedRealtime() + 500,
+                restartServicePendingIntent);
+
+        super.onTaskRemoved(rootIntent);
     }
 }

@@ -2,10 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.portic_tech_modules">
 
-    <!-- // added user permissions required -->
     <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
-    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:name=".MainApplication"
@@ -15,18 +17,37 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme">
         <!--
+         <activity
+             android:name="com.FrontEndNativoXavier.ActivityInteractWithBackground"
+             android:exported="false"
+             android:label="@string/title_activity_interact_with_background"
+             android:theme="@style/AppTheme.NoActionBar" />
+        -->
+        <!--
         <activity
-            android:name="com.Frontend.MainActivity"
+            android:name="com.FrontEndNativoXavier.ActivityInteractWithBackground"
             android:exported="true"
-            android:label="@string/app_name"
+            android:label="@string/Background_Modules"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         -->
-
+        <!--
+         <activity
+             android:name="com.Frontend.MainActivity"
+             android:exported="true"
+             android:label="@string/app_name"
+             android:theme="@style/AppTheme.NoActionBar">
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
+                 <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
+         </activity>
+        -->
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
@@ -39,11 +60,29 @@
             </intent-filter>
         </activity>
 
+        <receiver
+            android:name="pt.portic.tech.modules.HARModule.BackgroundServicesRestarter"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="Restart_AMaaS_Service" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="pt.portic.tech.modules.ReportHandlerModule.ReportAlarm"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action
+                    android:name="Report_Handler_Alarm"/>
+            </intent-filter>
+        </receiver>
 
         <service
             android:name="pt.portic.tech.modules.HARModule.DetectedActivitiesIntentService"
             android:exported="false" />
-        <service android:name="pt.portic.tech.modules.HARModule.BackgroundDetectedActivitiesService"></service>
+        <service android:name="pt.portic.tech.modules.HARModule.BackgroundDetectedActivitiesService"
+            android:enabled="true"/>
     </application>
 
 </manifest>

@@ -9,4 +9,12 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="title_activity_interact_with_background">ActivityInteractWithBackground</string>
+    <string name="Background_Modules">Background_Modules</string>
+    <string name="read_db">Read DB</string>
+    <string name="notification_titleAMaaS">AMaaS activity sensing</string>
+    <string name="notification_messageAMaaS">Sensing your level of activity to help improve your health.</string>
+    <string name="notification_titleLocation">Location Tracking</string>
+    <string name="notification_messageLocation">Attaching location to your physical activity to understand intensity.</string>
+    <string name="ticker_text">tick</string>
 </resources>
