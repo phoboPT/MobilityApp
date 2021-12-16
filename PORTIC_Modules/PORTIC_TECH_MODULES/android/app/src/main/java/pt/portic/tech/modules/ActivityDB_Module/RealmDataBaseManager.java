@@ -1,15 +1,17 @@
 /**
  *  Software disponibilizado no âmbito do projeto TECH pelo PORTIC, Instituto Politécnico do Porto.
  *
- *  Os direitos de autor são exclusivamente retidos pelo PORTIC, e qualquer partilha
- *  deste código carece de autorização explicita por parte do autor responsável.
+ *  Os direitos de autor são exclusivamente retidos pelo PORTIC e pelo Autor mencionado nesta nota.
+ *  Carece de autorização explicita por parte do autor responsável o uso deste código (1) para fins
+ *  que não sejam devidamente definidos na Licença que acompanha este projeto, e (2) para os fins que
+ *  própria licença assim o exija.
  *
- *  Autor:      Dr.Eng. Francisco Xavier dos Santos Fonseca
- *  Nº Ordem:   84598
- *  Data:       2021.Nov.10
- *  Email:      xavier.fonseca@portic.ipp.pt
+ *  Autor:          Dr.Eng. Francisco Xavier dos Santos Fonseca
+ *  Nº da Ordem:    84598
+ *  Data:           2021.Nov.10
+ *  Email
+ *  Institucional:  xavier.fonseca@portic.ipp.pt
  */
-
 package pt.portic.tech.modules.ActivityDB_Module;
 
 
@@ -211,12 +213,66 @@ public class RealmDataBaseManager extends ReactContextBaseJavaModule implements 
 
 
     @ReactMethod
-    public void ReadAllDataFromDBIntoReactNative(Callback successCallback) throws JSONException {
+    public void ReadAllDataFromDBIntoReactNative(Callback successCallback) throws Exception {
+        Realm realm;
 
-        // guarantee the database has already been created; if not, get app context stored in HAR module
-        if (!databaseInitiated)  { CreateDB(HARModuleManager.mainActivityObj); }
+        try {
+            realm = Realm.getDefaultInstance();
+        }
+        catch (java.lang.IllegalStateException e){
+            Log.d("RealmDataBaseManager","Tried getting Realm default Instance at ReadAllDataFromDBIntoReactNative. Error: " + e.toString());
 
-        Realm realm = Realm.getDefaultInstance();
+            if (Realm.getApplicationContext() == null)
+            {
+                //if (context != null)
+                //{
+                //    Realm.init(context);
+                //}
+                //else
+                if (HARModuleManager.mainActivityObj != null) {
+                    Realm.init(HARModuleManager.mainActivityObj);
+                }
+                else {
+                    throw new Exception("ReadAllDataFromDBIntoReactNative: Problem with Contexts being null.");
+                }
+            }
+            else {
+                Realm.init(Realm.getApplicationContext());
+            }
+
+
+            // on below line we are setting realm configuration
+            RealmConfiguration config =
+                    new RealmConfiguration.Builder()
+                            .name("DetectedActivities.db")
+                            // below line is to allow write
+                            // data to database on ui thread.
+                            .allowWritesOnUiThread(true)
+                            // below line is to delete realm
+                            // if migration is needed.
+                            .deleteRealmIfMigrationNeeded()
+                            // at last we are calling a method to build.
+                            .build();
+            // on below line we are setting
+            // configuration to our realm database.
+            Realm.setDefaultConfiguration(config);
+
+            realm = Realm.getDefaultInstance();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         List<ActivitiesDataModal> modals = ReadAllDataFromDB();
         WritableArray array = new WritableNativeArray();
         JsonObject jsonObject = null;
@@ -359,6 +415,8 @@ public class RealmDataBaseManager extends ReactContextBaseJavaModule implements 
                 }
             });
         }
+
+        Log.d("RealmDataBaseManager","All activity records are DELETED from DB.");
 
         realm.close();
     }

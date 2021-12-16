@@ -148,7 +148,7 @@ FlatListItemStyle: {
   submitButtonBig: {
     backgroundColor: '#7a42f4',
     padding: 10,
-    margin: 15,
+    margin: 0,
     height: 40,
     width: 300,
   },

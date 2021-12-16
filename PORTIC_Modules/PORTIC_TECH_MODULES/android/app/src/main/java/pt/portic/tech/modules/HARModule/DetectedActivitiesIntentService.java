@@ -1,15 +1,17 @@
 /**
  *  Software disponibilizado no âmbito do projeto TECH pelo PORTIC, Instituto Politécnico do Porto.
  *
- *  Os direitos de autor são exclusivamente retidos pelo PORTIC, e qualquer partilha
- *  deste código carece de autorização explicita por parte do autor responsável.
+ *  Os direitos de autor são exclusivamente retidos pelo PORTIC e pelo Autor mencionado nesta nota.
+ *  Carece de autorização explicita por parte do autor responsável o uso deste código (1) para fins
+ *  que não sejam devidamente definidos na Licença que acompanha este projeto, e (2) para os fins que
+ *  própria licença assim o exija.
  *
- *  Autor:      Dr.Eng. Francisco Xavier dos Santos Fonseca
- *  Nº Ordem:   84598
- *  Data:       2021.Nov.10
- *  Email:      xavier.fonseca@portic.ipp.pt
+ *  Autor:          Dr.Eng. Francisco Xavier dos Santos Fonseca
+ *  Nº da Ordem:    84598
+ *  Data:           2021.Nov.10
+ *  Email
+ *  Institucional:  xavier.fonseca@portic.ipp.pt
  */
-
 package pt.portic.tech.modules.HARModule;
 
 import android.Manifest;
@@ -115,7 +117,8 @@ public class DetectedActivitiesIntentService extends IntentService implements Lo
 
         Location ll = LocationServices.FusedLocationApi.getLastLocation(gac);
         Log.d(TAG, "LastLocation: " + (ll == null ? "NO LastLocation" : ll.toString()));
-
+        long hour;
+        Calendar rightNow = Calendar.getInstance();
         // Get the list of the probable activities associated with the current state of the
         // device. Each activity is associated with a confidence level, which is an int between
         // 0 and 100.
@@ -128,17 +131,29 @@ public class DetectedActivitiesIntentService extends IntentService implements Lo
                         activity.getConfidence() + "%.");
 
                 java.sql.Timestamp timestamp = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
-                if (activity.getConfidence() >= HARModuleManager.CONFIDENCE) {
-                    RealmDataBaseManager.getInstance().AddDataToDB(UserProfileManager.getInstance().Get_User_ID(),
-                            (timestamp).toString(),
-                            activity.getType(),
-                            DetectedActivityGetType(activity.getType()),
-                            activity.getConfidence(),
-                            this.latitude,
-                            this.longitude);
+                hour = rightNow.get(Calendar.HOUR_OF_DAY);
+
+                // test if this is night time (if it is bed time, it's uninteresting to
+                // capture the "still" periods and count them as sedentary
+                // I'll ignore STILL activities between 22h and 09h
+                if ((activity.getType() == 3) && ((hour > HARModuleManager.sleepTimeA) || (hour < HARModuleManager.sleepTimeB))) {
+                    Log.d(TAG,"Ignored activity " + DetectedActivityGetType(activity.getType()) +
+                            " at " + (timestamp).toString() + " because .it's night time: [" +
+                            HARModuleManager.sleepTimeA + "H - " + HARModuleManager.sleepTimeB + "H]. Current hour is " + hour + "H.");
                 }
-
-
+                else {
+                    // if it's not night time, or even if it is but the activity is not STIL,
+                    // then record it.
+                    if (activity.getConfidence() >= HARModuleManager.CONFIDENCE) {
+                        RealmDataBaseManager.getInstance().AddDataToDB(UserProfileManager.getInstance().Get_User_ID(),
+                                (timestamp).toString(),
+                                activity.getType(),
+                                DetectedActivityGetType(activity.getType()),
+                                activity.getConfidence(),
+                                this.latitude,
+                                this.longitude);
+                    }
+                }
             }
         } catch (java.lang.NullPointerException e) {
             Log.e("DetectedActIntentServ", "Erro: " + e.toString());
@@ -265,32 +280,6 @@ public class DetectedActivitiesIntentService extends IntentService implements Lo
             Log.d(TAG, "On Location changed: [" + latitude + ";"+longitude+"].");
         }
     }
-
-    /*
-    @Override
-    public void onRequestPermissionsResult(
-            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(HARModuleManager.mainActivityObj, "Permission was granted!", Toast.LENGTH_LONG).show();
-
-                    try{
-                        LocationServices.FusedLocationApi.requestLocationUpdates(
-                                gac, locationRequest, this);
-                    } catch (SecurityException e) {
-                        Toast.makeText(HARModuleManager.mainActivityObj, "SecurityException:\n" + e.toString(),
-                                Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    Toast.makeText(HARModuleManager.mainActivityObj, "Permission denied!", Toast.LENGTH_LONG).show();
-                }
-                return;
-            }
-        }
-    }*/
 
     private boolean isLocationEnabled() {
         LocationManager locationManager =

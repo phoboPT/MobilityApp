@@ -1,15 +1,17 @@
 /**
  *  Software disponibilizado no âmbito do projeto TECH pelo PORTIC, Instituto Politécnico do Porto.
  *
- *  Os direitos de autor são exclusivamente retidos pelo PORTIC, e qualquer partilha
- *  deste código carece de autorização explicita por parte do autor responsável.
+ *  Os direitos de autor são exclusivamente retidos pelo PORTIC e pelo Autor mencionado nesta nota.
+ *  Carece de autorização explicita por parte do autor responsável o uso deste código (1) para fins
+ *  que não sejam devidamente definidos na Licença que acompanha este projeto, e (2) para os fins que
+ *  própria licença assim o exija.
  *
- *  Autor:      Dr.Eng. Francisco Xavier dos Santos Fonseca
- *  Nº Ordem:   84598
- *  Data:       2021.Nov.10
- *  Email:      xavier.fonseca@portic.ipp.pt
+ *  Autor:          Dr.Eng. Francisco Xavier dos Santos Fonseca
+ *  Nº da Ordem:    84598
+ *  Data:           2021.Nov.10
+ *  Email
+ *  Institucional:  xavier.fonseca@portic.ipp.pt
  */
-
 package pt.portic.tech.modules.HARModule;
 
 import android.app.ActivityManager;
@@ -28,6 +30,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.portic_tech_modules.MainActivity;
 
 import pt.portic.tech.modules.ActivityDB_Module.RealmDataBaseManager;
+import pt.portic.tech.modules.HealthReportsDB_Module.HealthReportsDBManager;
 import pt.portic.tech.modules.Public_API_HAR_Module;
 import pt.portic.tech.modules.ReportHandlerModule.ReportModuleManager;
 import pt.portic.tech.modules.UserProfile.UserProfileManager;
@@ -48,6 +51,7 @@ public class HARModuleManager extends ReactContextBaseJavaModule  implements Pub
     public static final long DETECTION_INTERVAL_IN_MILLISECONDS = 1000; // 1 seg.
     public static final int CONFIDENCE = 75;
 
+    public static int sleepTimeA = 22, sleepTimeB = 9;// this is only in hours [22h-09] -> night time to ignore STILL time
 
     private static HARModuleManager harModuleManagerSingleton =null;
     public HARModuleManager() {
@@ -133,6 +137,9 @@ public class HARModuleManager extends ReactContextBaseJavaModule  implements Pub
             // start Detected Activities DB to store the activities
             RealmDataBaseManager.getInstance().CreateDB(mainActivityObj);
 
+            // start Health Reports DB to store the reports of the user's activity
+            HealthReportsDBManager.getInstance().CreateDB(mainActivityObj);
+
 
             if (!isMyServiceRunning(BackgroundDetectedActivitiesService.class)) {
                 mainActivityObj.startService(harModuleServiceIntent);
@@ -141,6 +148,8 @@ public class HARModuleManager extends ReactContextBaseJavaModule  implements Pub
         }
 
         ReportModuleManager.getInstance().Begin_Report_Handler_Module();
+        //HealthReportsDBManager.getInstance().Begin_Health_Report_Handler_Module();
+
 
         return true;
     }
@@ -183,6 +192,7 @@ public class HARModuleManager extends ReactContextBaseJavaModule  implements Pub
         //    locationManager.removeUpdates(this);
         //}
         ReportModuleManager.getInstance().Stop_Report_Handler_Module();
+        //HealthReportsDBManager.getInstance().Stop_Health_Report_Handler_Module();
 
         return true;
     }
@@ -199,5 +209,24 @@ public class HARModuleManager extends ReactContextBaseJavaModule  implements Pub
                         mainActivityObj.finish();
                     }
                 });
+    }
+
+
+    /**
+     * Use this method to set up the night period [time A, time B]. This is to ignore
+     * sedentary activities of type STILL when the user is likely to sleep. This does
+     * not affect the recognition and logging of any other relevant activity (including
+     * in vehicle, which is also sedentary).
+     * Example, if set period is [22h, 09h], then all the STILL activities between 22h
+     * and 09h will be ignored (not registered).
+     *
+     * @param timeA the beginning of the night period
+     * @param timeB the end of the night period
+     */
+    @ReactMethod
+    @Override
+    public void SetNightTimePeriodToIgnoreActivity(int timeA, int timeB) {
+        sleepTimeA = timeA;
+        sleepTimeB = timeB;
     }
 }

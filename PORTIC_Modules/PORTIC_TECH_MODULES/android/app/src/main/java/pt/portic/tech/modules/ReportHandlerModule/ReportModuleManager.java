@@ -1,13 +1,16 @@
 /**
  *  Software disponibilizado no âmbito do projeto TECH pelo PORTIC, Instituto Politécnico do Porto.
  *
- *  Os direitos de autor são exclusivamente retidos pelo PORTIC, e qualquer partilha
- *  deste código carece de autorização explicita por parte do autor responsável.
+ *  Os direitos de autor são exclusivamente retidos pelo PORTIC e pelo Autor mencionado nesta nota.
+ *  Carece de autorização explicita por parte do autor responsável o uso deste código (1) para fins
+ *  que não sejam devidamente definidos na Licença que acompanha este projeto, e (2) para os fins que
+ *  própria licença assim o exija.
  *
- *  Autor:      Dr.Eng. Francisco Xavier dos Santos Fonseca
- *  Nº Ordem:   84598
- *  Data:       2021.Dez.10
- *  Email:      xavier.fonseca@portic.ipp.pt
+ *  Autor:          Dr.Eng. Francisco Xavier dos Santos Fonseca
+ *  Nº da Ordem:    84598
+ *  Data:           2021.Dec.10
+ *  Email
+ *  Institucional:  xavier.fonseca@portic.ipp.pt
  */
 package pt.portic.tech.modules.ReportHandlerModule;
 
@@ -35,44 +38,18 @@ public class ReportModuleManager extends ReactContextBaseJavaModule implements P
     public AlarmManager alarmManager;
     public PendingIntent pendingIntent;
     public static Calendar calendar = null;
-    public static int hour = 18,minute = 30,second = 00;
+    public static int hour = 20, minute = 00,second = 00;
 
     private static ReportModuleManager reportModuleManagerSingleton =null;
-    public ReportModuleManager() {
-        activity = HARModuleManager.mainActivityObj;
+    public ReportModuleManager() {activity = HARModuleManager.mainActivityObj;    }
+    public ReportModuleManager(AppCompatActivity activityObj) {activity = activityObj;    }
 
-        /*
-        ReportModuleManager.getInstance().alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(activity, MainActivity.class);
-        ReportModuleManager.getInstance().pendingIntent = PendingIntent.getActivity(activity, 0, intent, 0);
-
-        calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hour); // For 1 PM or 2 PM
-        calendar.set(Calendar.MINUTE, minute);
-        calendar.set(Calendar.SECOND, second);*/
-    }
-    public ReportModuleManager(AppCompatActivity activityObj) {
-        activity = activityObj;
-/*
-        ReportModuleManager.getInstance().alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(activity, MainActivity.class);
-        ReportModuleManager.getInstance().pendingIntent = PendingIntent.getActivity(activity, 0, intent, 0);
-
-        calendar = Calendar.getInstance();
-
-        calendar.set(Calendar.HOUR_OF_DAY, hour); // For 1 PM or 2 PM
-        calendar.set(Calendar.MINUTE, minute);
-        calendar.set(Calendar.SECOND, second);*/
-    }
     public static ReportModuleManager getInstance(){
         if (reportModuleManagerSingleton == null){
             synchronized(ReportModuleManager.class){
                 if (reportModuleManagerSingleton == null){
-                    reportModuleManagerSingleton = new ReportModuleManager();//instance will be created at request time
-                    /*calendar = Calendar.getInstance();
-                    calendar.set(Calendar.HOUR_OF_DAY, hour); // For 1 PM or 2 PM
-                    calendar.set(Calendar.MINUTE, minute);
-                    calendar.set(Calendar.SECOND, second);*/
+                    //instance will be created at request time
+                    reportModuleManagerSingleton = new ReportModuleManager();
                 }
             }
         }
@@ -83,11 +60,8 @@ public class ReportModuleManager extends ReactContextBaseJavaModule implements P
         if (reportModuleManagerSingleton == null){
             synchronized(ReportModuleManager.class){
                 if (reportModuleManagerSingleton == null){
-                    reportModuleManagerSingleton = new ReportModuleManager(activityObj);//instance will be created at request time
-                    /*calendar = Calendar.getInstance();
-                    calendar.set(Calendar.HOUR_OF_DAY, hour); // For 1 PM or 2 PM
-                    calendar.set(Calendar.MINUTE, minute);
-                    calendar.set(Calendar.SECOND, second);*/
+                    //instance will be created at request time
+                    reportModuleManagerSingleton = new ReportModuleManager(activityObj);
                 }
             }
         }
@@ -112,7 +86,10 @@ public class ReportModuleManager extends ReactContextBaseJavaModule implements P
      *
      *
      *******************************************************************************/
-    @ReactMethod
+    /**
+     * MUST ONLY BE CALLED WHEN APPLICATION IS IN FOREGROUND. This is not a service intent,
+     * and therefore the context will be null when app gets killed.
+     */
     @Override
     public void Begin_Report_Handler_Module() {
 
@@ -121,7 +98,7 @@ public class ReportModuleManager extends ReactContextBaseJavaModule implements P
         pendingIntent = PendingIntent.getBroadcast(activity, 0, intent, 0);
 
 
-
+        /*
         Calendar rightNow = Calendar.getInstance();
         if (rightNow.get(Calendar.MINUTE) < 59) {
             minute = rightNow.get(Calendar.MINUTE) + 1;
@@ -133,7 +110,7 @@ public class ReportModuleManager extends ReactContextBaseJavaModule implements P
                 hour = rightNow.get(Calendar.HOUR_OF_DAY) + 1; // return the hour in 24 hrs format (ranging from 0-23)
             }
             else hour = 00; // return the hour in 24 hrs format (ranging from 0-23)
-        }
+        }*/
 
         calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, hour); // For 1 PM or 2 PM
@@ -141,13 +118,17 @@ public class ReportModuleManager extends ReactContextBaseJavaModule implements P
         calendar.set(Calendar.SECOND, second);
 
         //setAlarm();// AlarmManager.INTERVAL_DAY
-        alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 60 * 1000, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
 
         // Enable ReportAlarm Component
         //setBootReceiverEnabled(PackageManager.COMPONENT_ENABLED_STATE_ENABLED);
-        Log.d(TAG, "Report Handler module alarm is set.");
+        Log.d(TAG, "Report Handler module alarm is set every day at " +hour+":"+minute+":"+second+"H.");
     }
-    @ReactMethod
+
+    /**
+     * MUST ONLY BE CALLED WHEN APPLICATION IS IN FOREGROUND. This is not a service intent,
+     * and therefore the context will be null when app gets killed.
+     */
     @Override
     public void Stop_Report_Handler_Module() {
         //cancelAlarm();
@@ -155,29 +136,28 @@ public class ReportModuleManager extends ReactContextBaseJavaModule implements P
             alarmManager.cancel(pendingIntent);
             // Disable ReportAlarm Component
             //setBootReceiverEnabled(PackageManager.COMPONENT_ENABLED_STATE_DISABLED);
+            alarmManager = null;
             Log.d(TAG, "Report Handler module alarm disabled.");
         }
     }
-    /*private void setAlarm() {
-        Log.d(TAG, "AlarmReceiver set");
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60, pendingIntent);
 
-        // Enable ReportAlarm Component
-        setBootReceiverEnabled(PackageManager.COMPONENT_ENABLED_STATE_ENABLED);
+    @ReactMethod
+    @Override
+    public void CalculateCurrentReport() {
+        new ReportAlarm().CalculateReport(HARModuleManager.mainActivityObj);
     }
-    private void cancelAlarm() {
-        Log.d(TAG, "AlarmReceiver cancelled");
-        alarmManager.cancel(pendingIntent);
 
-        // Disable ReportAlarm Component
-        setBootReceiverEnabled(PackageManager.COMPONENT_ENABLED_STATE_DISABLED);
-    }*/
-    /*
-    private void setBootReceiverEnabled(int componentEnabledState) {
-        ComponentName componentName = new ComponentName(activity, ReportAlarm.class);
-        PackageManager packageManager = activity.getPackageManager();
-        packageManager.setComponentEnabledSetting(componentName,
-                componentEnabledState,
-                PackageManager.DONT_KILL_APP);
-    }*/
+    /**
+     * MUST ONLY BE CALLED WHEN APPLICATION IS IN FOREGROUND. This is not a service intent,
+     * and therefore the context will be null when app gets killed.
+     */
+    @Override
+    public void VerifyIfReportServiceIsRunning() {
+        if (alarmManager != null) {
+            Log.d(TAG, "Report scheduler is running.");
+        }
+        else {
+            Begin_Report_Handler_Module();
+        }
+    }
 }

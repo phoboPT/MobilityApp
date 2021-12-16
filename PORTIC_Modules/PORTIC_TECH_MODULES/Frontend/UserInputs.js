@@ -40,7 +40,10 @@ class Inputs extends Component {
   handleUserWeight = text => {
     this.setState({UserWeight: text});
   };
-  submitALLProperties = (UserID, UserName, UserBirthDate, UserGender, UserHeight, UserWeight) => {
+  handleUserHealthRisk = text => {
+    this.setState({UserHealthRisk: text});
+  };
+  submitALLProperties = (UserID, UserName, UserBirthDate, UserGender, UserHeight, UserWeight, UserHealthRisk) => {
     //alert('ID: ' + UserID + ' Name: ' + UserName);
 
     UserProfileModule.Set_User_ID(UserID);
@@ -49,10 +52,12 @@ class Inputs extends Component {
     UserProfileModule.Set_User_Gender(UserGender);
     UserProfileModule.Set_User_Height(UserHeight);
     UserProfileModule.Set_User_Weight(UserWeight);
+    UserProfileModule.Set_Health_Activity_Risk(UserHealthRisk);
 
     alert('Submitted ID: ' + UserID + ' Name: ' + UserName + ' BirthDate: ' +
     UserBirthDate + ' User Gender: ' + UserGender + ' User Height: ' + UserHeight + ' User Weight: ' + 
-    UserWeight);
+    UserWeight + ' User Health Risk: ' + 
+    UserHealthRisk);
   };
   submitUserID = (UserID) => {
     UserProfileModule.Set_User_ID(UserID);
@@ -77,6 +82,10 @@ class Inputs extends Component {
   submitUserWeight = (UserWeight) => {
     UserProfileModule.Set_User_Weight(UserWeight);
     alert('Submitted Weight: ' + UserWeight);
+  };
+  submitUserHealthRisk = (UserHealthRisk) => {
+    UserProfileModule.Set_Health_Activity_Risk(UserHealthRisk);
+    alert('Submitted Health Risk: ' + UserHealthRisk);
   };
 
   render() {
@@ -198,11 +207,30 @@ class Inputs extends Component {
             </View>
         </View>
 
+        <View style={{flexDirection:"row"}}>
+            <View style={{flex:1}}>
+                <TextInput
+                    style={styles.input}
+                    underlineColorAndroid="transparent"
+                    placeholder="User Health Risk"
+                    placeholderTextColor="#9a73ef"
+                    autoCapitalize="none"
+                    onChangeText={this.handleUserHealthRisk}/>
+            </View>
+            <View style={{flex:1}}>
+                <TouchableOpacity
+                        style={styles.submitButton}
+                        onPress={() => this.submitUserHealthRisk(this.state.UserHealthRisk)}>
+                        <Text style={styles.submitButtonText}> Submit </Text>
+                </TouchableOpacity>
+            </View>
+        </View>
+
 
         <TouchableOpacity
           style={styles.submitButtonBig}
           onPress={() => this.submitALLProperties(this.state.UserID, this.state.UserName, 
-                this.state.UserBirthDate, this.state.UserGender, this.state.UserHeight, this.state.UserWeight)}>
+                this.state.UserBirthDate, this.state.UserGender, this.state.UserHeight, this.state.UserWeight, this.state.UserHealthRisk)}>
           <Text style={styles.submitButtonText}> Submit All fields </Text>
         </TouchableOpacity>
       </View>
