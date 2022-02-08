@@ -44,6 +44,8 @@ public class UserProfileManager extends ReactContextBaseJavaModule implements Pu
     public static final String user_Height = "user_Height";
     public static final String user_Weight = "user_Weight";
     public static final String healthActivityRisk = "healthActivityRisk";
+    public static final String dateOfLastWeeklyReport = "dateOfLastWeeklyReport";
+
 
     /*
      *   Singleton Pattern
@@ -125,50 +127,68 @@ public class UserProfileManager extends ReactContextBaseJavaModule implements Pu
         editor.putInt(healthActivityRisk, new Integer(Integer.parseInt(risk)));
         editor.commit();
     }
-    
+
+    @ReactMethod
+    @Override
+    public void Set_Date_Of_Last_Weekly_Report(String date) {
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(dateOfLastWeeklyReport, date);
+        editor.commit();
+    }
 
 
+    @ReactMethod
     @Override
     public Map<String, ?> Get_User_ALL_Data() {
         return sharedpreferences.getAll();
     }
 
+    @ReactMethod
     @Override
     public String Get_User_ID() {
         return sharedpreferences.getString("user_ID","N/A");
     }
 
+    @ReactMethod
     @Override
     public String Get_User_Name() {
         return sharedpreferences.getString("user_Name","N/A");
     }
 
+    @ReactMethod
     @Override
     public Long Get_User_BirthDate() {
         return sharedpreferences.getLong("user_BirthDate",new Long(0));
     }
 
+    @ReactMethod
     @Override
     public String Get_User_Gender() {
         return sharedpreferences.getString("user_Gender","N/A");
     }
 
+    @ReactMethod
     @Override
     public Float Get_User_Height() {
         return sharedpreferences.getFloat("user_Height",new Float(0.0));
     }
 
+    @ReactMethod
     @Override
     public Float Get_User_Weight() {
         return sharedpreferences.getFloat("user_Weight",new Float(0.0));
     }
 
+    @ReactMethod
     @Override
-    public Integer Get_Health_Activity_Risk() {
-        return sharedpreferences.getInt("healthActivityRisk",new Integer(0));
+    public Integer Get_Health_Activity_Risk() { // default is 1, risk is low
+        return sharedpreferences.getInt("healthActivityRisk",new Integer(1));
     }
-
-
+    @ReactMethod
+    @Override
+    public String Get_Date_Of_Last_Weekly_Report() {
+        return sharedpreferences.getString("dateOfLastWeeklyReport",new String(""));
+    }
 
 
 

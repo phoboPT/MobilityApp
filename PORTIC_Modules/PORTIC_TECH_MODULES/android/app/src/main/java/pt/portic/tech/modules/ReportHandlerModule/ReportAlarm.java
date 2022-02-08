@@ -21,19 +21,21 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import pt.portic.tech.modules.ActivityDB_Module.ActivitiesDataModal;
-import pt.portic.tech.modules.ActivityDB_Module.RealmDataBaseManager;
 import pt.portic.tech.modules.HARModule.HARModuleManager;
 import pt.portic.tech.modules.HealthReportsDB_Module.HealthReportsDBManager;
 import pt.portic.tech.modules.UserProfile.UserProfileManager;
 
 public class ReportAlarm extends BroadcastReceiver {
     private static final String TAG = "ReportAlarmModule";
+    public static final String ACTION_ALARM_RECEIVER = "HealthReportsProducer";
     Realm realm = null;
 
     /**
@@ -54,19 +56,31 @@ public class ReportAlarm extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         CalculateReport(context);
+    }
 
-        // apagar os registos de Atividade do último dia da BD.
-        Log.d(TAG,"Deleting all records from DB.");
-        RealmDataBaseManager.getInstance().DeleteAllRecordsFromDB();
+    /**
+            * Get a diff between two timestamps.
+            *
+            * @param oldTs The older timestamp
+ * @param newTs The newer timestamp
+ * @param timeUnit The unit in which you want the diff
+ * @return The diff value, in the provided time unit.
+ */
+    public static long getDateDiff(java.sql.Timestamp oldTs, java.sql.Timestamp newTs, TimeUnit timeUnit) {
+        long diffInMS = newTs.getTime() - oldTs.getTime();
+        return timeUnit.convert(diffInMS, TimeUnit.MILLISECONDS);
     }
 
     public void CalculateReport(Context context) {
-        Log.d(TAG, "Where you produce your report!");
+        Log.d(TAG, "Producing health report of the last day...");
         java.sql.Timestamp timestamp1 = null,timestamp2 = null;
         int seconds = 0;
         int minutes = 0;
         int hours = 0;
 
+
+        java.sql.Timestamp timestampRightNow = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+        boolean timestampsUnder24h = true;
 
         /** *******************************************************
          * *************  Capture Sedentary Activity  **************
@@ -100,9 +114,18 @@ public class ReportAlarm extends BroadcastReceiver {
                 gastoEnergeticoTotalOnBicycle= new DispendioEnergetico(),
                 gastoEnergeticoTotalOnRunning= new DispendioEnergetico();
 
-        while(it.hasNext()) {
+        while(it.hasNext())  {
             ActivitiesDataModal recordA = it.next();
-            if(it.hasNext()) {
+
+            long diffHours = getDateDiff(java.sql.Timestamp.valueOf(recordA.getTimestamp()),
+                    timestampRightNow, TimeUnit.HOURS);
+            if (diffHours > 24) {timestampsUnder24h = false;}
+            else {timestampsUnder24h = true;}
+
+            //Log.d(TAG,""+java.sql.Timestamp.valueOf(recordA.getTimestamp())+
+            //        " has a time difference of " + diffHours + " hours. Consider: " + timestampsUnder24h);
+
+            if((it.hasNext()) && (timestampsUnder24h)) {
                 ActivitiesDataModal recordB = it.next();
                 it.previous();
 
@@ -256,6 +279,8 @@ public class ReportAlarm extends BroadcastReceiver {
                 // this method ignores the activities "UNKNOWN" and "TILTING"
             }
         }
+
+        closeDB();
 
         if (onFootActivityVector) {
             onFootActivityVector = false;
@@ -432,7 +457,6 @@ public class ReportAlarm extends BroadcastReceiver {
                 gastoEnergeticoTotalOnRunning.distanceTravelled,
                 gastoEnergeticoTotalOnBicycle.distanceTravelled);
 
-        closeDB();
 
         Toast.makeText(context, "AMaaS: Daily Report Available.", Toast.LENGTH_LONG).show(); // For example
     }
@@ -663,7 +687,8 @@ public class ReportAlarm extends BroadcastReceiver {
             // on below line we are setting realm configuration
             RealmConfiguration config =
                     new RealmConfiguration.Builder()
-                            .name("DetectedActivities.db")
+                            //.name("DetectedActivities.db")
+                            .name(HARModuleManager.PORTIC_Database_Name)
                             // below line is to allow write
                             // data to database on ui thread.
                             .allowWritesOnUiThread(true)
@@ -706,7 +731,8 @@ public class ReportAlarm extends BroadcastReceiver {
             // on below line we are setting realm configuration
             RealmConfiguration config =
                     new RealmConfiguration.Builder()
-                            .name("DetectedActivities.db")
+                            //.name("DetectedActivities.db")
+                            .name(HARModuleManager.PORTIC_Database_Name)
                             // below line is to allow write
                             // data to database on ui thread.
                             .allowWritesOnUiThread(true)

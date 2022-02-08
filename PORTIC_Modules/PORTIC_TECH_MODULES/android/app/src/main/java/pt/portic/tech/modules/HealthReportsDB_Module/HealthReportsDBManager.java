@@ -31,6 +31,7 @@ import com.google.gson.JsonObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,15 +39,18 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.Sort;
 import pt.portic.tech.modules.HARModule.HARModuleManager;
 import pt.portic.tech.modules.Public_API_HealthReportsDB_Module;
+import pt.portic.tech.modules.RecommendationsModule.RecommendationsManager;
+import pt.portic.tech.modules.UserProfile.UserProfileManager;
 
 public class HealthReportsDBManager extends ReactContextBaseJavaModule implements Public_API_HealthReportsDB_Module {
-private static final String TAG = "HealthReportsDBManager";
+private static final String TAG = "HealthReportsDBModule";
     /*
      *   Singleton Pattern
      */
@@ -88,7 +92,7 @@ private static final String TAG = "HealthReportsDBManager";
         // on below line we are setting realm configuration
         RealmConfiguration config =
                 new RealmConfiguration.Builder()
-                        .name("HealthReports.db")
+                        .name(HARModuleManager.PORTIC_Database_Name)
                         // below line is to allow write
                         // data to database on ui thread.
                         .allowWritesOnUiThread(true)
@@ -280,8 +284,50 @@ private static final String TAG = "HealthReportsDBManager";
         }
 
         // on below line we are calling a method to execute a transaction.
-
         realm.close();
+
+        // verify if there are 7 reports already, so that we can produce our recommendations
+        // read database first
+        //Date currentDate = Calendar.getInstance().getTime();
+        //SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
+        //String formattedDate = df.format(currentDate);
+        Date dateOfLastReport;
+        try {
+            if (UserProfileManager.getInstance().Get_Date_Of_Last_Weekly_Report().equals(""))
+            {
+                // neste caso, eu só quero que a data da alegada primeira produção de relatório
+                // seja esta (a de produção do primeiro relatório de saúde
+                UserProfileManager.getInstance().Set_Date_Of_Last_Weekly_Report(formattedDate);
+                // then no report exists yet. Produce one.
+                //RecommendationsManager.getInstance().ProduceWeeklyRecommendations();
+            }
+            // e depois produzes o relatório só quando passou a quantidade de dias para a sua
+            // produção. É improvável que o código seguinte execute alguma vez, só quando se
+            // queira um relatório semanal de 1 dia.
+
+            Date timeNow = Calendar.getInstance().getTime();
+            String timeNowFormattedDate = df.format(timeNow);
+
+
+            String time = UserProfileManager.getInstance().Get_Date_Of_Last_Weekly_Report();
+            dateOfLastReport = new SimpleDateFormat("dd-MMM-yyyy").parse(time);
+
+            long diffInMillies = Math.abs(timeNow.getTime() - dateOfLastReport.getTime());
+            long numberOfDaysSinceLastReport = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+
+            Log.d(TAG,"Numero de dias desde o último relatório semanal: " + numberOfDaysSinceLastReport);
+            if (numberOfDaysSinceLastReport >= HARModuleManager.NUMBER_OF_DAYS_OF_WEEKLY_REPORT) // change this to 7
+            {
+                // produce weekly report and recommendations
+                Log.d(TAG,"Produzindo o relatório semanal com as recomendações de saúde.");
+                RecommendationsManager.getInstance().ProduceWeeklyRecommendations();
+            }
+
+        } catch (ParseException e) {
+            Log.d(TAG,"Exception: " + e.toString());
+
+            e.printStackTrace();
+        }
     }
 
     //@ReactMethod

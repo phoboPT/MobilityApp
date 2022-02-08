@@ -46,6 +46,8 @@ import com.portic_tech_modules.R;
 import java.util.HashSet;
 import java.util.Set;
 
+import pt.portic.tech.modules.ReportHandlerModule.ReportModuleManager;
+
 /**
  *
  * We need to create another background service class named
@@ -163,10 +165,12 @@ public class BackgroundDetectedActivitiesService extends Service {
             @Override
             public void onSuccess(Void result) {
                 Log.d("BackgroundDetecASModule","Successfully requested activity updates");
-                Toast.makeText(getApplicationContext(),
+                ReportModuleManager.getInstance().VerifyIfReportServiceIsRunning();
+
+                /*Toast.makeText(getApplicationContext(),
                         "AMaaS activity sensing is ON.",
                         Toast.LENGTH_SHORT)
-                        .show();
+                        .show();*/
             }
         });
 
@@ -189,11 +193,12 @@ public class BackgroundDetectedActivitiesService extends Service {
         taskAMaaS.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void result) {
-                Toast.makeText(getApplicationContext(),
+                /*Toast.makeText(getApplicationContext(),
                         "AMaaS activity sensing is OFF.",
                         Toast.LENGTH_SHORT)
-                        .show();
+                        .show();*/
                 mPendingIntent_DetectedActivities.cancel();
+                ReportModuleManager.getInstance().Stop_Report_Handler_Module();
             }
         });
 
@@ -231,8 +236,7 @@ public class BackgroundDetectedActivitiesService extends Service {
 
         Intent restartServiceIntent = new Intent(this, BackgroundDetectedActivitiesService.class);
         restartServiceIntent.setPackage(getPackageName());
-// ActivityManager manager = (ActivityManager)
-//                mainActivityObj.getSystemService(Context.ACTIVITY_SERVICE);
+
         PendingIntent restartServicePendingIntent = PendingIntent.getService(getApplicationContext(), 1, restartServiceIntent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmService = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
         alarmService.set(

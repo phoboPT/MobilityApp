@@ -48,10 +48,11 @@ public class HARModuleManager extends ReactContextBaseJavaModule  implements Pub
     // https://en.proft.me/2017/04/17/how-get-location-latitude-longitude-gps-android/
 
     public static final String BROADCAST_DETECTED_ACTIVITY = "activity_intent";
-    public static final long DETECTION_INTERVAL_IN_MILLISECONDS = 1000; // 1 seg.
+    public static final long DETECTION_INTERVAL_IN_MILLISECONDS = 1000;//1000; // 1 seg.
     public static final int CONFIDENCE = 75;
-
+    public static final String PORTIC_Database_Name = "PORTIC_Health_Module_DB.realm";
     public static int sleepTimeA = 22, sleepTimeB = 9;// this is only in hours [22h-09] -> night time to ignore STILL time
+    public static final int NUMBER_OF_DAYS_OF_WEEKLY_REPORT = 6; // (default: 6 [index 0 to 6 included] for 7 days)
 
     private static HARModuleManager harModuleManagerSingleton =null;
     public HARModuleManager() {

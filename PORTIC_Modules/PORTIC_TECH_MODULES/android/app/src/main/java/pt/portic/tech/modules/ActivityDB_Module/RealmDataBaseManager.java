@@ -40,7 +40,9 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.Sort;
 import pt.portic.tech.modules.HARModule.HARModuleManager;
+import pt.portic.tech.modules.HealthReportsDB_Module.HealthReportDataModal;
 import pt.portic.tech.modules.Public_API_ActivityDB_Module;
+import pt.portic.tech.modules.RecommendationsModule.WeeklyReportDataModal;
 
 /**
  * Follow:
@@ -94,7 +96,8 @@ public class RealmDataBaseManager extends ReactContextBaseJavaModule implements 
         // on below line we are setting realm configuration
         RealmConfiguration config =
                 new RealmConfiguration.Builder()
-                        .name("DetectedActivities.db")
+                        //.name("DetectedActivities.db")
+                        .name(HARModuleManager.PORTIC_Database_Name)
                         // below line is to allow write
                         // data to database on ui thread.
                         .allowWritesOnUiThread(true)
@@ -244,7 +247,8 @@ public class RealmDataBaseManager extends ReactContextBaseJavaModule implements 
             // on below line we are setting realm configuration
             RealmConfiguration config =
                     new RealmConfiguration.Builder()
-                            .name("DetectedActivities.db")
+                            //.name("DetectedActivities.db")
+                            .name(HARModuleManager.PORTIC_Database_Name)
                             // below line is to allow write
                             // data to database on ui thread.
                             .allowWritesOnUiThread(true)
@@ -360,7 +364,7 @@ public class RealmDataBaseManager extends ReactContextBaseJavaModule implements 
      */
     @ReactMethod
     @Override
-    public void DeleteRecordFromDB(int position) {
+    public void DeleteRecordFromDBActivitiesDataModal(int position) {
         // guarantee the database has already been created; if not, get app context stored in HAR module
         if (!databaseInitiated)  { CreateDB(HARModuleManager.mainActivityObj); }
 
@@ -368,6 +372,73 @@ public class RealmDataBaseManager extends ReactContextBaseJavaModule implements 
 
         if (position <= realm.where(ActivitiesDataModal.class).findAll().size()) {
             ActivitiesDataModal modal = realm.where(ActivitiesDataModal.class).equalTo("id", position).findFirst();
+
+            if (modal != null) {
+                // inside on execute method we are calling a method to delete our modal from db.
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        modal.deleteFromRealm();
+                    }
+                });
+            }
+            else {
+                Log.d("RealmDatabaseManModule", "Record requested does not exist in the DB.");
+                Log.e("RealmDatabaseManModule", "Record requested does not exist in the DB.");
+            }
+
+        }
+        else {
+            Log.d("RealmDatabaseManModule", "Delete position requested" + position + " outside possible index.");
+            Log.e("RealmDatabaseManModule", "Delete position requested" + position + " outside possible index.");
+        }
+
+        realm.close();
+    }
+
+    @ReactMethod
+    @Override
+    public void DeleteRecordFromDBHealthReportDataModal(int position) {
+        // guarantee the database has already been created; if not, get app context stored in HAR module
+        if (!databaseInitiated)  { CreateDB(HARModuleManager.mainActivityObj); }
+
+        Realm realm = Realm.getDefaultInstance();
+
+        if (position <= realm.where(HealthReportDataModal.class).findAll().size()) {
+            HealthReportDataModal modal = realm.where(HealthReportDataModal.class).equalTo("id", position).findFirst();
+
+            if (modal != null) {
+                // inside on execute method we are calling a method to delete our modal from db.
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        modal.deleteFromRealm();
+                    }
+                });
+            }
+            else {
+                Log.d("RealmDatabaseManModule", "Record requested does not exist in the DB.");
+                Log.e("RealmDatabaseManModule", "Record requested does not exist in the DB.");
+            }
+
+        }
+        else {
+            Log.d("RealmDatabaseManModule", "Delete position requested" + position + " outside possible index.");
+            Log.e("RealmDatabaseManModule", "Delete position requested" + position + " outside possible index.");
+        }
+
+        realm.close();
+    }
+    @ReactMethod
+    @Override
+    public void DeleteRecordFromDBWeeklyReportDataModal(int position) {
+        // guarantee the database has already been created; if not, get app context stored in HAR module
+        if (!databaseInitiated)  { CreateDB(HARModuleManager.mainActivityObj); }
+
+        Realm realm = Realm.getDefaultInstance();
+
+        if (position <= realm.where(WeeklyReportDataModal.class).findAll().size()) {
+            WeeklyReportDataModal modal = realm.where(WeeklyReportDataModal.class).equalTo("id", position).findFirst();
 
             if (modal != null) {
                 // inside on execute method we are calling a method to delete our modal from db.
@@ -403,11 +474,13 @@ public class RealmDataBaseManager extends ReactContextBaseJavaModule implements 
         if (!databaseInitiated)  { CreateDB(HARModuleManager.mainActivityObj); }
 
         Realm realm = Realm.getDefaultInstance();
-        List<ActivitiesDataModal> modals = new ArrayList<ActivitiesDataModal>();
+        List<ActivitiesDataModal> modalsActivities = new ArrayList<ActivitiesDataModal>();
+        List<HealthReportDataModal> modalsHealthReports = new ArrayList<HealthReportDataModal>();
+        List<WeeklyReportDataModal> modalsWeeklyReports = new ArrayList<WeeklyReportDataModal>();
 
         // on below line we are getting data from realm database in our list.
-        modals = realm.where(ActivitiesDataModal.class).findAll();
-        for (ActivitiesDataModal m : modals) {
+        modalsActivities = realm.where(ActivitiesDataModal.class).findAll();
+        for (ActivitiesDataModal m : modalsActivities) {
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
@@ -416,7 +489,51 @@ public class RealmDataBaseManager extends ReactContextBaseJavaModule implements 
             });
         }
 
-        Log.d("RealmDataBaseManager","All activity records are DELETED from DB.");
+        modalsHealthReports =  realm.where(HealthReportDataModal.class).findAll();
+        for (HealthReportDataModal m : modalsHealthReports) {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    m.deleteFromRealm();
+                }
+            });
+        }
+
+        modalsWeeklyReports = realm.where(WeeklyReportDataModal.class).findAll();
+        for (WeeklyReportDataModal m : modalsWeeklyReports) {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    m.deleteFromRealm();
+                }
+            });
+        }
+
+        Log.d("RealmDataBaseManager","Every record from the overall Database " + HARModuleManager.PORTIC_Database_Name +" is DELETED.");
+
+        realm.close();
+    }
+
+    @Override
+    public void DeleteAllActivityRecordsFromDB() {
+        // guarantee the database has already been created; if not, get app context stored in HAR module
+        if (!databaseInitiated)  { CreateDB(HARModuleManager.mainActivityObj); }
+
+        Realm realm = Realm.getDefaultInstance();
+        List<ActivitiesDataModal> modalsActivities = new ArrayList<ActivitiesDataModal>();
+
+        // on below line we are getting data from realm database in our list.
+        modalsActivities = realm.where(ActivitiesDataModal.class).findAll();
+        for (ActivitiesDataModal m : modalsActivities) {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    m.deleteFromRealm();
+                }
+            });
+        }
+
+        Log.d("RealmDataBaseManager","Every record from the Activitiies' Database " + HARModuleManager.PORTIC_Database_Name +" is DELETED.");
 
         realm.close();
     }

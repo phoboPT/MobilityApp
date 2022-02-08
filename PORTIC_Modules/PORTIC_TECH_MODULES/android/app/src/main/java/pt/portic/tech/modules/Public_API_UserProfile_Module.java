@@ -27,6 +27,8 @@ public interface Public_API_UserProfile_Module {
      * Gender (M/F)
      * Height
      * Weight
+     * Health Activity Risk
+     * Date of Last weekly Report
      *
      * Com os respetivos setters e getters
      *
@@ -56,7 +58,8 @@ public interface Public_API_UserProfile_Module {
     /* Stored as INTEGER, format 1 */
     void Set_Health_Activity_Risk(String risk);
 
-
+    /* Stored as STRING, format dd-mm-yyyy*/
+    void Set_Date_Of_Last_Weekly_Report(String date);
 
     /* Stored as STRING */
     Map<String, ?> Get_User_ALL_Data();
@@ -81,6 +84,9 @@ public interface Public_API_UserProfile_Module {
 
     /* Stored as INTEGER, format 1 */
     Integer Get_Health_Activity_Risk();
+
+    /* Stored as STRING, format dd-mm-yyyy*/
+    String Get_Date_Of_Last_Weekly_Report();
 
     /**
      * Example of how data is stored:

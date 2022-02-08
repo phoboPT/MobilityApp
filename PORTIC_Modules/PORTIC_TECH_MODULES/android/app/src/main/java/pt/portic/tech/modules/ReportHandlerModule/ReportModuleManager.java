@@ -95,30 +95,16 @@ public class ReportModuleManager extends ReactContextBaseJavaModule implements P
 
         alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(activity, ReportAlarm.class);
-        pendingIntent = PendingIntent.getBroadcast(activity, 0, intent, 0);
-
-
-        /*
-        Calendar rightNow = Calendar.getInstance();
-        if (rightNow.get(Calendar.MINUTE) < 59) {
-            minute = rightNow.get(Calendar.MINUTE) + 1;
-            hour = rightNow.get(Calendar.HOUR_OF_DAY); // return the hour in 24 hrs format (ranging from 0-23)
-        }
-        else {
-            minute = 00;
-            if (rightNow.get(Calendar.HOUR_OF_DAY) < 23) {
-                hour = rightNow.get(Calendar.HOUR_OF_DAY) + 1; // return the hour in 24 hrs format (ranging from 0-23)
-            }
-            else hour = 00; // return the hour in 24 hrs format (ranging from 0-23)
-        }*/
+        intent.setAction(ReportAlarm.ACTION_ALARM_RECEIVER);//my custom string action name
+        pendingIntent = PendingIntent.getBroadcast(activity, 1001, intent, PendingIntent.FLAG_CANCEL_CURRENT); // was activity, 0, intent, 0
 
         calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, hour); // For 1 PM or 2 PM
         calendar.set(Calendar.MINUTE, minute);
         calendar.set(Calendar.SECOND, second);
 
-        //setAlarm();// AlarmManager.INTERVAL_DAY
-        alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_DAY, pendingIntent); //first start will start asap
 
         // Enable ReportAlarm Component
         //setBootReceiverEnabled(PackageManager.COMPONENT_ENABLED_STATE_ENABLED);
@@ -132,13 +118,23 @@ public class ReportModuleManager extends ReactContextBaseJavaModule implements P
     @Override
     public void Stop_Report_Handler_Module() {
         //cancelAlarm();
-        if (alarmManager != null) {
+        /*if (alarmManager != null) {
             alarmManager.cancel(pendingIntent);
+            pendingIntent.cancel();//important
             // Disable ReportAlarm Component
             //setBootReceiverEnabled(PackageManager.COMPONENT_ENABLED_STATE_DISABLED);
             alarmManager = null;
             Log.d(TAG, "Report Handler module alarm disabled.");
-        }
+        }*/
+
+        alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(activity, ReportAlarm.class);
+        intent.setAction(ReportAlarm.ACTION_ALARM_RECEIVER);//my custom string action name
+        pendingIntent = PendingIntent.getBroadcast(activity, 1001, intent, PendingIntent.FLAG_CANCEL_CURRENT); // was activity, 0, intent, 0
+
+        alarmManager.cancel(pendingIntent);//important
+        pendingIntent.cancel();//important
+
     }
 
     @ReactMethod
@@ -153,11 +149,18 @@ public class ReportModuleManager extends ReactContextBaseJavaModule implements P
      */
     @Override
     public void VerifyIfReportServiceIsRunning() {
-        if (alarmManager != null) {
-            Log.d(TAG, "Report scheduler is running.");
-        }
-        else {
+
+        alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(activity, ReportAlarm.class);
+        intent.setAction(ReportAlarm.ACTION_ALARM_RECEIVER);//my custom string action name
+
+        boolean isWorking = (PendingIntent.getBroadcast(activity, 1001, intent, PendingIntent.FLAG_NO_CREATE) != null);//just changed the flag
+        Log.d(TAG, "Report scheduler is " + (isWorking ? "" : "not") + " running...");
+
+        if (!isWorking) {
             Begin_Report_Handler_Module();
+            Log.d(TAG, "Restarting it!");
         }
+
     }
 }

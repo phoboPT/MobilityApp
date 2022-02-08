@@ -50,11 +50,20 @@ public interface Public_API_ActivityDB_Module {
      *
      * @param position
      */
-    public void DeleteRecordFromDB(int position);
+    void DeleteRecordFromDBActivitiesDataModal(int position);
+    void DeleteRecordFromDBHealthReportDataModal(int position);
+    void DeleteRecordFromDBWeeklyReportDataModal(int position);
 
     /**
      * Clean all the records from the database to initiate another cycle of recording. For example,
      * Cleaning the last 24H of recordings.
      */
-    public void DeleteAllRecordsFromDB();
+    void DeleteAllRecordsFromDB();
+
+    /**
+     * This method cleans all the activities and GPS data from the activities database.
+     * Should be called for e.g., when the weekly report is produced, so that this DB frees up
+     * space that is no longer needed.
+     */
+    void DeleteAllActivityRecordsFromDB();
 }

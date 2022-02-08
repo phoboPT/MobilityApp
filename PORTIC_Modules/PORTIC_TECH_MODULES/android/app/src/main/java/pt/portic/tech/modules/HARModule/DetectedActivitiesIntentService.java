@@ -136,7 +136,7 @@ public class DetectedActivitiesIntentService extends IntentService implements Lo
                 // test if this is night time (if it is bed time, it's uninteresting to
                 // capture the "still" periods and count them as sedentary
                 // I'll ignore STILL activities between 22h and 09h
-                if ((activity.getType() == 3) && ((hour > HARModuleManager.sleepTimeA) || (hour < HARModuleManager.sleepTimeB))) {
+                if ((activity.getType() == 3) && ((hour >= HARModuleManager.sleepTimeA) || (hour < HARModuleManager.sleepTimeB))) {
                     Log.d(TAG,"Ignored activity " + DetectedActivityGetType(activity.getType()) +
                             " at " + (timestamp).toString() + " because .it's night time: [" +
                             HARModuleManager.sleepTimeA + "H - " + HARModuleManager.sleepTimeB + "H]. Current hour is " + hour + "H.");
