@@ -1,5 +1,5 @@
 apply plugin: "com.android.application"
-
+apply plugin: 'realm-android' 
 import com.android.build.OutputFile
 
 /**
@@ -193,7 +193,10 @@ dependencies {
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
     }
-
+  implementation 'com.google.android.gms:play-services-location:18.0.0' //HAR
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:+'
+    implementation 'com.facebook.android:facebook-android-sdk:+'
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.flipper'
         exclude group:'com.squareup.okhttp3', module:'okhttp'

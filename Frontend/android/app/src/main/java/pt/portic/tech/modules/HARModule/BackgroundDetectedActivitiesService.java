@@ -41,7 +41,7 @@ import com.google.android.gms.location.ActivityRecognitionClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.portic_tech_modules.R;
+import com.frontend.R;
 
 import java.util.HashSet;
 import java.util.Set;

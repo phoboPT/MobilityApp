@@ -15,8 +15,10 @@ import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import pt.portic.tech.modules.All_Modules_Into_React_Native_Package;
+import pt.portic.tech.modules.UserProfile.UserProfileManager;
 public class MainApplication extends Application implements ReactApplication {
-
+  private static Context context;
   private final ReactNativeHost mReactNativeHost =
       new ReactNativeHost(this) {
         @Override
@@ -30,6 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
+          packages.add(new All_Modules_Into_React_Native_Package());
           return packages;
         }
 
@@ -49,8 +52,18 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
-  }
 
+    context = getApplicationContext();
+
+    /*
+       Initialize the user preferences module, to store data from the user
+       physique, app registration, and app preferences
+      */
+      UserProfileManager.getInstance();
+  }
+  public static Context getAppContext() {
+    return context;
+}
   /**
    * Loads Flipper in React Native templates. Call this in the onCreate method with something like
    * initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
