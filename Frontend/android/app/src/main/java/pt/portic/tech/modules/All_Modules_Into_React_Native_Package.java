@@ -28,6 +28,7 @@ import pt.portic.tech.modules.HARModule.HARModuleManager;
 import pt.portic.tech.modules.HealthReportsDB_Module.HealthReportsDBManager;
 import pt.portic.tech.modules.ReportHandlerModule.ReportModuleManager;
 import pt.portic.tech.modules.UserProfile.UserProfileManager;
+import pt.portic.tech.modules.RecommendationsModule.RecommendationsManager;
 
 
 /**
@@ -55,6 +56,7 @@ public class All_Modules_Into_React_Native_Package implements ReactPackage {
         modules.add(new RealmDataBaseManager());
         modules.add(new ReportModuleManager());
         modules.add(new HealthReportsDBManager());
+        modules.add(new RecommendationsManager());
 
         return modules;
     }
