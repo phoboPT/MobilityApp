@@ -1,8 +1,11 @@
+//@ts-ignore
 import comboios from 'comboios';
+//@ts-ignore
 import NodeGeocoder from 'node-geocoder';
 import busRoutes from '../bus/bus.json';
 import { distance } from '../lib/utils';
-import { ILatLong, ICPStations, IRoutes, IBusRoutes } from '../interfaces/interfaces';
+import { ILatLong, ICPStations, IRoutes, IBusRoutes, IRoute } from '../interfaces/interfaces';
+import { Route } from '../models/route';
 
 const routeAPI = async (start: any, end: any, type: string): Promise<any> => {
   try {
@@ -38,57 +41,54 @@ const routeAPI = async (start: any, end: any, type: string): Promise<any> => {
     // });
     // const date: Date = new Date();
 
-    // const cpJourneys =
-    //     (await comboios.journeys(begin.id, stop.id, {
-    //         when: new Date(`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`),
-    //     })) || [];
-    // const bdRides = await Route.find({ state: 'AVAILABLE', startDate: { $gte: date.toDateString() } });
+    const cpJourneys = [];
+    const bdRides = await Route.find({ state: 'AVAILABLE' });
     // //  console.log(bdRides)
-    // bdRides.forEach((route: any) => {
-    //     const ride: IRoute = {
-    //         id: route.id,
-    //         type: route.type,
-    //         availableTime: route.availableTime,
-    //         state: route.state,
-    //         description: route.description,
-    //         estimatedTime: route.estimatedTime,
-    //         startDate: route.startDate,
-    //         userImage: route.userImage,
-    //         rating: route.rating,
-    //         capacity: route.capacity,
-    //         actualCapacity: route.actualCapacity,
-    //         version: route.version,
-    //         legs: [
-    //             {
-    //                 tripId: route.id,
-    //                 origin: {
-    //                     id: route.id,
-    //                     name: route.startLocation,
-    //                 },
-    //                 destination: {
-    //                     id: route.id,
-    //                     name: route.endLocation,
-    //                 },
-    //             },
-    //         ],
-    //         startLocation: route.startLocation,
-    //         endLocation: route.endLocation,
-    //         originId: route.id,
-    //         destinationId: route.id,
-    //         price: 0,
-    //     };
+    bdRides.forEach((route: any) => {
+      const ride: IRoute = {
+        id: route.id,
+        type: route.type,
+        availableTime: route.availableTime,
+        state: route.state,
+        description: route.description,
+        estimatedTime: route.estimatedTime,
+        startDate: route.startDate,
+        userImage: route.userImage,
+        rating: route.rating,
+        capacity: route.capacity,
+        actualCapacity: route.actualCapacity,
+        version: route.version,
+        legs: [
+          {
+            tripId: route.id,
+            origin: {
+              id: route.id,
+              name: route.startLocation,
+            },
+            destination: {
+              id: route.id,
+              name: route.endLocation,
+            },
+          },
+        ],
+        startLocation: route.startLocation,
+        endLocation: route.endLocation,
+        originId: route.id,
+        destinationId: route.id,
+        price: 0,
+      };
 
-    //     allTargets.push(route.startLocation);
-    //     if (route.startLocation.includes(initialPlace)) {
-    //         begin.id = route.id;
-    //         begin.name = route.startLocation;
-    //     }
-    //     if (route.endLocation.includes(finalPlace)) {
-    //         stop.id = route.id;
-    //         stop.name = route.endLocation;
-    //     }
-    //     cpJourneys.push(ride);
-    // });
+      allTargets.push(route.startLocation);
+      if (route.startLocation.includes(initialPlace)) {
+        begin.id = route.id;
+        begin.name = route.startLocation;
+      }
+      if (route.endLocation.includes(finalPlace)) {
+        stop.id = route.id;
+        stop.name = route.endLocation;
+      }
+      cpRoutes.push(ride);
+    });
 
     // // busRoutes.data.forEach((route: any) => {
     // //     const routeDate = new Date(route.date);
