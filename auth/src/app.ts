@@ -1,12 +1,12 @@
 import express from 'express';
 import 'express-async-errors';
 import { json } from 'body-parser';
+import { errorHandler, NotFoundError } from '@mobileorg/common-lib';
+import cookieSession from 'cookie-session';
 import { currentUserRouter } from './routes/current-user';
 import { signinRouter } from './routes/signin';
 import { signoutRouter } from './routes/signout';
 import { signupRouter } from './routes/signup';
-import { errorHandler, NotFoundError } from '@mobileorg/common-lib';
-import cookieSession from 'cookie-session';
 import { allUsersRouter } from './routes/allUsers';
 
 const app = express();

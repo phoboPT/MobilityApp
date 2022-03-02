@@ -1,15 +1,17 @@
 /**
  *  Software disponibilizado no âmbito do projeto TECH pelo PORTIC, Instituto Politécnico do Porto.
  *
- *  Os direitos de autor são exclusivamente retidos pelo PORTIC, e qualquer partilha
- *  deste código carece de autorização explicita por parte do autor responsável.
+ *  Os direitos de autor são exclusivamente retidos pelo PORTIC e pelo Autor mencionado nesta nota.
+ *  Carece de autorização explicita por parte do autor responsável o uso deste código (1) para fins
+ *  que não sejam devidamente definidos na Licença que acompanha este projeto, e (2) para os fins que
+ *  própria licença assim o exija.
  *
- *  Autor:      Dr.Eng. Francisco Xavier dos Santos Fonseca
- *  Nº Ordem:   84598
- *  Data:       2021.Nov.10
- *  Email:      xavier.fonseca@portic.ipp.pt
+ *  Autor:          Dr.Eng. Francisco Xavier dos Santos Fonseca
+ *  Nº da Ordem:    84598
+ *  Data:           2021.Nov.10
+ *  Email
+ *  Institucional:  xavier.fonseca@portic.ipp.pt
  */
-
 package pt.portic.tech.modules.UserProfile;
 
 import android.content.Context;
@@ -20,7 +22,6 @@ import androidx.annotation.NonNull;
 
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.portic_tech_modules.MainActivity;
 import com.portic_tech_modules.MainApplication;
 
 import java.util.Map;
@@ -42,6 +43,9 @@ public class UserProfileManager extends ReactContextBaseJavaModule implements Pu
     public static final String user_Gender = "user_Gender";
     public static final String user_Height = "user_Height";
     public static final String user_Weight = "user_Weight";
+    public static final String healthActivityRisk = "healthActivityRisk";
+    public static final String dateOfLastWeeklyReport = "dateOfLastWeeklyReport";
+
 
     /*
      *   Singleton Pattern
@@ -116,45 +120,77 @@ public class UserProfileManager extends ReactContextBaseJavaModule implements Pu
         editor.commit();
     }
 
+    @ReactMethod
+    @Override
+    public void Set_Health_Activity_Risk(String risk) {
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putInt(healthActivityRisk, new Integer(Integer.parseInt(risk)));
+        editor.commit();
+    }
+
+    @ReactMethod
+    @Override
+    public void Set_Date_Of_Last_Weekly_Report(String date) {
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(dateOfLastWeeklyReport, date);
+        editor.commit();
+    }
 
 
-
-
-
+    @ReactMethod
     @Override
     public Map<String, ?> Get_User_ALL_Data() {
         return sharedpreferences.getAll();
     }
 
+    @ReactMethod
     @Override
     public String Get_User_ID() {
         return sharedpreferences.getString("user_ID","N/A");
     }
 
+    @ReactMethod
     @Override
     public String Get_User_Name() {
         return sharedpreferences.getString("user_Name","N/A");
     }
 
+    @ReactMethod
     @Override
     public Long Get_User_BirthDate() {
         return sharedpreferences.getLong("user_BirthDate",new Long(0));
     }
 
+    @ReactMethod
     @Override
     public String Get_User_Gender() {
         return sharedpreferences.getString("user_Gender","N/A");
     }
 
+    @ReactMethod
     @Override
     public Float Get_User_Height() {
         return sharedpreferences.getFloat("user_Height",new Float(0.0));
     }
 
+    @ReactMethod
     @Override
     public Float Get_User_Weight() {
         return sharedpreferences.getFloat("user_Weight",new Float(0.0));
     }
+
+    @ReactMethod
+    @Override
+    public Integer Get_Health_Activity_Risk() { // default is 1, risk is low
+        return sharedpreferences.getInt("healthActivityRisk",new Integer(1));
+    }
+    @ReactMethod
+    @Override
+    public String Get_Date_Of_Last_Weekly_Report() {
+        return sharedpreferences.getString("dateOfLastWeeklyReport",new String(""));
+    }
+
+
 
     @NonNull
     @Override

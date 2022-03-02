@@ -1,3 +1,20 @@
 <resources>
-    <string name="app_name">Frontend</string>
+    <string name="app_name">Mobility One</string>
+    <string name="title_activity_main">MainActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="title_activity_interact_with_background">ActivityInteractWithBackground</string>
+    <string name="Background_Modules">Background_Modules</string>
+    <string name="read_db">Read DB</string>
+    <string name="notification_titleAMaaS">Mobility Service</string>
+    <string name="notification_messageAMaaS">AMaaS activity service.</string>
+    <string name="notification_titleLocation">Location Tracking</string>
+    <string name="notification_messageLocation">Attaching location to your physical activity to understand intensity.</string>
+    <string name="ticker_text">tick</string>
 </resources>

@@ -39,8 +39,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
+        
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -65,7 +64,11 @@ public class MainActivity extends AppCompatActivity {
          * Responsibility: PORTIC/IPP
          */
         context = this;
+        // context.requestPermissions(thisActivity,
+        //           arrayOf(Manifest.permission.ACTIVITY_RECOGNITION),
+        //           MY_PERMISSIONS_REQUEST_ACTIVITY_RECOGNITION);
         HARModuleManager.getInstance(context);
+        
     }
 
     @Override

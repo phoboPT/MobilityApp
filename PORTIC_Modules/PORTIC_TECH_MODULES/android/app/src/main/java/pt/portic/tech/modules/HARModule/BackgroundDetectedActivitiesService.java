@@ -1,15 +1,17 @@
 /**
  *  Software disponibilizado no âmbito do projeto TECH pelo PORTIC, Instituto Politécnico do Porto.
  *
- *  Os direitos de autor são exclusivamente retidos pelo PORTIC, e qualquer partilha
- *  deste código carece de autorização explicita por parte do autor responsável.
+ *  Os direitos de autor são exclusivamente retidos pelo PORTIC e pelo Autor mencionado nesta nota.
+ *  Carece de autorização explicita por parte do autor responsável o uso deste código (1) para fins
+ *  que não sejam devidamente definidos na Licença que acompanha este projeto, e (2) para os fins que
+ *  própria licença assim o exija.
  *
- *  Autor:      Dr.Eng. Francisco Xavier dos Santos Fonseca
- *  Nº Ordem:   84598
- *  Data:       2021.Nov.10
- *  Email:      xavier.fonseca@portic.ipp.pt
+ *  Autor:          Dr.Eng. Francisco Xavier dos Santos Fonseca
+ *  Nº da Ordem:    84598
+ *  Data:           2021.Nov.10
+ *  Email
+ *  Institucional:  xavier.fonseca@portic.ipp.pt
  */
-
 package pt.portic.tech.modules.HARModule;
 
 import android.annotation.TargetApi;
@@ -43,6 +45,8 @@ import com.portic_tech_modules.R;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import pt.portic.tech.modules.ReportHandlerModule.ReportModuleManager;
 
 /**
  *
@@ -161,17 +165,24 @@ public class BackgroundDetectedActivitiesService extends Service {
             @Override
             public void onSuccess(Void result) {
                 Log.d("BackgroundDetecASModule","Successfully requested activity updates");
-                Toast.makeText(getApplicationContext(),
+                ReportModuleManager.getInstance().VerifyIfReportServiceIsRunning();
+
+                /*Toast.makeText(getApplicationContext(),
                         "AMaaS activity sensing is ON.",
                         Toast.LENGTH_SHORT)
-                        .show();
+                        .show();*/
             }
         });
 
         taskAMaaS.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                
                 Log.d("BackgroundDetecASModule","Requesting activity updates failed to start");
+                  Toast.makeText(getApplicationContext(),
+                       e.getMessage(),
+                        Toast.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(getApplicationContext(),
                         "AMaaS activity sensing failed to start.",
                         Toast.LENGTH_SHORT)
@@ -187,11 +198,12 @@ public class BackgroundDetectedActivitiesService extends Service {
         taskAMaaS.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void result) {
-                Toast.makeText(getApplicationContext(),
+                /*Toast.makeText(getApplicationContext(),
                         "AMaaS activity sensing is OFF.",
                         Toast.LENGTH_SHORT)
-                        .show();
+                        .show();*/
                 mPendingIntent_DetectedActivities.cancel();
+                ReportModuleManager.getInstance().Stop_Report_Handler_Module();
             }
         });
 
@@ -229,8 +241,7 @@ public class BackgroundDetectedActivitiesService extends Service {
 
         Intent restartServiceIntent = new Intent(this, BackgroundDetectedActivitiesService.class);
         restartServiceIntent.setPackage(getPackageName());
-// ActivityManager manager = (ActivityManager)
-//                mainActivityObj.getSystemService(Context.ACTIVITY_SERVICE);
+
         PendingIntent restartServicePendingIntent = PendingIntent.getService(getApplicationContext(), 1, restartServiceIntent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmService = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
         alarmService.set(

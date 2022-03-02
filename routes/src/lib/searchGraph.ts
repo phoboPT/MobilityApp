@@ -14,6 +14,7 @@ interface IRoutes extends Array<IRoute> {}
 export const searchRoute = (src: string, dst: string, routes: IRoutes, allTargets: string[]) => {
   // The graph
   try {
+    console.log('src', src, dst);
     const adjacencyList = new Map();
     // Add node
     function addNode(node: string) {
@@ -37,7 +38,7 @@ export const searchRoute = (src: string, dst: string, routes: IRoutes, allTarget
         adjacencyList.set(key, uniq_fast(item));
       }
     });
-
+    console.log(adjacencyList);
     const searchAllPaths = (
       graph: Map<string, string>,
       start: string,
@@ -45,6 +46,7 @@ export const searchRoute = (src: string, dst: string, routes: IRoutes, allTarget
       visited: IVisit,
       all: string
     ): void => {
+      console.log(start, end, visited, all);
       if (start === end) {
         paths.push(all);
         return;
@@ -60,7 +62,7 @@ export const searchRoute = (src: string, dst: string, routes: IRoutes, allTarget
     };
 
     searchAllPaths(adjacencyList, src, dst, visit, src);
-
+    console.log(paths);
     return paths;
   } catch (error) {
     console.log(`search error: ${error}`);

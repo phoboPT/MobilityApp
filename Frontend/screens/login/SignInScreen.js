@@ -1,10 +1,23 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  Button,
+} from 'react-native';
 import Form from 'react-native-basic-form';
 import api from '../../services/api';
+import {NativeModules} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import {StackActions, NavigationActions} from 'react-navigation';
 
+const {
+  HAR_Module,
+  ReportModuleManager,
+  RecommendationsManager,
+  ActivitiesDatabaseModule,
+} = NativeModules;
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: 'white'},
   master: {
@@ -83,6 +96,29 @@ const SignInScreen = ({navigation}) => {
       setLoading(false);
     }
   }
+  const onPress_HAR_Begin_Service = () => {
+    //  CalendarModule.createCalendarEvent('testName', 'testLocation');
+
+    HAR_Module.HAR_Begin_Service();
+  };
+
+  const onPress_HAR_Stop_Service = () => {
+    //console.log('We will invoke the native module here!');
+    //  CalendarModule.createCalendarEvent('testName', 'testLocation');
+    HAR_Module.HAR_Stop_Service();
+  };
+  const onPress_Report = () => {
+    ReportModuleManager.CalculateCurrentReport();
+    const data = RecommendationsManager.GetWeeklyRecommendations();
+    console.log(data);
+  };
+
+  const PrintEntireDB = () => {
+    ActivitiesDatabaseModule.ReadAllDataFromDBIntoReactNative(array => {
+      console.log(array, 'The array you sent from the native side');
+      // [{"activityDescription": "STILL", "activityType": 3, "confidence": 100, "id": 1, "timestamp": "2021-11-19 19:30:35.517", "userID": "98765"}]
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -98,6 +134,27 @@ const SignInScreen = ({navigation}) => {
             </TouchableOpacity>
           </View>
         </Form>
+        <Button
+          title="Start Activity Recognition Service"
+          color="#841584"
+          onPress={() => onPress_HAR_Begin_Service()}
+        />
+        <Text> </Text>
+        <Button
+          title="Stop Activity Recognition Service"
+          color="#841584"
+          onPress={() => onPress_HAR_Stop_Service()}
+        />
+        <Text> </Text>
+        <Button
+          title="Report"
+          color="#841584"
+          onPress={() => onPress_Report()}
+        />
+        <Text> </Text>
+        <Button title="DB" color="#841584" onPress={() => PrintEntireDB()} />
+
+        <View />
       </View>
     </View>
   );

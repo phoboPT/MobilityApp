@@ -59,13 +59,4 @@ interface ILatLong {
   long: number;
 }
 
-export {
-  ILatLong,
-  IStation,
-  ILeg,
-  IRoute,
-  IBusRoutes,
-  ICPRoutes,
-  IRoutes,
-  ICPStations,
-};
+export { ILatLong, IStation, ILeg, IRoute, IBusRoutes, ICPRoutes, IRoutes, ICPStations };

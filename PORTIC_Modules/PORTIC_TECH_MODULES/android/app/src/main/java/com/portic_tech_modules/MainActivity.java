@@ -8,9 +8,13 @@ package com.portic_tech_modules;
  *  Email:
  */
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.facebook.react.ReactActivity;
 
@@ -35,6 +39,7 @@ public class MainActivity extends ReactActivity {
     context = this;
     HARModuleManager.getInstance(context);
     ReportModuleManager.getInstance(context);
+
   }
 
 
