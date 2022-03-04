@@ -23,27 +23,30 @@ import MyProfile from './screens/MyProfile';
 import MapScreen from './screens/MapScreen';
 import OrdersScreen from './screens/OrdersScreen';
 import OrderDetail from './screens/OrderDetail';
+import {NativeBaseProvider, Box} from 'native-base';
 
 const Drawer = createDrawerNavigator();
 
 const App = () => {
   const navigationDrawer = () => {
     return (
-      <Drawer.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}
-        initialRouteName={HomeScreen}
-        drawerContent={props => <DrawerContent {...props} />}>
-        <Drawer.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{headerShown: false}}
-        />
-        <Drawer.Screen name="Map" component={MapScreen} />
-        <Drawer.Screen name="My Routes" component={MyRoutesScreen} />
-        <Drawer.Screen name="Settings" component={SettingsScreen} />
-      </Drawer.Navigator>
+      <NativeBaseProvider>
+        <Drawer.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}
+          initialRouteName={HomeScreen}
+          drawerContent={props => <DrawerContent {...props} />}>
+          <Drawer.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{headerShown: false}}
+          />
+          <Drawer.Screen name="Map" component={MapScreen} />
+          <Drawer.Screen name="My Routes" component={MyRoutesScreen} />
+          <Drawer.Screen name="Settings" component={SettingsScreen} />
+        </Drawer.Navigator>
+      </NativeBaseProvider>
     );
   };
 

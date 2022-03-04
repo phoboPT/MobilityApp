@@ -1,74 +1,31 @@
 import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Alert,
-  Button,
-} from 'react-native';
-import Form from 'react-native-basic-form';
+import {TouchableOpacity, Alert} from 'react-native';
 import api from '../../services/api';
 import {NativeModules} from 'react-native';
+import images from '../../constants/images';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import {
+  Box,
+  Text,
+  Heading,
+  VStack,
+  FormControl,
+  Input,
+  Button,
+  HStack,
+  Center,
+  Image,
+  NativeBaseProvider,
+} from 'native-base';
 const {
   HAR_Module,
   ReportModuleManager,
   RecommendationsManager,
   ActivitiesDatabaseModule,
 } = NativeModules;
-const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: 'white'},
-  master: {
-    backgroundColor: 'white',
-    marginVertical: 150,
-    alignContent: 'center',
-    padding: 20,
-    flex: 1,
-    alignItems: 'stretch',
-    justifyContent: 'center',
-  },
-  header: {
-    fontSize: 32,
-    marginBottom: 18,
-    alignSelf: 'center',
-  },
-  subHeader: {
-    fontSize: 20,
-    marginBottom: 18,
-    fontWeight: '300',
-    alignSelf: 'center',
-  },
-  text: {
-    fontSize: 16,
-    marginTop: 16,
-  },
-  link: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-});
 
 const SignInScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
-  const fields = [
-    {
-      name: 'email',
-      label: 'Email Address',
-      required: true,
-      autoCapitalize: 'none',
-    },
-    {
-      name: 'password',
-      label: 'Password',
-      required: true,
-      secure: true,
-      autoCapitalize: 'none',
-    },
-  ];
-  let formProps = {title: 'Login', fields, onSubmit, loading};
-
   async function saveUser(user) {
     await AsyncStorage.setItem('@App:userID', JSON.stringify(user));
   }
@@ -96,67 +53,70 @@ const SignInScreen = ({navigation}) => {
       setLoading(false);
     }
   }
-  const onPress_HAR_Begin_Service = () => {
-    //  CalendarModule.createCalendarEvent('testName', 'testLocation');
 
-    HAR_Module.HAR_Begin_Service();
-  };
-
-  const onPress_HAR_Stop_Service = () => {
-    //console.log('We will invoke the native module here!');
-    //  CalendarModule.createCalendarEvent('testName', 'testLocation');
-    HAR_Module.HAR_Stop_Service();
-  };
-  const onPress_Report = () => {
-    ReportModuleManager.CalculateCurrentReport();
-    const data = RecommendationsManager.GetWeeklyRecommendations();
-    console.log(data);
-  };
-
-  const PrintEntireDB = () => {
-    ActivitiesDatabaseModule.ReadAllDataFromDBIntoReactNative(array => {
-      console.log(array, 'The array you sent from the native side');
-      // [{"activityDescription": "STILL", "activityType": 3, "confidence": 100, "id": 1, "timestamp": "2021-11-19 19:30:35.517", "userID": "98765"}]
-    });
-  };
+  const [formData, setData] = React.useState({});
 
   return (
-    <View style={styles.container}>
-      <View style={styles.master}>
-        <Text style={styles.header}>Mobility One</Text>
-        <Text style={styles.subHeader}>Login</Text>
-        <Form {...formProps}>
-          <View style={styles.link}>
-            <Text style={styles.text}>Dont have an account? </Text>
+    <NativeBaseProvider>
+      <Center w="100%">
+        <HStack mt="5" justifyContent="center">
+          <Image source={images.logo} size={200} borderRadius={100} />
+        </HStack>
+        <Box safeArea p="2" py="8" w="90%" maxW="290">
+          <Heading
+            size="lg"
+            fontWeight="600"
+            color="coolGray.800"
+            _dark={{
+              color: 'warmGray.50',
+            }}>
+            Mobility Service
+          </Heading>
+          <Heading
+            mt="1"
+            _dark={{
+              color: 'warmGray.200',
+            }}
+            color="coolGray.600"
+            fontWeight="medium"
+            size="xs">
+            Sign in to continue!
+          </Heading>
+
+          <VStack space={5} mt="5">
+            <FormControl>
+              <FormControl.Label>Email ID</FormControl.Label>
+              <Input
+                placeholder="user@email.com"
+                onChangeText={value => setData({...formData, email: value})}
+              />
+            </FormControl>
+            <FormControl>
+              <FormControl.Label>Password</FormControl.Label>
+              <Input
+                type="password"
+                onChangeText={value => setData({...formData, password: value})}
+              />
+            </FormControl>
+            <Button onPress={onSubmit} mt="2" colorScheme="indigo">
+              Sign in
+            </Button>
             <TouchableOpacity
               onPress={() => navigation.navigate('SignUpScreen')}>
-              <Text style={styles.text}>Sign up Here.</Text>
+              <Text
+                fontSize="sm"
+                color="coolGray.600"
+                _dark={{
+                  color: 'warmGray.200',
+                }}>
+                I'm a new user.
+              </Text>
             </TouchableOpacity>
-          </View>
-        </Form>
-        <Button
-          title="Start Activity Recognition Service"
-          color="#841584"
-          onPress={() => onPress_HAR_Begin_Service()}
-        />
-        <Text> </Text>
-        <Button
-          title="Stop Activity Recognition Service"
-          color="#841584"
-          onPress={() => onPress_HAR_Stop_Service()}
-        />
-        <Text> </Text>
-        <Button
-          title="Report"
-          color="#841584"
-          onPress={() => onPress_Report()}
-        />
-        <Text> </Text>
-        <Button title="DB" color="#841584" onPress={() => PrintEntireDB()} />
-
-        <View />
-      </View>
-    </View>
+            <HStack mt="6" justifyContent="center"></HStack>
+          </VStack>
+        </Box>
+      </Center>
+    </NativeBaseProvider>
   );
 };
 
