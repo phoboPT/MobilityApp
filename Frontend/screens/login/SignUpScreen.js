@@ -1,52 +1,24 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Button} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import Form from 'react-native-basic-form';
 import api from '../../services/api';
 import {COLORS} from '../../constants';
 import {Alert} from 'react-native';
 import {Avatar} from 'react-native-elements';
 import {launchImageLibrary} from 'react-native-image-picker';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  master: {
-    marginTop: 40,
-    alignContent: 'center',
-    padding: 20,
-    flex: 1,
-    alignItems: 'stretch',
-    justifyContent: 'center',
-  },
-  subHeader: {
-    fontSize: 20,
-    marginBottom: 18,
-    fontWeight: '300',
-    alignSelf: 'center',
-  },
-  header: {
-    fontSize: 32,
-    marginBottom: 18,
-    alignSelf: 'center',
-  },
-  text: {
-    fontSize: 16,
-    color: COLORS.black,
-    marginTop: 16,
-  },
-  link: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  button: {
-    marginTop: 30,
-    backgroundColor: COLORS.primary,
-    borderRadius: 10,
-  },
-  avatar: {alignSelf: 'center', marginBottom: 12},
-});
+import {
+  Box,
+  Text,
+  Heading,
+  VStack,
+  FormControl,
+  Input,
+  Button,
+  HStack,
+  Center,
+  Image,
+  NativeBaseProvider,
+} from 'native-base';
 
 const SignUpScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
@@ -87,25 +59,6 @@ const SignUpScreen = ({navigation}) => {
     setPhoto(null);
   };
 
-  const fields = [
-    {name: 'name', label: 'Name', required: true, autoCapitalize: 'none'},
-    {
-      name: 'email',
-      label: 'Email Address',
-      required: true,
-      autoCapitalize: 'none',
-    },
-    {
-      name: 'password',
-      label: 'Password',
-      required: true,
-      secure: true,
-      autoCapitalize: 'none',
-    },
-    {name: 'contact', label: 'Contact', require: true},
-    {name: 'biography', label: 'Biography', multiline: true},
-  ];
-
   async function onSubmit(state) {
     setLoading(true);
     if (photo == null) {
@@ -136,15 +89,15 @@ const SignUpScreen = ({navigation}) => {
     }
   }
 
-  async function signUp(state, photo) {
+  async function signUp(photo) {
     try {
       const response = await api.post('/users/signup', {
-        name: state.name,
-        email: state.email,
-        password: state.password,
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
         photoUrl: photo,
-        biography: state.biography,
-        contact: state.contact,
+        biography: formData.biography,
+        contact: formData.contact,
       });
       if (response.data !== undefined) {
         setLoading(false);
@@ -158,46 +111,115 @@ const SignUpScreen = ({navigation}) => {
     }
   }
 
-  let formProps = {title: 'Register', fields, onSubmit, loading};
+  const [formData, setData] = React.useState({});
 
   return (
-    <View style={styles.container}>
-      <View style={styles.master}>
-        <Text style={styles.subHeader}>Register</Text>
+    <NativeBaseProvider>
+      <Center w="100%" h="100%" bgColor="blueGray.800">
         {photo ? (
           <>
-            <Avatar
-              containerStyle={styles.avatar}
-              rounded
-              source={photo}
-              size="xlarge"
-            />
-            <Button
-              onPress={() => removeImage()}
-              buttonStyle={styles.button}
-              titleStyle={{color: COLORS.white}}
-              title="Remove Image"
-            />
+            <HStack
+              mt="20"
+              alignItems={{
+                base: 'center',
+                md: 'flex-start',
+              }}>
+              <Avatar rounded source={photo} size="xlarge" />
+            </HStack>
+            <Button onPress={() => removeImage()} mt="3" colorScheme="indigo">
+              Remove Image
+            </Button>
           </>
         ) : (
-          <Button
-            onPress={() => openPicker()}
-            buttonStyle={styles.button}
-            titleStyle={{color: COLORS.white}}
-            title="Upload Image"
-          />
+          <Button onPress={() => openPicker()} colorScheme="indigo" mt="8">
+            Upload Image
+          </Button>
         )}
-        <Form {...formProps}>
-          <View style={styles.link}>
-            <Text style={styles.text}>Already have an account? </Text>
+        <Box safeArea p="2" w="90%" maxW="290">
+          <Heading
+            size="lg"
+            fontWeight="600"
+            color="white"
+            _dark={{
+              color: 'warmGray.50',
+            }}>
+            Register
+          </Heading>
+          <VStack space={5} mt="3">
+            <FormControl>
+              <FormControl.Label>
+                {' '}
+                <Text color="white">Name</Text>
+              </FormControl.Label>
+              <Input
+                color="white"
+                placeholder="John Doe"
+                TextColor="white"
+                onChangeText={value => setData({...formData, name: value})}
+              />
+            </FormControl>
+            <FormControl>
+              <FormControl.Label>
+                {' '}
+                <Text color="white">Email</Text>
+              </FormControl.Label>
+              <Input
+                color="white"
+                placeholder="user@email.com"
+                onChangeText={value => setData({...formData, email: value})}
+              />
+            </FormControl>
+            <FormControl>
+              <FormControl.Label>
+                <Text color="white">Password</Text>
+              </FormControl.Label>
+              <Input
+                color="white"
+                type="password"
+                onChangeText={value => setData({...formData, password: value})}
+              />
+            </FormControl>
+            <FormControl>
+              <FormControl.Label>
+                {' '}
+                <Text color="white">Biography</Text>
+              </FormControl.Label>
+              <Input
+                color="white"
+                placeholder="Something about Yourself"
+                onChangeText={value => setData({...formData, biography: value})}
+              />
+            </FormControl>
+            <FormControl>
+              <FormControl.Label>
+                {' '}
+                <Text color="white">Contact</Text>
+              </FormControl.Label>
+              <Input
+                color="white"
+                type="number"
+                placeholder="912345678"
+                onChangeText={value => setData({...formData, contact: value})}
+              />
+            </FormControl>
+            <Button onPress={onSubmit} mt="2" colorScheme="indigo">
+              Create Account
+            </Button>
             <TouchableOpacity
               onPress={() => navigation.navigate('SignInScreen')}>
-              <Text style={styles.text}>Sign In Here.</Text>
+              <Text
+                fontSize="sm"
+                color="coolGray.400"
+                _dark={{
+                  color: 'coolGray.200',
+                }}>
+                I already have an Account
+              </Text>
             </TouchableOpacity>
-          </View>
-        </Form>
-      </View>
-    </View>
+          </VStack>
+        </Box>
+      </Center>
+    </NativeBaseProvider>
   );
 };
 

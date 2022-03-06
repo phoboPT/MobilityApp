@@ -89,6 +89,7 @@ const SignInScreen = ({navigation}) => {
                 <Text color="white">Email ID</Text>
               </FormControl.Label>
               <Input
+                color="white"
                 placeholder="user@email.com"
                 onChangeText={value => setData({...formData, email: value})}
               />
@@ -98,6 +99,7 @@ const SignInScreen = ({navigation}) => {
                 <Text color="white">Password</Text>
               </FormControl.Label>
               <Input
+                color="white"
                 type="password"
                 onChangeText={value => setData({...formData, password: value})}
               />
