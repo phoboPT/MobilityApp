@@ -1,6 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+
   name: vehicles-depl
 spec:
   replicas: 1
@@ -44,4 +45,6 @@ spec:
       protocol: TCP
       port: 3000
       targetPort: 3000
+
+      
       
