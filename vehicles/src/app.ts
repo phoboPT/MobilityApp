@@ -13,10 +13,10 @@ const app = express();
 app.set('trust proxy', true);
 app.use(json());
 app.use(
-    cookieSession({
-        signed: false,
-        secure: false,
-    })
+  cookieSession({
+    signed: false,
+    secure: false,
+  })
 );
 
 // Vehiclee.collection.drop();
@@ -27,7 +27,7 @@ app.use(indexVehicleRouter);
 app.use(updateVehicleRouter);
 
 app.all('*', async () => {
-    throw new NotFoundError({ from: "Index, /BAD_URL, route don't exist" });
+  throw new NotFoundError({ from: "Index, /BAD_URL, route don't exist" });
 });
 
 app.use(errorHandler);
