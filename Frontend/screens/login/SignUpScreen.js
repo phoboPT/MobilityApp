@@ -107,6 +107,11 @@ const SignUpScreen = ({navigation}) => {
     } catch (err) {
       console.log(err);
       Alert.alert('Error creating new user!');
+      console.log(formData.name);
+      console.log(formData.email);
+      console.log(formData.password);
+      console.log(formData.biography);
+      console.log(formData.contact);
       setLoading(false);
     }
   }
