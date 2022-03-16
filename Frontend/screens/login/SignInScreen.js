@@ -19,12 +19,6 @@ import {
 } from 'native-base';
 import {ImageBackground} from 'react-native';
 import {Dimensions} from 'react-native';
-const {
-  HAR_Module,
-  ReportModuleManager,
-  RecommendationsManager,
-  ActivitiesDatabaseModule,
-} = NativeModules;
 
 const SignInScreen = ({navigation}) => {
   async function saveUser(user) {
@@ -59,7 +53,8 @@ const SignInScreen = ({navigation}) => {
         source={images.logo}
         style={{
           height: Dimensions.get('screen').height / 2.5,
-        }}></ImageBackground>
+        }}
+      />
       <Center w="100%" bgColor="blueGray.800">
         <Box safeArea p="2" py="2" w="90%" maxW="290">
           <Heading
@@ -118,7 +113,7 @@ const SignInScreen = ({navigation}) => {
                 I'm a new user.
               </Text>
             </TouchableOpacity>
-            <HStack mt="6" justifyContent="center"></HStack>
+            <HStack mt="6" justifyContent="center" />
           </VStack>
         </Box>
       </Center>
