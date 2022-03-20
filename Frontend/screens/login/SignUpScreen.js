@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {TouchableOpacity} from 'react-native';
-import Form from 'react-native-basic-form';
+// import Form from 'react-native-basic-form';
 import api from '../../services/api';
-import {COLORS} from '../../constants';
+// import {COLORS} from '../../constants';
 import {Alert} from 'react-native';
 import {Avatar} from 'react-native-elements';
 import {launchImageLibrary} from 'react-native-image-picker';
@@ -16,7 +16,7 @@ import {
   Button,
   HStack,
   Center,
-  Image,
+  // Image,
   NativeBaseProvider,
 } from 'native-base';
 
