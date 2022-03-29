@@ -89,7 +89,7 @@ public class RecommendationsManager extends ReactContextBaseJavaModule implement
     public String getName() {
         return "RecommendationsManager";
     }
-
+    @ReactMethod
     @Override
     public void ProduceWeeklyRecommendations() {
 
@@ -594,7 +594,7 @@ public class RecommendationsManager extends ReactContextBaseJavaModule implement
 
         return report;
     }
-
+    @ReactMethod
     @Override
     public void ReadAllWeeklyReportsFromDBIntoReactNative(Callback successCallback) throws JSONException {
         // guarantee the database has already been created; if not, get app context stored in HAR module

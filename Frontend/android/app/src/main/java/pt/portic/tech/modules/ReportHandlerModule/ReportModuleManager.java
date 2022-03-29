@@ -115,6 +115,7 @@ public class ReportModuleManager extends ReactContextBaseJavaModule implements P
      * MUST ONLY BE CALLED WHEN APPLICATION IS IN FOREGROUND. This is not a service intent,
      * and therefore the context will be null when app gets killed.
      */
+    
     @Override
     public void Stop_Report_Handler_Module() {
         //cancelAlarm();
@@ -139,8 +140,11 @@ public class ReportModuleManager extends ReactContextBaseJavaModule implements P
 
     @ReactMethod
     @Override
-    public void CalculateCurrentReport() {
-        new ReportAlarm().CalculateReport(HARModuleManager.mainActivityObj);
+    public String CalculateCurrentReport() {
+        String report=new ReportAlarm().CalculateReport(HARModuleManager.mainActivityObj);
+        Log.d("teste", "hey");
+        Log.d("teste", report);
+        return report;
     }
 
     /**

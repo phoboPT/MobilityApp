@@ -1,31 +1,18 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {NativeModules} from 'react-native';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  SafeAreaView,
-  Section,
-} from 'react-native';
+import {Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import ActivityDB from './ActivityDBModule';
 import {
+  View,
   Button,
   Center,
   Container,
   TextArea,
   Switch,
-  Pressable,
   ScrollView,
 } from 'native-base';
 import {icons, SIZES} from '../constants/index';
-const {
-  HAR_Module,
-  ReportModuleManager,
-  RecommendationsManager,
-  ActivitiesDatabaseModule,
-} = NativeModules;
+const {HAR_Module, RecommendationsManager, UserProfileModule} = NativeModules;
 
 const styles = StyleSheet.create({
   container: {
@@ -61,43 +48,41 @@ const styles = StyleSheet.create({
 });
 
 const SettingsScreen = ({navigation}) => {
-  const [search, setSearch] = useState('');
+  // const [search, setSearch] = useState('');
   const [checked, setCheked] = useState('');
+  const [mets, setMets] = useState('');
 
-  const onPress_HAR_Begin_Service = () => {
+  const produceRecomendation = () => {
     //console.log('We will invoke the native module here!');
     //  CalendarModule.createCalendarEvent('testName', 'testLocation');
-    HAR_Module.HAR_Begin_Service();
-  };
 
-  const onPress_ReportVerifyService = () => {
-    //console.log('We will invoke the native module here!');
-    //  CalendarModule.createCalendarEvent('testName', 'testLocation');
-    ReportModuleManager.VerifyIfReportServiceIsRunning();
+    RecommendationsManager.ReadAllWeeklyReportsFromDBIntoReactNative(result => {
+      setMets(result);
+    });
   };
-
-  const onPress_ReportCalculateReportNow = () => {
-    //console.log('We will invoke the native module here!');
-    //  CalendarModule.createCalendarEvent('testName', 'testLocation');
-    ReportModuleManager.CalculateCurrentReport();
-  };
-
-  const onPress_HAR_Stop_Service = () => {
-    //console.log('We will invoke the native module here!');
-    //  CalendarModule.createCalendarEvent('testName', 'testLocation');
-    HAR_Module.HAR_Stop_Service();
-  };
+  useEffect(() => {
+    // console.log(HAR_Module.isMyServiceRunning());
+  });
 
   const manageAR = () => {
     if (!checked) {
-      onPress_HAR_Begin_Service();
+      HAR_Module.HAR_Begin_Service();
     } else {
-      onPress_HAR_Stop_Service();
+      HAR_Module.HAR_Stop_Service();
     }
     setCheked(!checked);
   };
+  const registerUser = () => {
+    UserProfileModule.Set_User_ID('UserID');
+    UserProfileModule.Set_User_Name('Teste');
+    UserProfileModule.Set_User_BirthDate('19920813');
+    UserProfileModule.Set_User_Gender('m');
+    UserProfileModule.Set_User_Height('165');
+    UserProfileModule.Set_User_Weight('65');
+    UserProfileModule.Set_Health_Activity_Risk('3');
+  };
 
-  function renderHeader() {
+  const renderHeader = () => {
     return (
       <View style={styles.view}>
         <TouchableOpacity
@@ -114,7 +99,7 @@ const SettingsScreen = ({navigation}) => {
         </View>
       </View>
     );
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -122,23 +107,10 @@ const SettingsScreen = ({navigation}) => {
 
       <Center>
         <Container>
-          <ScrollView
-            h="80"
-            _contentContainerStyle={{
-              px: '10px',
-            }}>
+          <ScrollView h="80">
             <Center>
               <Text>Activity Recognition </Text>
-              <TextArea isDisabled>
-                This activates a permanent background service that will be
-                responsible for multiple background activities: (1) the constant
-                human activity recognition, (2) the collection of GPS
-                coordinates to attach to the recognised activity (to estimate
-                the physical effort, (3) to produce a health report recurrently,
-                (4) to store this report in a database of reports for the whole
-                week, and (5) to generate recommendations once a week from the
-                set of available reports (up to 7 previous reports).
-              </TextArea>
+
               <Text>
                 Avtivity Recognition
                 <Switch
@@ -147,27 +119,49 @@ const SettingsScreen = ({navigation}) => {
                   isChecked={checked}
                 />
               </Text>
-              {/* <Button
-              title=""
-              color="#841584"
-              onPress={onPress_HAR_Begin_Service}>
-              Start AR
-            </Button>
-            <Text> </Text>
-            <Button title="" color="#841584" onPress={onPress_HAR_Stop_Service}>
-              Stop AR
-            </Button> */}
+
               <Text> </Text>
             </Center>
+            <ScrollView h="80">
+              <Center>
+                {mets.length > 0 &&
+                  mets.map(item => {
+                    return (
+                      <Text key={item.id}>
+                        -----------------{item.id}----------------- {'\n'}
+                        Mets Baixa- {item.metsIntBaixa}
+                        {'\n'}
+                        Mets Totais - {item.metsTotais}
+                        {'\n'}
+                        Mets Vigorosa - {item.metsIntVigorosa}
+                        {'\n'}
+                        Minutos de atividade -{' '}
+                        {item.totalAmountActiveActivityInMinutes}
+                        {'\n'}
+                        Distancia a pe - {item.distanceWalking.toFixed(2)}
+                        {'\n'}
+                        Distancia a correr - {item.distanceRunning}
+                        {'\n'}
+                        Distancia em bicicleta - {item.distanceBicycle}
+                        {'\n'}
+                        Horas sedentários - {item.totalAmountSedentaryHours}
+                        {'\n'}
+                        Minutos sedentários - {item.totalAmountSedentaryMinutes}
+                        {'\n'}
+                        Data: [{item.dateOfReport}]
+                      </Text>
+                    );
+                  })}
+              </Center>
+            </ScrollView>
             <ActivityDB />
             <Text />
-            <Button onPress={() => onPress_ReportCalculateReportNow()}>
-              Report
+
+            <Button onPress={() => produceRecomendation()}>
+              Produce Recomendation
             </Button>
             <Text />
-            <Button onPress={() => onPress_ReportVerifyService()}>
-              Verify Service
-            </Button>
+            <Button onPress={() => registerUser()}>User register</Button>
           </ScrollView>
         </Container>
       </Center>

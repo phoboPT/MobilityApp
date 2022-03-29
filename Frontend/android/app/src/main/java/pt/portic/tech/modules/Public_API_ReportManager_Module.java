@@ -44,7 +44,7 @@ public interface Public_API_ReportManager_Module {
     /* Stored as STRING */
     void Begin_Report_Handler_Module();
     void Stop_Report_Handler_Module();
-    void CalculateCurrentReport();
+  public  String CalculateCurrentReport();
 
     /**
      * When executed, this function verifies if the report service is running.
