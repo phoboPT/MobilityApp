@@ -50,16 +50,7 @@ const styles = StyleSheet.create({
 const SettingsScreen = ({navigation}) => {
   // const [search, setSearch] = useState('');
   const [checked, setCheked] = useState('');
-  const [mets, setMets] = useState('');
 
-  const produceRecomendation = () => {
-    //console.log('We will invoke the native module here!');
-    //  CalendarModule.createCalendarEvent('testName', 'testLocation');
-
-    RecommendationsManager.ReadAllWeeklyReportsFromDBIntoReactNative(result => {
-      setMets(result);
-    });
-  };
   useEffect(() => {
     // console.log(HAR_Module.isMyServiceRunning());
   });
@@ -122,44 +113,10 @@ const SettingsScreen = ({navigation}) => {
 
               <Text> </Text>
             </Center>
-            <ScrollView h="80">
-              <Center>
-                {mets.length > 0 &&
-                  mets.map(item => {
-                    return (
-                      <Text key={item.id}>
-                        -----------------{item.id}----------------- {'\n'}
-                        Mets Baixa- {item.metsIntBaixa}
-                        {'\n'}
-                        Mets Totais - {item.metsTotais}
-                        {'\n'}
-                        Mets Vigorosa - {item.metsIntVigorosa}
-                        {'\n'}
-                        Minutos de atividade -{' '}
-                        {item.totalAmountActiveActivityInMinutes}
-                        {'\n'}
-                        Distancia a pe - {item.distanceWalking.toFixed(2)}
-                        {'\n'}
-                        Distancia a correr - {item.distanceRunning}
-                        {'\n'}
-                        Distancia em bicicleta - {item.distanceBicycle}
-                        {'\n'}
-                        Horas sedentários - {item.totalAmountSedentaryHours}
-                        {'\n'}
-                        Minutos sedentários - {item.totalAmountSedentaryMinutes}
-                        {'\n'}
-                        Data: [{item.dateOfReport}]
-                      </Text>
-                    );
-                  })}
-              </Center>
-            </ScrollView>
+
             <ActivityDB />
             <Text />
 
-            <Button onPress={() => produceRecomendation()}>
-              Produce Recomendation
-            </Button>
             <Text />
             <Button onPress={() => registerUser()}>User register</Button>
           </ScrollView>

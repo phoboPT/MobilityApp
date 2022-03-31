@@ -147,7 +147,7 @@ export function DrawerContent(props) {
                 props.navigation.navigate('My Routes');
               }}
             />
-            
+
             <DrawerItem
               icon={({color, size}) => (
                 <Image
@@ -164,6 +164,24 @@ export function DrawerContent(props) {
               label="Settings"
               onPress={() => {
                 props.navigation.navigate('Settings');
+              }}
+            />
+            <DrawerItem
+              icon={({color, size}) => (
+                <Image
+                  source={icons.settings}
+                  name="settings-outline"
+                  style={{
+                    tintColor: COLORS.primary,
+                    resizeMode: 'contain',
+                    height: 24,
+                    width: 24,
+                  }}
+                />
+              )}
+              label="Statistics"
+              onPress={() => {
+                props.navigation.navigate('Statistics');
               }}
             />
           </Drawer.Section>

@@ -39,6 +39,7 @@
                 <action android:name="Restart_AMaaS_Service" />
             </intent-filter>
         </receiver>
+        
 
         <receiver android:name="pt.portic.tech.modules.ReportHandlerModule.ReportAlarm"
             android:enabled="true"
