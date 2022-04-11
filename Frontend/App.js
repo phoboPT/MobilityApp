@@ -15,6 +15,7 @@ import {
   UserProfile,
   CreateVehicle,
 } from './screens';
+import Statistics from './screens/Statistics';
 import {createStackNavigator} from '@react-navigation/stack';
 import {navigationRef} from './navigation/RootNavigation';
 import CreateCarPooling from './screens/CreateCarPooling';
@@ -45,6 +46,7 @@ const App = () => {
           <Drawer.Screen name="Map" component={MapScreen} />
           <Drawer.Screen name="My Routes" component={MyRoutesScreen} />
           <Drawer.Screen name="Settings" component={SettingsScreen} />
+          <AppStack.Screen name="Statistics" component={Statistics} />
         </Drawer.Navigator>
       </NativeBaseProvider>
     );
@@ -65,6 +67,7 @@ const App = () => {
         <AppStack.Screen name="Onboarding" component={Onboarding} />
         <AppStack.Screen name="MyProfile" component={MyProfile} />
         <AppStack.Screen name="AuthLoading" component={AuthLoadingScreen} />
+
         <AppStack.Screen
           name="DestinationSearch"
           component={DestinationSearch}

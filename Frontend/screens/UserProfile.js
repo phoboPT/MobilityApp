@@ -14,18 +14,13 @@ import LinearGradient from 'react-native-linear-gradient';
 import {images, icons, COLORS, SIZES} from '../constants';
 import {ScrollView} from 'react-native';
 
-
-
 const UserProfile = ({navigation, route}) => {
   const {user} = route.params;
   const [rating, setRating] = useState(null);
 
-  const onStarRatingPress=(score)=>{
-    console.log(score);
+  const onStarRatingPress = score => {
     setRating(score);
-    console.log(rating);
-  }
-
+  };
 
   return (
     <View style={styles.container}>
@@ -71,12 +66,12 @@ const UserProfile = ({navigation, route}) => {
                 justifyContent: 'space-around',
               }}>
               <Text style={{...SIZES.h3}}>{user.name}</Text>
-             <StarRating
+              <StarRating
                 disabled={false}
                 maxStars={5}
                 rating={rating}
-                selectedStar={(score) =>onStarRatingPress(score)}
-                />
+                selectedStar={score => onStarRatingPress(score)}
+              />
               <View style={{marginTop: 5}}>
                 <Text style={{color: COLORS.primary}}>{user.email}</Text>
                 <Text style={{color: COLORS.primary}}>{user.contact}</Text>
@@ -134,7 +129,6 @@ const UserProfile = ({navigation, route}) => {
         </View>
       </View>
       {/* Footer */}
-      
     </View>
   );
 };

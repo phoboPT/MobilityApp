@@ -71,12 +71,13 @@ public class ReportAlarm extends BroadcastReceiver {
         return timeUnit.convert(diffInMS, TimeUnit.MILLISECONDS);
     }
 
-    public void CalculateReport(Context context) {
+    public String CalculateReport(Context context) {
         Log.d(TAG, "Producing health report of the last day...");
         java.sql.Timestamp timestamp1 = null,timestamp2 = null;
         int seconds = 0;
         int minutes = 0;
         int hours = 0;
+        String value="";
 
 
         java.sql.Timestamp timestampRightNow = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
@@ -296,91 +297,124 @@ public class ReportAlarm extends BroadcastReceiver {
             trackLongs = new ArrayList<Double>();
             timestampsTmp = new ArrayList<Long>();
         }
-
-        Log.d(TAG, "***************************");
-        Log.d(TAG, "Sedentary Activity");
-        Log.d(TAG, "***************************");
-        Log.d(TAG, "Amount of time Still:");
+        value+="***************************\n";
+        value+="Sedentary Activity\n";
+        value+= "***************************\n";
+        value+="Amount of time Still:\n";
+        // Log.d(TAG, "***************************");
+        // Log.d(TAG, "Sedentary Activity");
+        // Log.d(TAG, "***************************");
+        // Log.d(TAG, "Amount of time Still:");
         tempoTotalDeAtividadeSedentariaMilliseconds = tempoTotalDeAtividadeSedentariaMilliseconds + stillMillisecondsTotal;
         long amountTimeStillMilliseconds = stillMillisecondsTotal;
         seconds = (int) stillMillisecondsTotal / 1000;
         hours = seconds / 3600;
         minutes = (seconds % 3600) / 60;
         seconds = (seconds % 3600) % 60;
-        Log.d(TAG, " Hours: " + hours);
-        Log.d(TAG, " Minutes: " + minutes);
-        Log.d(TAG, " Seconds: " + seconds);
+        value+= " Hours: " + hours+"\n";
+        value+= " Minutes: " + minutes+"\n";
+        value+= " Seconds: " + seconds+"\n";
+        // Log.d(TAG, " Hours: " + hours);
+        // Log.d(TAG, " Minutes: " + minutes);
+        // Log.d(TAG, " Seconds: " + seconds);
         int amountTimeStillHours = hours,amountTimeStillMinute = minutes,amountTimeStillSeconds = seconds;
 
-        Log.d(TAG, "Amount of time in Vehicle:");
+        value+="***************************\n";
+        value+="Amount of time in Vehicle:\n";
+        value+= "***************************\n";
+        // Log.d(TAG, "***************************");
+        // Log.d(TAG, "Amount of time in Vehicle:");
         long amountTimeInVehicleMilliseconds = vehicleMillisecondsTotal;
         tempoTotalDeAtividadeSedentariaMilliseconds = tempoTotalDeAtividadeSedentariaMilliseconds + vehicleMillisecondsTotal;
         seconds = (int) vehicleMillisecondsTotal / 1000;
         hours = seconds / 3600;
         minutes = (seconds % 3600) / 60;
         seconds = (seconds % 3600) % 60;
-        Log.d(TAG, " Hours: " + hours);
-        Log.d(TAG, " Minutes: " + minutes);
-        Log.d(TAG, " Seconds: " + seconds);
+        value+= " Hours: " + hours+"\n";
+        value+= " Minutes: " + minutes+"\n";
+        value+= " Seconds: " + seconds+"\n";
+
+        // Log.d(TAG, " Hours: " + hours);
+        // Log.d(TAG, " Minutes: " + minutes);
+        // Log.d(TAG, " Seconds: " + seconds);
         int amountTimeInVehicleHours=hours,amountTimeInVehicleMinute=minutes,
                 amountTimeInVehicleSeconds=seconds;
-
-        Log.d(TAG, "***************************");
-        Log.d(TAG, "Active Physical Activity");
-        Log.d(TAG, "***************************");
-        Log.d(TAG, "Amount of time on a bicycle:");
+        value+="***************************\n";
+        value+="Active Physical Activityn\n";
+        value+= "***************************\n";
+        value+="Amount of time on a bicycle:\n";
+        // Log.d(TAG, "***************************");
+        // Log.d(TAG, "Active Physical Activity");
+        // Log.d(TAG, "***************************");
+        // Log.d(TAG, "Amount of time on a bicycle:");
         long amountTimeOnBicycleMilliseconds = bicycleMillisecondsTotal;
         tempoTotalDeAtividadeFisicaMilliseconds = tempoTotalDeAtividadeFisicaMilliseconds + bicycleMillisecondsTotal;
         seconds = (int) bicycleMillisecondsTotal / 1000;
         hours = seconds / 3600;
         minutes = (seconds % 3600) / 60;
         seconds = (seconds % 3600) % 60;
-        Log.d(TAG, " Hours: " + hours);
-        Log.d(TAG, " Minutes: " + minutes);
-        Log.d(TAG, " Seconds: " + seconds);
-        Log.d(TAG, " Cycled a total of : " + gastoEnergeticoTotalOnBicycle.distanceTravelled + " meters.");
+        value+= " Hours: " + hours+"\n";
+        value+= " Minutes: " + minutes+"\n";
+        value+= " Seconds: " + seconds+"\n";
+        value+="Cycled a total of : " + gastoEnergeticoTotalOnBicycle.distanceTravelled + " meters.\n";
+        // Log.d(TAG, " Hours: " + hours);
+        // Log.d(TAG, " Minutes: " + minutes);
+        // Log.d(TAG, " Seconds: " + seconds);
+        // Log.d(TAG, " Cycled a total of : " + gastoEnergeticoTotalOnBicycle.distanceTravelled + " meters.");
         int amountTimeOnBicycleHours=hours,amountTimeOnBicycleMinute=minutes,
                 amountTimeOnBicycleSeconds=seconds;
-
-        Log.d(TAG, "Amount of time on foot/walking:");
+        value+="Amount of time on foot/walking:\n";
+        // Log.d(TAG, "Amount of time on foot/walking:");
         long amountTimeWalkingMilliseconds = onfootMillisecondsTotal;
         tempoTotalDeAtividadeFisicaMilliseconds = tempoTotalDeAtividadeFisicaMilliseconds + onfootMillisecondsTotal;
         seconds = (int) onfootMillisecondsTotal / 1000;
         hours = seconds / 3600;
         minutes = (seconds % 3600) / 60;
         seconds = (seconds % 3600) % 60;
-        Log.d(TAG, " Hours: " + hours);
-        Log.d(TAG, " Minutes: " + minutes);
-        Log.d(TAG, " Seconds: " + seconds);
-        Log.d(TAG, " Walked a total of : " + gastoEnergeticoTotalOnFoot.distanceTravelled + " meters.");
+        value+= " Hours: " + hours+"\n";
+        value+= " Minutes: " + minutes+"\n";
+        value+= " Seconds: " + seconds+"\n";
+        value+="Walked a total of : " + gastoEnergeticoTotalOnFoot.distanceTravelled + " meters.\n";
+        // Log.d(TAG, " Hours: " + hours);
+        // Log.d(TAG, " Minutes: " + minutes);
+        // Log.d(TAG, " Seconds: " + seconds);
+        // Log.d(TAG, " Walked a total of : " + gastoEnergeticoTotalOnFoot.distanceTravelled + " meters.");
 
         int amountTimeWalkingHours=hours,amountTimeWalkingMinute=minutes,
                 amountTimeWalkingSeconds=seconds;
-
-        Log.d(TAG, "Amount of time on Running:");
+        value+="Amount of time on Running:\n";
+        // Log.d(TAG, "Amount of time on Running:");
         long amountTimeRunningMilliseconds = runningMillisecondsTotal;
         tempoTotalDeAtividadeFisicaMilliseconds = tempoTotalDeAtividadeFisicaMilliseconds + runningMillisecondsTotal;
         seconds = (int) runningMillisecondsTotal / 1000;
         hours = seconds / 3600;
         minutes = (seconds % 3600) / 60;
         seconds = (seconds % 3600) % 60;
-        Log.d(TAG, " Hours: " + hours);
-        Log.d(TAG, " Minutes: " + minutes);
-        Log.d(TAG, " Seconds: " + seconds);
-        Log.d(TAG, " Ran a total of : " + gastoEnergeticoTotalOnRunning.distanceTravelled + " meters.");
+        value+= " Hours: " + hours+"\n";
+        value+= " Minutes: " + minutes+"\n";
+        value+= " Seconds: " + seconds+"\n";
+        value+="Ran a total of : " + gastoEnergeticoTotalOnRunning.distanceTravelled + " meters.\n";
+        // Log.d(TAG, " Hours: " + hours);
+        // Log.d(TAG, " Minutes: " + minutes);
+        // Log.d(TAG, " Seconds: " + seconds);
+        // Log.d(TAG, " Ran a total of : " + gastoEnergeticoTotalOnRunning.distanceTravelled + " meters.");
         int amountTimeRunningHours=hours,amountTimeRunningMinute=minutes,
                 amountTimeRunningSeconds=seconds;
+        value+="***************************\n";
+        value+="Tempo total de Atividade\n";
+        value+= "***************************\n";
 
-        Log.d(TAG, "***************************");
-        Log.d(TAG, "Tempo total de Atividade:");
-        Log.d(TAG, "***************************");
+        // Log.d(TAG, "***************************");
+        // Log.d(TAG, "Tempo total de Atividade:");
+        // Log.d(TAG, "***************************");
         long totalAmountActiveActivityMilliseconds = tempoTotalDeAtividadeFisicaMilliseconds;
         long totalAmountSedentaryMilliseconds = tempoTotalDeAtividadeSedentariaMilliseconds;
         seconds = (int) tempoTotalDeAtividadeSedentariaMilliseconds / 1000;
         hours = seconds / 3600;
         minutes = (seconds % 3600) / 60;
         //Log.d(TAG, "Tempo de Atividade sedentária total/semana: " + (hours*60 + minutes) + " minutos.");
-        Log.d(TAG, "Tempo de Atividade sedentária total/semana: " + hours+ "H"+minutes+"min.");
+        value+= "Tempo de Atividade sedentária total/semana: " + hours+ "H"+minutes+"min.\n";
+        // Log.d(TAG, "Tempo de Atividade sedentária total/semana: " + hours+ "H"+minutes+"min.");
         int totalAmountSedentaryHours=hours, totalAmountSedentaryMinutes=minutes;
 
         seconds = (int) tempoTotalDeAtividadeFisicaMilliseconds / 1000;
@@ -388,12 +422,17 @@ public class ReportAlarm extends BroadcastReceiver {
         minutes = (seconds % 3600) / 60;
         //seconds = (seconds % 3600) % 60;
         //int minutosTotais = hours*60 + minutes;
-        Log.d(TAG, "Tempo de Atividade física total/semana: " + (hours*60 + minutes) + " minutos.");
+        value+= "Tempo de Atividade física total/semana: " + (hours*60 + minutes) + " minutos.\n";
+        // Log.d(TAG, "Tempo de Atividade física total/semana: " + (hours*60 + minutes) + " minutos.");
         int totalAmountActiveActivityInMinutes = (hours*60 + minutes);
+        
+        value+="***************************\n";
+        value+="METs totais de Atividade:\n";
+        value+= "***************************\n";
 
-        Log.d(TAG, "***************************");
-        Log.d(TAG, "METs totais de Atividade:");
-        Log.d(TAG, "***************************");
+        // Log.d(TAG, "***************************");
+        // Log.d(TAG, "METs totais de Atividade:");
+        // Log.d(TAG, "***************************");
         double metsTotais = gastoEnergeticoTotalOnBicycle.METsIntBaixa +
                 gastoEnergeticoTotalOnBicycle.METsIntModerada +
                 gastoEnergeticoTotalOnBicycle.METsIntVigorosa +
@@ -414,12 +453,17 @@ public class ReportAlarm extends BroadcastReceiver {
                 gastoEnergeticoTotalOnRunning.METsIntVigorosa;
         double metsIntBaixa=metsTotaisIntBaixa, metsIntModerada=metsTotaisIntModerada,
                 metsIntVigorosa=metsTotaisIntVigorosa;
+        value+= "METs totais: " + metsTotais + " ("+new Double(((metsTotaisIntBaixa/metsTotais)*100)).intValue()+"% Int. Baixa, "+new Double(((metsTotaisIntModerada/metsTotais)*100)).intValue()+"% Int. Moderada, e "+new Double(((metsTotaisIntVigorosa/metsTotais)*100)).intValue()+"% Int. Vigorosa.)\n";
 
-        Log.d(TAG, "METs totais: " + metsTotais + " ("+new Double(((metsTotaisIntBaixa/metsTotais)*100)).intValue()+"% Int. Baixa, "+new Double(((metsTotaisIntModerada/metsTotais)*100)).intValue()+"% Int. Moderada, e "+new Double(((metsTotaisIntVigorosa/metsTotais)*100)).intValue()+"% Int. Vigorosa.)");
-        Log.d(TAG, "Dos quais, de intensidade");
-        Log.d(TAG, "Baixa: " + metsTotaisIntBaixa + " (" + new Double(((gastoEnergeticoTotalOnBicycle.METsIntBaixa/metsTotaisIntBaixa) * 100)).intValue() + "% bicicleta, " + new Double(((gastoEnergeticoTotalOnFoot.METsIntBaixa/metsTotaisIntBaixa)*100)).intValue() + "% a pé, e " +  new Double(((gastoEnergeticoTotalOnRunning.METsIntBaixa/metsTotaisIntBaixa)*100)).intValue() + "% a correr.)");
-        Log.d(TAG, "Moderada: " + metsTotaisIntModerada+ " (" + new Double(((gastoEnergeticoTotalOnBicycle.METsIntModerada/metsTotaisIntModerada)*100)).intValue() + "% bicicleta, " + new Double(((gastoEnergeticoTotalOnFoot.METsIntModerada/metsTotaisIntModerada)*100)).intValue() + "% a pé, e " + new Double(((gastoEnergeticoTotalOnRunning.METsIntModerada/metsTotaisIntModerada)*100)).intValue() + "% a correr.)");
-        Log.d(TAG, "Vigorosa: " + metsTotaisIntVigorosa+ " (" + new Double(((gastoEnergeticoTotalOnBicycle.METsIntVigorosa/metsTotaisIntVigorosa)*100)).intValue() + "% bicicleta, " + new Double(((gastoEnergeticoTotalOnFoot.METsIntVigorosa/metsTotaisIntVigorosa)*100)).intValue() + "% a pé, e " + new Double(((gastoEnergeticoTotalOnRunning.METsIntVigorosa/metsTotaisIntVigorosa)*100)).intValue() + "% a correr.)");
+        // Log.d(TAG, "METs totais: " + metsTotais + " ("+new Double(((metsTotaisIntBaixa/metsTotais)*100)).intValue()+"% Int. Baixa, "+new Double(((metsTotaisIntModerada/metsTotais)*100)).intValue()+"% Int. Moderada, e "+new Double(((metsTotaisIntVigorosa/metsTotais)*100)).intValue()+"% Int. Vigorosa.)");
+        value+= "Dos quais, de intensidade\n";
+        value+= "Baixa: " + metsTotaisIntBaixa + " (" + new Double(((gastoEnergeticoTotalOnBicycle.METsIntBaixa/metsTotaisIntBaixa) * 100)).intValue() + "% bicicleta, " + new Double(((gastoEnergeticoTotalOnFoot.METsIntBaixa/metsTotaisIntBaixa)*100)).intValue() + "% a pé, e " +  new Double(((gastoEnergeticoTotalOnRunning.METsIntBaixa/metsTotaisIntBaixa)*100)).intValue() + "% a correr.)\n";
+        value+="Moderada: " + metsTotaisIntModerada+ " (" + new Double(((gastoEnergeticoTotalOnBicycle.METsIntModerada/metsTotaisIntModerada)*100)).intValue() + "% bicicleta, " + new Double(((gastoEnergeticoTotalOnFoot.METsIntModerada/metsTotaisIntModerada)*100)).intValue() + "% a pé, e " + new Double(((gastoEnergeticoTotalOnRunning.METsIntModerada/metsTotaisIntModerada)*100)).intValue() + "% a correr.)\n";
+        value+="Vigorosa: " + metsTotaisIntVigorosa+ " (" + new Double(((gastoEnergeticoTotalOnBicycle.METsIntVigorosa/metsTotaisIntVigorosa)*100)).intValue() + "% bicicleta, " + new Double(((gastoEnergeticoTotalOnFoot.METsIntVigorosa/metsTotaisIntVigorosa)*100)).intValue() + "% a pé, e " + new Double(((gastoEnergeticoTotalOnRunning.METsIntVigorosa/metsTotaisIntVigorosa)*100)).intValue() + "% a correr.)\n";
+        // Log.d(TAG, "Dos quais, de intensidade");
+        // Log.d(TAG, "Baixa: " + metsTotaisIntBaixa + " (" + new Double(((gastoEnergeticoTotalOnBicycle.METsIntBaixa/metsTotaisIntBaixa) * 100)).intValue() + "% bicicleta, " + new Double(((gastoEnergeticoTotalOnFoot.METsIntBaixa/metsTotaisIntBaixa)*100)).intValue() + "% a pé, e " +  new Double(((gastoEnergeticoTotalOnRunning.METsIntBaixa/metsTotaisIntBaixa)*100)).intValue() + "% a correr.)");
+        // Log.d(TAG, "Moderada: " + metsTotaisIntModerada+ " (" + new Double(((gastoEnergeticoTotalOnBicycle.METsIntModerada/metsTotaisIntModerada)*100)).intValue() + "% bicicleta, " + new Double(((gastoEnergeticoTotalOnFoot.METsIntModerada/metsTotaisIntModerada)*100)).intValue() + "% a pé, e " + new Double(((gastoEnergeticoTotalOnRunning.METsIntModerada/metsTotaisIntModerada)*100)).intValue() + "% a correr.)");
+        // Log.d(TAG, "Vigorosa: " + metsTotaisIntVigorosa+ " (" + new Double(((gastoEnergeticoTotalOnBicycle.METsIntVigorosa/metsTotaisIntVigorosa)*100)).intValue() + "% bicicleta, " + new Double(((gastoEnergeticoTotalOnFoot.METsIntVigorosa/metsTotaisIntVigorosa)*100)).intValue() + "% a pé, e " + new Double(((gastoEnergeticoTotalOnRunning.METsIntVigorosa/metsTotaisIntVigorosa)*100)).intValue() + "% a correr.)");
         int metsIntBaixaPercentage=new Double(((metsTotaisIntBaixa/metsTotais)*100)).intValue(),
                 metsIntModeradaPercentage=new Double(((metsTotaisIntModerada/metsTotais)*100)).intValue(),
                 metsIntVigorosaPercentage=new Double(((metsTotaisIntVigorosa/metsTotais)*100)).intValue();
@@ -459,6 +503,7 @@ public class ReportAlarm extends BroadcastReceiver {
 
 
         Toast.makeText(context, "AMaaS: Daily Report Available.", Toast.LENGTH_LONG).show(); // For example
+        return value;
     }
 
     /**
