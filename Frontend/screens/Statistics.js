@@ -1,9 +1,17 @@
 import React, {useState, useEffect} from 'react';
 import {NativeModules} from 'react-native';
 import {Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
-
 import {View, Button, Center, Container, ScrollView} from 'native-base';
+import {
+  LineChart,
+  BarChart,
+  PieChart,
+  ProgressChart,
+  ContributionGraph,
+  StackedBarChart,
+} from 'react-native-chart-kit';
 import {icons, SIZES} from '../constants/index';
+import {Dimensions} from 'react-native';
 const {RecommendationsManager} = NativeModules;
 
 const styles = StyleSheet.create({
@@ -48,7 +56,7 @@ const Statistics = ({navigation}) => {
       setMets(result);
       setLength(result.length - 1);
     });
-  });
+  }, []);
 
   const renderHeader = () => {
     return (
@@ -87,7 +95,7 @@ const Statistics = ({navigation}) => {
       <Center>
         <Container>
           <ScrollView h="80">
-            <Center>
+            {/* <Center>
               <Text>Data</Text>
               <Text />
               <Center>
@@ -133,6 +141,60 @@ const Statistics = ({navigation}) => {
                 disabled={index < mets.length - 1 ? false : true}>
                 Next
               </Button>
+            </View> */}
+            <View>
+              <Text>Bezier Line Chart</Text>
+              <LineChart
+                data={{
+                  labels: [
+                    'January',
+                    'February',
+                    'March',
+                    'April',
+                    'May',
+                    'June',
+                  ],
+                  datasets: [
+                    {
+                      data: [
+                        Math.random() * 100,
+                        Math.random() * 100,
+                        Math.random() * 100,
+                        Math.random() * 100,
+                        Math.random() * 100,
+                        Math.random() * 100,
+                      ],
+                    },
+                  ],
+                }}
+                width={Dimensions.get('window').width - 80} // from react-native
+                height={220}
+                yAxisLabel="$"
+                yAxisSuffix="k"
+                yAxisInterval={1} // optional, defaults to 1
+                chartConfig={{
+                  backgroundColor: '#e26a00',
+                  backgroundGradientFrom: '#fb8c00',
+                  backgroundGradientTo: '#ffa726',
+                  decimalPlaces: 2, // optional, defaults to 2dp
+                  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                  labelColor: (opacity = 1) =>
+                    `rgba(255, 255, 255, ${opacity})`,
+                  style: {
+                    borderRadius: 16,
+                  },
+                  propsForDots: {
+                    r: '6',
+                    strokeWidth: '2',
+                    stroke: '#ffa726',
+                  },
+                }}
+                bezier
+                style={{
+                  marginVertical: 8,
+                  borderRadius: 16,
+                }}
+              />
             </View>
           </ScrollView>
         </Container>
