@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {TouchableOpacity, Alert} from 'react-native';
 import api from '../../services/api';
-import {NativeModules} from 'react-native';
+import {NativeModules, KeyboardAvoidingView} from 'react-native';
 import images from '../../constants/images';
 import AsyncStorage from '@react-native-community/async-storage';
 import {
@@ -49,76 +49,81 @@ const SignInScreen = ({navigation}) => {
 
   return (
     <NativeBaseProvider>
-      <ImageBackground
-        source={images.logo}
-        style={{
-          height: Dimensions.get('screen').height / 2.5,
-        }}
-      />
-      <Center w="100%" bgColor="blueGray.800">
-        <Box safeArea p="2" py="2" w="90%" maxW="290">
-          <Heading
-            size="lg"
-            fontWeight="600"
-            color="white"
-            _dark={{
-              color: 'warmGray.50',
-            }}>
-            Mobility Service
-          </Heading>
-          <Heading
-            mt="1"
-            _dark={{
-              color: 'warmGray.200',
-            }}
-            color="coolGray.400"
-            fontWeight="medium"
-            size="xs">
-            Sign in to continue!
-          </Heading>
+      <KeyboardAvoidingView behavior="position">
+        <ImageBackground
+          source={images.logo}
+          style={{
+            height: Dimensions.get('screen').height / 2.5,
+          }}
+        />
+        <Center w="100%" bgColor="blueGray.800">
+          <Box safeArea p="2" py="2" w="90%" maxW="290">
+            <Heading
+              size="lg"
+              fontWeight="600"
+              color="white"
+              _dark={{
+                color: 'warmGray.50',
+              }}>
+              Mobility Service
+            </Heading>
+            <Heading
+              mt="1"
+              _dark={{
+                color: 'warmGray.200',
+              }}
+              color="coolGray.400"
+              fontWeight="medium"
+              size="xs">
+              Sign in to continue!
+            </Heading>
 
-          <VStack space={5} mt="3">
-            <FormControl>
-              <FormControl.Label>
-                {' '}
-                <Text color="white">Email ID</Text>
-              </FormControl.Label>
-              <Input
-                color="white"
-                placeholder="user@email.com"
-                onChangeText={value => setData({...formData, email: value})}
-              />
-            </FormControl>
-            <FormControl>
-              <FormControl.Label>
-                <Text color="white">Password</Text>
-              </FormControl.Label>
-              <Input
-                color="white"
-                type="password"
-                onChangeText={value => setData({...formData, password: value})}
-              />
-            </FormControl>
-            <Button onPress={onSubmit} mt="2" colorScheme="indigo">
-              Sign in
-            </Button>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('SignUpScreen')}>
-              <Text
-                fontSize="sm"
-                color="coolGray.400"
-                _dark={{
-                  color: 'coolGray.200',
-                }}>
-                I'm a new user.
-              </Text>
-            </TouchableOpacity>
-            <HStack mt="6" justifyContent="center" />
-          </VStack>
-        </Box>
-      </Center>
+            <VStack space={5} mt="3">
+              <FormControl>
+                <FormControl.Label>
+                  {' '}
+                  <Text color="white">Email ID</Text>
+                </FormControl.Label>
+                <Input
+                  color="white"
+                  placeholder="user@email.com"
+                  onChangeText={value => setData({...formData, email: value})}
+                />
+              </FormControl>
+              <FormControl>
+                <FormControl.Label>
+                  <Text color="white">Password</Text>
+                </FormControl.Label>
+                <Input
+                  color="white"
+                  type="password"
+                  onChangeText={value =>
+                    setData({...formData, password: value})
+                  }
+                />
+              </FormControl>
+              <Button onPress={onSubmit} mt="2" colorScheme="indigo">
+                Sign in
+              </Button>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('SignUpScreen')}>
+                <Text
+                  fontSize="sm"
+                  color="coolGray.400"
+                  _dark={{
+                    color: 'coolGray.200',
+                  }}>
+                  I'm a new user.
+                </Text>
+              </TouchableOpacity>
+              <HStack mt="6" justifyContent="center" />
+            </VStack>
+          </Box>
+        </Center>
+      </KeyboardAvoidingView>
     </NativeBaseProvider>
   );
 };
 
 export default SignInScreen;
+

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {TouchableOpacity} from 'react-native';
+import {TouchableOpacity, KeyboardAvoidingView} from 'react-native';
 // import Form from 'react-native-basic-form';
 import api from '../../services/api';
 // import {COLORS} from '../../constants';
@@ -120,112 +120,119 @@ const SignUpScreen = ({navigation}) => {
 
   return (
     <NativeBaseProvider>
-      <Center w="100%" h="100%" bgColor="blueGray.800">
-        {photo ? (
-          <>
-            <HStack
-              mt="20"
-              alignItems={{
-                base: 'center',
-                md: 'flex-start',
-              }}>
-              <Avatar rounded source={photo} size="xlarge" />
-            </HStack>
-            <Button onPress={() => removeImage()} mt="3" colorScheme="indigo">
-              Remove Image
-            </Button>
-          </>
-        ) : (
-          <Button onPress={() => openPicker()} colorScheme="indigo" mt="8">
-            Upload Image
-          </Button>
-        )}
-        <Box safeArea p="2" w="90%" maxW="290">
-          <Heading
-            size="lg"
-            fontWeight="600"
-            color="white"
-            _dark={{
-              color: 'warmGray.50',
-            }}>
-            Register
-          </Heading>
-          <VStack space={5} mt="3">
-            <FormControl>
-              <FormControl.Label>
-                {' '}
-                <Text color="white">Name</Text>
-              </FormControl.Label>
-              <Input
-                color="white"
-                placeholder="John Doe"
-                TextColor="white"
-                onChangeText={value => setData({...formData, name: value})}
-              />
-            </FormControl>
-            <FormControl>
-              <FormControl.Label>
-                {' '}
-                <Text color="white">Email</Text>
-              </FormControl.Label>
-              <Input
-                color="white"
-                placeholder="user@email.com"
-                onChangeText={value => setData({...formData, email: value})}
-              />
-            </FormControl>
-            <FormControl>
-              <FormControl.Label>
-                <Text color="white">Password</Text>
-              </FormControl.Label>
-              <Input
-                color="white"
-                type="password"
-                onChangeText={value => setData({...formData, password: value})}
-              />
-            </FormControl>
-            <FormControl>
-              <FormControl.Label>
-                {' '}
-                <Text color="white">Biography</Text>
-              </FormControl.Label>
-              <Input
-                color="white"
-                placeholder="Something about Yourself"
-                onChangeText={value => setData({...formData, biography: value})}
-              />
-            </FormControl>
-            <FormControl>
-              <FormControl.Label>
-                {' '}
-                <Text color="white">Contact</Text>
-              </FormControl.Label>
-              <Input
-                color="white"
-                type="number"
-                placeholder="912345678"
-                onChangeText={value => setData({...formData, contact: value})}
-              />
-            </FormControl>
-            <Button onPress={onSubmit} mt="2" colorScheme="indigo">
-              Create Account
-            </Button>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('SignInScreen')}>
-              <Text
-                fontSize="sm"
-                color="coolGray.400"
-                _dark={{
-                  color: 'coolGray.200',
+      <KeyboardAvoidingView behavior="position">
+        <Center w="100%" h="100%" bgColor="blueGray.800">
+          {photo ? (
+            <>
+              <HStack
+                mt="20"
+                alignItems={{
+                  base: 'center',
+                  md: 'flex-start',
                 }}>
-                I already have an Account
-              </Text>
-            </TouchableOpacity>
-          </VStack>
-        </Box>
-      </Center>
+                <Avatar rounded source={photo} size="xlarge" />
+              </HStack>
+              <Button onPress={() => removeImage()} mt="3" colorScheme="indigo">
+                Remove Image
+              </Button>
+            </>
+          ) : (
+            <Button onPress={() => openPicker()} colorScheme="indigo" mt="8">
+              Upload Image
+            </Button>
+          )}
+          <Box safeArea p="2" w="90%" maxW="290">
+            <Heading
+              size="lg"
+              fontWeight="600"
+              color="white"
+              _dark={{
+                color: 'warmGray.50',
+              }}>
+              Register
+            </Heading>
+            <VStack space={5} mt="3">
+              <FormControl>
+                <FormControl.Label>
+                  {' '}
+                  <Text color="white">Name</Text>
+                </FormControl.Label>
+                <Input
+                  color="white"
+                  placeholder="John Doe"
+                  TextColor="white"
+                  onChangeText={value => setData({...formData, name: value})}
+                />
+              </FormControl>
+              <FormControl>
+                <FormControl.Label>
+                  {' '}
+                  <Text color="white">Email</Text>
+                </FormControl.Label>
+                <Input
+                  color="white"
+                  placeholder="user@email.com"
+                  onChangeText={value => setData({...formData, email: value})}
+                />
+              </FormControl>
+              <FormControl>
+                <FormControl.Label>
+                  <Text color="white">Password</Text>
+                </FormControl.Label>
+                <Input
+                  color="white"
+                  type="password"
+                  onChangeText={value =>
+                    setData({...formData, password: value})
+                  }
+                />
+              </FormControl>
+              <FormControl>
+                <FormControl.Label>
+                  {' '}
+                  <Text color="white">Biography</Text>
+                </FormControl.Label>
+                <Input
+                  color="white"
+                  placeholder="Something about Yourself"
+                  onChangeText={value =>
+                    setData({...formData, biography: value})
+                  }
+                />
+              </FormControl>
+              <FormControl>
+                <FormControl.Label>
+                  {' '}
+                  <Text color="white">Contact</Text>
+                </FormControl.Label>
+                <Input
+                  color="white"
+                  type="number"
+                  placeholder="912345678"
+                  onChangeText={value => setData({...formData, contact: value})}
+                />
+              </FormControl>
+              <Button onPress={onSubmit} mt="2" colorScheme="indigo">
+                Create Account
+              </Button>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('SignInScreen')}>
+                <Text
+                  fontSize="sm"
+                  color="coolGray.400"
+                  _dark={{
+                    color: 'coolGray.200',
+                  }}>
+                  I already have an Account
+                </Text>
+              </TouchableOpacity>
+            </VStack>
+          </Box>
+        </Center>
+      </KeyboardAvoidingView>
     </NativeBaseProvider>
   );
 };
 
 export default SignUpScreen;
+

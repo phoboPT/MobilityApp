@@ -12,6 +12,7 @@ import {
 } from 'react-native-chart-kit';
 import {icons, SIZES} from '../constants/index';
 import {Dimensions} from 'react-native';
+import {withTheme} from 'react-native-elements';
 const {RecommendationsManager} = NativeModules;
 
 const styles = StyleSheet.create({
@@ -23,14 +24,14 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
   },
-  view: {flexDirection: 'row', height: 40},
+  view: {flexDirection: 'row', height: 40, alignItems: 'center'},
   touchable: {
     width: 50,
     paddingLeft: SIZES.padding * 1,
     justifyContent: 'center',
   },
   view_2: {
-    borderRadius: 20,
+    borderRadius: 10,
     width: 280,
     justifyContent: 'center',
     alignItems: 'center',
@@ -39,28 +40,31 @@ const styles = StyleSheet.create({
   text_settings: {
     fontSize: 24,
     fontWeight: '400',
+    color: 'white',
   },
-  row: {flexDirection: 'row'},
+  row: {flexDirection: 'row', alignItems: 'center'},
   button: {
     justifyContent: 'space-around',
     margin: 10,
+    alignItems: 'center',
   },
 });
 
 const Statistics = ({navigation}) => {
-  const [mets, setMets] = useState('');
+  const [mets, setMets] = useState(null);
   const [index, setIndex] = useState(0);
   const [length, setLength] = useState(0);
   useEffect(() => {
     RecommendationsManager.ReadAllWeeklyReportsFromDBIntoReactNative(result => {
       setMets(result);
       setLength(result.length - 1);
+      console.log(result);
     });
   }, []);
 
   const renderHeader = () => {
     return (
-      <View style={styles.view}>
+      <View style={styles.view} bgColor="blueGray.800">
         <TouchableOpacity
           onPress={() => navigation.openDrawer()}
           style={styles.touchable}>
@@ -89,118 +93,102 @@ const Statistics = ({navigation}) => {
   };
 
   return (
-    <View style={styles.container}>
-      {renderHeader()}
+    // if mets is not populated yet, do not render anything
+    !mets ? null : (
+      <View style={styles.container}>
+        {renderHeader()}
 
-      <Center>
-        <Container>
-          <ScrollView h="80">
-            {/* <Center>
-              <Text>Data</Text>
-              <Text />
-              <Center>
-                {mets.length > 0 && (
-                  <Text key={mets[index].id}>
-                    -----------------{mets[index].id}----------------- {'\n'}
-                    Mets Baixa- {mets[index].metsIntBaixa}
-                    {'\n'}
-                    Mets Totais - {mets[index].metsTotais}
-                    {'\n'}
-                    Mets Vigorosa - {mets[index].metsIntVigorosa}
-                    {'\n'}
-                    Minutos de atividade -
-                    {mets[index].totalAmountActiveActivityInMinutes}
-                    {'\n'}
-                    Distancia a pe - {mets[index].distanceWalking.toFixed(2)}
-                    {'\n'}
-                    Distancia a correr - {mets[index].distanceRunning}
-                    {'\n'}
-                    Distancia em bicicleta - {mets[index].distanceBicycle}
-                    {'\n'}
-                    Horas sedentários - {mets[index].totalAmountSedentaryHours}
-                    {'\n'}
-                    Minutos sedentários -
-                    {mets[index].totalAmountSedentaryMinutes}
-                    {'\n'}
-                    Data: [{mets[index].dateOfReport}]
-                  </Text>
-                )}
-              </Center>
-            </Center>
-            <View style={styles.row}>
-              <Button
-                style={styles.button}
-                onPress={() => previous()}
-                disabled={index > 0 ? false : true}>
-                Previous
-              </Button>
+        <Center bgColor="blueGray.800">
+          <Container>
+            <ScrollView h="80">
+              <View style={styles.row}>
+                <Button
+                  style={styles.button}
+                  onPress={() => previous()}
+                  disabled={index > 0 ? false : true}>
+                  Previous
+                </Button>
 
-              <Button
-                style={styles.button}
-                onPress={() => next()}
-                disabled={index < mets.length - 1 ? false : true}>
-                Next
-              </Button>
-            </View> */}
-            <View>
-              <Text>Bezier Line Chart</Text>
-              <LineChart
-                data={{
-                  labels: [
-                    'January',
-                    'February',
-                    'March',
-                    'April',
-                    'May',
-                    'June',
-                  ],
-                  datasets: [
-                    {
-                      data: [
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                      ],
-                    },
-                  ],
-                }}
-                width={Dimensions.get('window').width - 80} // from react-native
-                height={220}
-                yAxisLabel="$"
-                yAxisSuffix="k"
-                yAxisInterval={1} // optional, defaults to 1
-                chartConfig={{
-                  backgroundColor: '#e26a00',
-                  backgroundGradientFrom: '#fb8c00',
-                  backgroundGradientTo: '#ffa726',
-                  decimalPlaces: 2, // optional, defaults to 2dp
-                  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                  labelColor: (opacity = 1) =>
-                    `rgba(255, 255, 255, ${opacity})`,
-                  style: {
+                <Button
+                  style={styles.button}
+                  onPress={() => next()}
+                  disabled={index < mets.length - 1 ? false : true}>
+                  Next
+                </Button>
+              </View>
+              <View>
+                <Text style={styles.text_settings}>Mets Cumpridos</Text>
+                <ProgressChart
+                  data={{
+                    labels: ['Baixa', 'Moderada', 'Vigorosa'],
+
+                    data: [
+                      mets[index].metsIntBaixaPercentage,
+                      mets[index].metsIntModeradaPercentage,
+                      mets[index].metsIntVigorosaPercentage,
+                    ],
+                  }}
+                  width={Dimensions.get('window').width - 80} // from react-native
+                  height={220}
+                  strokeWidth={16}
+                  radius={30}
+                  chartConfig={{
+                    backgroundGradientFrom: '#1E2923',
+                    backgroundGradientFromOpacity: 0,
+                    backgroundGradientTo: '#08130D',
+                    backgroundGradientToOpacity: 0.5,
+                    color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+                    strokeWidth: 2, // optional, default 3
+                    barPercentage: 0.5,
+                    useShadowColorFromDataset: false, // optional
+                  }}
+                  hideLegend={false}
+                />
+              </View>
+              <View>
+                <Text style={styles.text_settings}>Atividade Diária</Text>
+                <BarChart
+                  data={{
+                    labels: ['Parado', 'Caminhar', 'Correr', 'Bicicleta'],
+                    datasets: [
+                      {
+                        data: [
+                          mets[index].amountTimeStillMinute,
+                          mets[index].amountTimeWalkingMinute,
+                          mets[index].amountTimeRunningMinute,
+                          mets[index].amountTimeOnBicycleMinute,
+                        ],
+                      },
+                    ],
+                  }}
+                  width={Dimensions.get('window').width - 80} // from react-native
+                  height={220}
+                  yAxisLabel="min"
+                  verticalLabelRotation={20}
+                  chartConfig={{
+                    backgroundGradientFrom: '#1E2923',
+                    backgroundGradientFromOpacity: 0,
+                    backgroundGradientTo: '#08130D',
+                    backgroundGradientToOpacity: 0.5,
+                    color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+                    strokeWidth: 2, // optional, default 3
+                    barPercentage: 0.5,
+                    useShadowColorFromDataset: false, // optional
+                  }}
+                  bezier
+                  style={{
+                    marginVertical: 8,
                     borderRadius: 16,
-                  },
-                  propsForDots: {
-                    r: '6',
-                    strokeWidth: '2',
-                    stroke: '#ffa726',
-                  },
-                }}
-                bezier
-                style={{
-                  marginVertical: 8,
-                  borderRadius: 16,
-                }}
-              />
-            </View>
-          </ScrollView>
-        </Container>
-      </Center>
-    </View>
+                  }}
+                />
+              </View>
+            </ScrollView>
+          </Container>
+        </Center>
+      </View>
+    )
   );
 };
 
 export default Statistics;
+
