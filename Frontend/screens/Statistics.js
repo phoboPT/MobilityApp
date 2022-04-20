@@ -42,12 +42,18 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: 'white',
   },
+  text_settings2: {
+    fontSize: 8,
+    color: 'white',
+    textAlign: 'justify',
+  },
   row: {flexDirection: 'row', alignItems: 'center'},
   button: {
     justifyContent: 'space-around',
     margin: 10,
     alignItems: 'center',
   },
+  row2: {flexDirection: 'row'},
 });
 
 const Statistics = ({navigation}) => {
@@ -58,6 +64,7 @@ const Statistics = ({navigation}) => {
     RecommendationsManager.ReadAllWeeklyReportsFromDBIntoReactNative(result => {
       setMets(result);
       setLength(result.length - 1);
+      setIndex(result.length - 1);
       console.log(result);
     });
   }, []);
@@ -96,31 +103,231 @@ const Statistics = ({navigation}) => {
     // if mets is not populated yet, do not render anything
     !mets ? null : (
       <View style={styles.container}>
-        {renderHeader()}
+        <ScrollView>
+          {renderHeader()}
+          <View style={styles.row} bgColor="black">
+            <ProgressChart
+              data={{
+                labels: ['Baixa', 'Mod.', 'Vig.'],
 
-        <Center bgColor="blueGray.800">
-          <Container>
-            <ScrollView h="80">
-              <View style={styles.row}>
-                <Button
-                  style={styles.button}
-                  onPress={() => previous()}
-                  disabled={index > 0 ? false : true}>
-                  Previous
-                </Button>
+                data: [
+                  !mets[index - 6] ? 0 : mets[index - 6].metsIntBaixaPercentage,
+                  !mets[index - 6]
+                    ? 0
+                    : mets[index - 6].metsIntModeradaPercentage,
+                  !mets[index - 6]
+                    ? 0
+                    : mets[index - 6].metsIntVigorosaPercentage,
+                ],
+              }}
+              width={
+                Dimensions.get('window').width -
+                0.8571 * Dimensions.get('window').width
+              } // from react-native
+              height={100}
+              strokeWidth={4}
+              radius={6}
+              chartConfig={{
+                backgroundColor: '#030308',
+                color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                strokeWidth: 2, // optional, default 3
+                barPercentage: 0.5,
+                useShadowColorFromDataset: false, // optional
+              }}
+              hideLegend={true}
+            />
 
-                <Button
-                  style={styles.button}
-                  onPress={() => next()}
-                  disabled={index < mets.length - 1 ? false : true}>
-                  Next
-                </Button>
-              </View>
+            <ProgressChart
+              data={{
+                labels: ['Baixa', 'Mod.', 'Vig.'],
+
+                data: [
+                  !mets[index - 5] ? 0 : mets[index - 5].metsIntBaixaPercentage,
+                  !mets[index - 5]
+                    ? 0
+                    : mets[index - 5].metsIntModeradaPercentage,
+                  !mets[index - 5]
+                    ? 0
+                    : mets[index - 5].metsIntVigorosaPercentage,
+                ],
+              }}
+              width={
+                Dimensions.get('window').width -
+                0.8571 * Dimensions.get('window').width
+              } // from react-native
+              height={100}
+              strokeWidth={4}
+              radius={6}
+              chartConfig={{
+                backgroundColor: '#030308',
+                color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                strokeWidth: 2, // optional, default 3
+                barPercentage: 0.5,
+                useShadowColorFromDataset: false, // optional
+              }}
+              hideLegend={true}
+            />
+            <ProgressChart
+              data={{
+                labels: ['Baixa', 'Mod.', 'Vig.'],
+
+                data: [
+                  !mets[index - 4] ? 0 : mets[index - 4].metsIntBaixaPercentage,
+                  !mets[index - 4]
+                    ? 0
+                    : mets[index - 4].metsIntModeradaPercentage,
+                  !mets[index - 4]
+                    ? 0
+                    : mets[index - 4].metsIntVigorosaPercentage,
+                ],
+              }}
+              width={
+                Dimensions.get('window').width -
+                0.8571 * Dimensions.get('window').width
+              } // from react-native
+              height={100}
+              strokeWidth={4}
+              radius={6}
+              chartConfig={{
+                backgroundColor: '#030308',
+                color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                strokeWidth: 2, // optional, default 3
+                barPercentage: 0.5,
+                useShadowColorFromDataset: false, // optional
+              }}
+              hideLegend={true}
+            />
+            <ProgressChart
+              data={{
+                labels: ['Baixa', 'Mod.', 'Vig.'],
+
+                data: [
+                  !mets[index - 3] ? 0 : mets[index - 3].metsIntBaixaPercentage,
+                  !mets[index - 3]
+                    ? 0
+                    : mets[index - 3].metsIntModeradaPercentage,
+                  !mets[index - 3]
+                    ? 0
+                    : mets[index - 3].metsIntVigorosaPercentage,
+                ],
+              }}
+              width={
+                Dimensions.get('window').width -
+                0.8571 * Dimensions.get('window').width
+              } // from react-native
+              height={100}
+              strokeWidth={4}
+              radius={6}
+              chartConfig={{
+                backgroundColor: '#030308',
+                color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                strokeWidth: 2, // optional, default 3
+                barPercentage: 0.5,
+                useShadowColorFromDataset: false, // optional
+              }}
+              hideLegend={true}
+            />
+            <ProgressChart
+              data={{
+                labels: ['Baixa', 'Mod.', 'Vig.'],
+
+                data: [
+                  !mets[index - 2] ? 0 : mets[index - 2].metsIntBaixaPercentage,
+                  !mets[index - 2]
+                    ? 0
+                    : mets[index - 2].metsIntModeradaPercentage,
+                  !mets[index - 2]
+                    ? 0
+                    : mets[index - 2].metsIntVigorosaPercentage,
+                ],
+              }}
+              width={
+                Dimensions.get('window').width -
+                0.8571 * Dimensions.get('window').width
+              } // from react-native
+              height={100}
+              strokeWidth={4}
+              radius={6}
+              chartConfig={{
+                backgroundColor: '#030308',
+                color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                strokeWidth: 2, // optional, default 3
+                barPercentage: 0.5,
+                useShadowColorFromDataset: false, // optional
+              }}
+              hideLegend={true}
+            />
+            <ProgressChart
+              data={{
+                labels: ['Baixa', 'Mod.', 'Vig.'],
+
+                data: [
+                  !mets[index - 1] ? 0 : mets[index - 1].metsIntBaixaPercentage,
+                  !mets[index - 1]
+                    ? 0
+                    : mets[index - 1].metsIntModeradaPercentage,
+                  !mets[index - 1]
+                    ? 0
+                    : mets[index - 1].metsIntVigorosaPercentage,
+                ],
+              }}
+              width={
+                Dimensions.get('window').width -
+                0.8571 * Dimensions.get('window').width
+              } // from react-native
+              height={100}
+              strokeWidth={4}
+              radius={6}
+              chartConfig={{
+                backgroundColor: '#030308',
+                color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                strokeWidth: 2, // optional, default 3
+                barPercentage: 0.5,
+                useShadowColorFromDataset: false, // optional
+              }}
+              hideLegend={true}
+            />
+            <ProgressChart
+              data={{
+                labels: ['Baixa', 'Mod.', 'Vig.'],
+
+                data: [
+                  mets[index].metsIntBaixaPercentage,
+                  mets[index].metsIntModeradaPercentage,
+                  mets[index].metsIntVigorosaPercentage,
+                ],
+              }}
+              width={
+                Dimensions.get('window').width -
+                0.8571 * Dimensions.get('window').width
+              } // from react-native
+              height={100}
+              strokeWidth={4}
+              radius={6}
+              chartConfig={{
+                backgroundColor: '#030308',
+                color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                strokeWidth: 2, // optional, default 3
+                barPercentage: 0.5,
+                useShadowColorFromDataset: false, // optional
+              }}
+              hideLegend={true}
+            />
+          </View>
+          <Center bgColor="blueGray.800">
+            <Container>
               <View>
-                <Text style={styles.text_settings}>Mets Cumpridos</Text>
+                <Text style={styles.text_settings}>Mets</Text>
                 <ProgressChart
                   data={{
-                    labels: ['Baixa', 'Moderada', 'Vigorosa'],
+                    labels: ['Baixa', 'Mod.', 'Vig.'],
 
                     data: [
                       mets[index].metsIntBaixaPercentage,
@@ -133,14 +340,18 @@ const Statistics = ({navigation}) => {
                   strokeWidth={16}
                   radius={30}
                   chartConfig={{
-                    backgroundGradientFrom: '#1E2923',
-                    backgroundGradientFromOpacity: 0,
-                    backgroundGradientTo: '#08130D',
-                    backgroundGradientToOpacity: 0.5,
+                    backgroundColor: '#030308',
                     color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+                    labelColor: (opacity = 1) =>
+                      `rgba(255, 255, 255, ${opacity})`,
                     strokeWidth: 2, // optional, default 3
                     barPercentage: 0.5,
                     useShadowColorFromDataset: false, // optional
+                    propsForDots: {
+                      r: '6',
+                      strokeWidth: '2',
+                      stroke: '#ffa726',
+                    },
                   }}
                   hideLegend={false}
                 />
@@ -166,14 +377,18 @@ const Statistics = ({navigation}) => {
                   yAxisLabel="min"
                   verticalLabelRotation={20}
                   chartConfig={{
-                    backgroundGradientFrom: '#1E2923',
-                    backgroundGradientFromOpacity: 0,
-                    backgroundGradientTo: '#08130D',
-                    backgroundGradientToOpacity: 0.5,
+                    backgroundColor: '#030308',
                     color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+                    labelColor: (opacity = 1) =>
+                      `rgba(255, 255, 255, ${opacity})`,
                     strokeWidth: 2, // optional, default 3
                     barPercentage: 0.5,
                     useShadowColorFromDataset: false, // optional
+                    propsForDots: {
+                      r: '6',
+                      strokeWidth: '2',
+                      stroke: '#ffa726',
+                    },
                   }}
                   bezier
                   style={{
@@ -182,9 +397,24 @@ const Statistics = ({navigation}) => {
                   }}
                 />
               </View>
-            </ScrollView>
-          </Container>
-        </Center>
+              <View style={styles.row} alignContent="center">
+                <Button
+                  style={styles.button}
+                  onPress={() => previous()}
+                  disabled={index > 0 ? false : true}>
+                  Previous
+                </Button>
+
+                <Button
+                  style={styles.button}
+                  onPress={() => next()}
+                  disabled={index < mets.length - 1 ? false : true}>
+                  Next
+                </Button>
+              </View>
+            </Container>
+          </Center>
+        </ScrollView>
       </View>
     )
   );
