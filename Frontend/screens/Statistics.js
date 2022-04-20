@@ -321,7 +321,7 @@ const Statistics = ({navigation}) => {
               hideLegend={true}
             />
           </View>
-          <Center bgColor="blueGray.800">
+          <Center bgColor="black">
             <Container>
               <View>
                 <Text style={styles.text_settings}>Mets</Text>
